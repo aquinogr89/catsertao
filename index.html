@@ -69,15 +69,40 @@
       flex-wrap: wrap;
     }
 
-    .logo {
+    .logo-wrapper {
       width: 70px;
       height: 70px;
-      object-fit: contain;
-      background: #fff;
       border-radius: 50%;
-      padding: 6px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
       flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 6px;
+      display: block;
+    }
+
+    /* Fallback do brasão: texto visível caso a imagem não carregue */
+    .logo-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.7rem;
+      color: var(--vermelho);
+      text-align: center;
+      line-height: 1.1;
+      padding: 4px;
     }
 
     .titulo-setor h1 {
@@ -132,21 +157,23 @@
       background: var(--cinza-claro);
     }
 
-    /* Layout principal */
+    /* Layout principal - coluna única centralizada */
     main {
       flex: 1;
-      max-width: 1400px;
+      max-width: 1200px;
       width: 100%;
       margin: 0 auto;
       padding: 24px 20px;
-      display: grid;
-      grid-template-columns: 1fr 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 24px;
     }
 
     /* Seção de apresentação */
     .apresentacao {
-      grid-column: 1 / -1;
+      width: 100%;
+      max-width: 900px;
       background: #fff;
       border-radius: 12px;
       padding: 24px;
@@ -166,8 +193,10 @@
       max-width: 900px;
     }
 
-    /* Container do chat */
+    /* Container do chat - centralizado e reduzido */
     .chat-area {
+      width: 100%;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       background: #fff;
@@ -328,8 +357,10 @@
       background: #fff;
     }
 
-    /* Contatos laterais */
+    /* Contatos das SATECs - agora abaixo do chat, coluna única centralizada */
     .contatos {
+      width: 100%;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -461,16 +492,6 @@
     }
 
     /* Responsividade */
-    @media (max-width: 1024px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-
-      .chat-area {
-        min-height: 500px;
-      }
-    }
-
     @media (max-width: 768px) {
       .cabecalho-conteudo {
         justify-content: center;
@@ -497,10 +518,15 @@
       .chat-cabecalho .info h3 {
         font-size: 0.95rem;
       }
+
+      main {
+        padding: 16px 12px;
+        gap: 18px;
+      }
     }
 
     @media (max-width: 480px) {
-      .logo {
+      .logo-wrapper {
         width: 56px;
         height: 56px;
       }
@@ -526,6 +552,14 @@
       .mensagem-usuario {
         max-width: 95%;
       }
+
+      .apresentacao {
+        padding: 18px 16px;
+      }
+
+      .apresentacao h2 {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
@@ -534,7 +568,10 @@
 
   <header>
     <div class="cabecalho-conteudo">
-      <img src="CAT-SERTAO-SEM-FUNDO.png" alt="Logotipo do CAT Sertão" class="logo" />
+      <div class="logo-wrapper">
+        <img src="./CAT-SERTAO-SEM-FUNDO.png" alt="Logotipo do CAT Sertão" class="logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';" />
+        <div class="logo-fallback" id="logo-fallback">CAT<br>SERTÃO</div>
+      </div>
       <div class="titulo-setor">
         <h1>CAT Sertão</h1>
         <p>Centro de Atividades Técnicas do Sertão</p>
