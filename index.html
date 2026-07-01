@@ -7,7 +7,8 @@
 <meta name="description" content="Site institucional do Centro de Atividades Técnicas do Sertão (CAT Sertão) do Corpo de Bombeiros Militar de Pernambuco (CBMPE)." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
   :root{
     --vermelho: #C62828;
@@ -486,7 +487,27 @@
     box-shadow: 0 2px 6px rgba(32,28,22,0.05);
     font-size: 0.93rem;
     animation: fadeIn 0.4s ease;
+    line-height: 1.5;
   }
+  
+  .mensagem-ajudante p,
+  .mensagem-ajudante ul,
+  .mensagem-ajudante ol,
+  .mensagem-ajudante li {
+    margin: 8px 0;
+  }
+  
+  .mensagem-ajudante ul,
+  .mensagem-ajudante ol {
+    padding-left: 20px;
+  }
+  
+  .mensagem-ajudante strong,
+  .mensagem-ajudante b {
+    font-weight: 600;
+    color: var(--azul-claro);
+  }
+  
   .mensagem-usuario{
     align-self: flex-end;
     background: linear-gradient(135deg, var(--azul) 0%, var(--azul-claro) 100%);
@@ -497,6 +518,7 @@
     box-shadow: 0 2px 6px rgba(27,42,91,0.28);
     font-size: 0.93rem;
     animation: fadeIn 0.4s ease;
+    line-height: 1.5;
   }
 
   @keyframes fadeIn {
@@ -802,7 +824,7 @@
       <p class="eyebrow">Centro de Atividades Técnicas</p>
       <h2>Bem-vindo ao CAT Sertão</h2>
       <p>
-        Aqui você poderá tirar dúvidas com nosso assistente online ou ser direcionado ao atendimento via WhatsApp com nossos militares em horário administrativo. Esse site está em fase de desenvolvimento e as respostas podem não ser confiáveis. Portanto, em caso de dúvidas, entrar em contato com nossos militares ou através do e-mail <strong>catsertao2cbmpe@gmail.com</strong>
+        Aqui você poderá tirar dúvidas com nosso assistente online ou ser direcionado ao atendimento via WhatsApp com nossos militares em horário administrativo. Esse site está em fase de desenvolvimento.
       </p>
       <a class="cta-hero" href="#chat">
         Falar com o assistente virtual
@@ -873,7 +895,7 @@
     </div>
 
     <div class="aviso-whats">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.38A9.93 9.93 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm1.07-5.69l-.9.92c-.7.7-1.34 1.34-1.8 2.1-.1.17-.3.34-.5.53h-.02c-.36.47-.68.93-.9 1.4-.1.2-.2.4-.29.6-.02.05-.04.09-.06.13-.06.12-.1.22-.12.26 0 .02 0 .05-.02.07-.02.04-.03.07-.04.08.08 0 .23-.03.3-.04.21-.02.34-.05.45-.08.09-.02.16-.05.24-.08.06-.02.12-.05.2-.08.04-.02.09-.04.15-.07.02-.01.04-.03.07-.04.03-.02.07-.04.1-.07.03-.02.05-.05.07-.07.02-.02.03-.05.04-.08.02-.04.04-.1.05-.19.01-.04.02-.07.03-.12.01-.06.02-.15.02-.25.01-.14.01-.35-.02-.57-.03-.25-.1-.6-.19-1.07-.06-.3-.16-.67-.28-1.09-.03-.1-.06-.2-.1-.31-.01-.04-.03-.07-.04-.11-.13-.43-.3-.95-.48-1.57-.06-.2-.12-.41-.18-.63.54-.72 1.16-1.37 1.82-1.97.2-.19.41-.37.61-.54.3-.27.56-.49.78-.65z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.38A9.93 9.93 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm1.07-5.69l-.9.92c-.7.71-1.76 1.24-2.79 1.24-2.18 0-4-1.79-4-4s1.79-4 4-4c.98 0 1.85.37 2.5 0.96l.86.8c.25.23.57.35.9.35.32 0 .65-.12.9-.35.5-.48.52-1.28.03-1.76l-.9-.92C13.5 2.62 12.64 2 11.38 2 8.51 2 6 4.49 6 7.38c0 1.23.38 2.38 1.03 3.34-1.49.92-2.48 2.54-2.48 4.39 0 2.87 2.33 5.2 5.2 5.2 1.85 0 3.47-.99 4.39-2.48.96.65 2.11 1.03 3.34 1.03 2.87 0 5.2-2.33 5.2-5.2 0-1.85-.99-3.47-2.48-4.39.65-.96 1.03-2.11 1.03-3.34 0-1.23-.38-2.38-1.03-3.34 1.49-.92 2.48-2.54 2.48-4.39 0-2.87-2.33-5.2-5.2-5.2-1.85 0-3.47.99-4.39 2.48-.96-.65-2.11-1.03-3.34-1.03-1.23 0-2.38.38-3.34 1.03.92-1.49 2.54-2.48 4.39-2.48 2.87 0 5.2 2.33 5.2 5.2 0 1.85-.99 3.47-2.48 4.39"/></svg>
       <span><strong>Atenção:</strong> os telefones listados abaixo são exclusivamente para contato via <strong>WhatsApp</strong>. Não realizamos atendimento telefônico convencional por estes números.</span>
     </div>
 
@@ -887,7 +909,7 @@
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Cb JANAYRA</p>
         <a class="telefone" href="https://wa.me/5587988772496" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8877-2496
         </a>
       </div>
@@ -900,7 +922,7 @@
         </div>
         <p class="responsavel"><strong>Responsáveis:</strong> Sgt GEAN e Cb D BARROS</p>
         <a class="telefone" href="https://wa.me/5587988352828" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8835-2828
         </a>
       </div>
@@ -913,7 +935,7 @@
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Cb DIONÍZIO</p>
         <a class="telefone" href="https://wa.me/5587988772495" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8877-2495
         </a>
       </div>
@@ -926,7 +948,7 @@
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sd Ruan</p>
         <a class="telefone" href="https://wa.me/5587988770198" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8877-0198
         </a>
       </div>
@@ -939,7 +961,7 @@
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sgt Taciana</p>
         <a class="telefone" href="https://wa.me/5587988770200" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8877-0200
         </a>
       </div>
@@ -952,7 +974,7 @@
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sgt EMMERSON</p>
         <a class="telefone" href="https://wa.me/5587988772518" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8877-2518
         </a>
       </div>
@@ -965,7 +987,7 @@
         </div>
         <p class="responsavel"><strong>Contato:</strong> WhatsApp da 2ª SATEC (Petrolina)</p>
         <a class="telefone" href="https://wa.me/5587988352828" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892-1.979 0-3.93-.497-5.672-1.48L.057 24zm10.896-3.882c1.672 0 3.288-.461 4.713-1.327l.356.211 1.36 5.058-5.155-1.378-.232.14c-1.39.831-2.998 1.271-4.738 1.271-4.971 0-9.017-4.04-9.017-9.01 0-1.913.622-3.776 1.756-5.294L2.129 2.75l5.603 1.479c1.519-1.087 3.393-1.673 5.323-1.673 4.973 0 9.023 4.049 9.023 9.022 0 2.424-.948 4.71-2.674 6.431-.88.882-1.91 1.584-3.065 2.038l-.355.211 1.358 5.052-5.156-1.376-.231.14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.35 11.927-11.9 11.927h-.06a11.79 11.79 0 01-5.684-1.455l-6.04 1.585 1.62-5.944zm-2.035-14.976c0-1.192.311-2.351.9-3.366a5.908 5.908 0 015.927-3.074c3.286 0 5.968 2.656 5.968 5.927 0 3.271-2.682 5.928-5.968 5.928a5.84 5.84 0 01-2.799-.685 5.94 5.94 0 01-1.946-1.335 5.924 5.924 0 01-1.182-4.395z"/></svg>
           (87) 9.8835-2828
         </a>
       </div>
@@ -999,95 +1021,76 @@
     if (corpo) corpo.scrollTop = corpo.scrollHeight;
   }
 
-  function getSessionId() {
-    let id = localStorage.getItem('catsertao_session_id');
-    if (!id) {
-      id = (crypto.randomUUID ? crypto.randomUUID() : 'sess-' + Date.now() + '-' + Math.random().toString(16).slice(2));
-      localStorage.setItem('catsertao_session_id', id);
-    }
-    return id;
-  }
-
-  function mostrarDigitando() {
-    const digitando = document.createElement('div');
-    digitando.className = 'mensagem-digitando';
-    digitando.id = 'digitando-indicador';
-    digitando.innerHTML = '<span></span><span></span><span></span>';
-    corpo.appendChild(digitando);
+  function criar_bolha_usuario(texto) {
+    const div = document.createElement('div');
+    div.className = 'mensagem-usuario';
+    div.textContent = texto;
+    corpo.appendChild(div);
     rolarParaBaixo();
   }
 
-  function removerDigitando() {
-    const digitando = document.getElementById('digitando-indicador');
+  function mostrar_digitacao() {
+    const div = document.createElement('div');
+    div.className = 'mensagem-digitando';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    div.id = 'digitando';
+    corpo.appendChild(div);
+    rolarParaBaixo();
+  }
+
+  function remover_digitacao() {
+    const digitando = document.getElementById('digitando');
     if (digitando) digitando.remove();
   }
 
-  async function enviarMensagem() {
-    const texto = (input && input.value || '').trim();
-    if (!texto) return;
+  function criar_bolha_assistente(texto) {
+    const div = document.createElement('div');
+    div.className = 'mensagem-ajudante';
+    div.innerHTML = marked.parse(texto);
+    corpo.appendChild(div);
+    rolarParaBaixo();
+  }
 
-    const balao = document.createElement('div');
-    balao.className = 'mensagem-usuario';
-    balao.textContent = texto;
-    corpo.appendChild(balao);
+  async function enviar_mensagem() {
+    const texto = input.value.trim();
+    if (!texto) return;
 
     input.value = '';
     btn.disabled = true;
-    rolarParaBaixo();
-    mostrarDigitando();
+    criar_bolha_usuario(texto);
+    mostrar_digitacao();
 
     try {
-      const resposta = await fetch(WEBHOOK_URL, {
+      const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'sendMessage',
-          sessionId: getSessionId(),
-          chatInput: texto,
-          metadata: {
-            origem: 'site-cat-sertao',
-            setor: 'CAT Sertão',
-            organizacao: 'CBMPE'
-          }
-        })
+        body: JSON.stringify({ chat_input: texto })
       });
 
-      if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
+      remover_digitacao();
 
-      const dados = await resposta.json();
-      const textoResposta = dados.output || dados.text || dados.chatInput || 'Desculpe, não consegui gerar uma resposta agora.';
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-      removerDigitando();
-      const balaoResposta = document.createElement('div');
-      balaoResposta.className = 'mensagem-ajudante';
-      balaoResposta.textContent = textoResposta;
-      corpo.appendChild(balaoResposta);
-      rolarParaBaixo();
-    } catch (erro) {
-      console.error('Erro ao falar com o assistente:', erro);
-      removerDigitando();
-      const balaoErro = document.createElement('div');
-      balaoErro.className = 'mensagem-ajudante';
-      balaoErro.textContent = 'Não foi possível conectar ao assistente no momento. Tente novamente em instantes ou fale com uma SATEC pelo WhatsApp.';
-      corpo.appendChild(balaoErro);
-      rolarParaBaixo();
+      const data = await response.json();
+      const respostaTexto = data?.response?.generations?.[0]?.[0]?.text || 'Desculpe, não consegui processar sua mensagem.';
+      criar_bolha_assistente(respostaTexto);
+    } catch (error) {
+      remover_digitacao();
+      console.error('Erro:', error);
+      criar_bolha_assistente('⚠️ Erro ao conectar com o servidor. Tente novamente.');
     } finally {
       btn.disabled = false;
       input.focus();
     }
   }
 
-  if (btn) btn.addEventListener('click', enviarMensagem);
-  if (input) {
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        enviarMensagem();
-      }
-    });
-  }
-
-  rolarParaBaixo();
+  btn.addEventListener('click', enviar_mensagem);
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      enviar_mensagem();
+    }
+  });
 })();
 </script>
 </body>
