@@ -1,654 +1,646 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CAT Sertão | Centro de Atividades Técnicas do Sertão - CBMPE</title>
-  <meta name="description" content="Site institucional do Centro de Atividades Técnicas do Sertão (CAT Sertão) do Corpo de Bombeiros Militar de Pernambuco (CBMPE)." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --vermelho: #D32F2F;
-      --azul: #1976D2;
-      --amarelo: #FBC02D;
-      --cinza-claro: #f4f6f8;
-      --cinza-medio: #e0e4e8;
-      --cinza-escuro: #37474f;
-      --sombra: 0 4px 18px rgba(0, 0, 0, 0.08);
-      --sombra-forte: 0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Roboto', Arial, Helvetica, sans-serif;
-      color: var(--cinza-escuro);
-      background: var(--cinza-claro);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Cabeçalho */
-    header {
-      background: linear-gradient(135deg, var(--vermelho) 0%, #b71c1c 100%);
-      color: #fff;
-      box-shadow: var(--sombra-forte);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .barra-superior {
-      background: var(--azul);
-      color: #fff;
-      font-size: 0.8rem;
-      text-align: center;
-      padding: 4px 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .cabecalho-conteudo {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .logo-wrapper {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .logo {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 6px;
-      display: block;
-    }
-
-    /* Fallback do brasão: texto visível caso a imagem não carregue */
-    .logo-fallback {
-      display: none;
-      width: 100%;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 0.7rem;
-      color: var(--vermelho);
-      text-align: center;
-      line-height: 1.1;
-      padding: 4px;
-    }
-
-    .titulo-setor h1 {
-      font-size: 1.4rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      line-height: 1.1;
-    }
-
-    .titulo-setor p {
-      font-size: 0.85rem;
-      font-weight: 400;
-      opacity: 0.95;
-      margin-top: 2px;
-    }
-
-    .faixa-amarela {
-      height: 4px;
-      background: var(--amarelo);
-      width: 100%;
-    }
-
-    /* Navegação */
-    nav {
-      background: #fff;
-      border-bottom: 3px solid var(--amarelo);
-    }
-
-    .nav-conteudo {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .nav-conteudo a {
-      text-decoration: none;
-      color: var(--cinza-escuro);
-      font-weight: 500;
-      font-size: 0.9rem;
-      padding: 12px 16px;
-      transition: all 0.2s ease;
-      border-bottom: 3px solid transparent;
-    }
-
-    .nav-conteudo a:hover {
-      color: var(--vermelho);
-      border-bottom-color: var(--vermelho);
-      background: var(--cinza-claro);
-    }
-
-    /* Layout principal - coluna única centralizada */
-    main {
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    /* Seção de apresentação */
-    .apresentacao {
-      width: 100%;
-      max-width: 900px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: var(--sombra);
-      border-left: 6px solid var(--azul);
-    }
-
-    .apresentacao h2 {
-      color: var(--vermelho);
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .apresentacao p {
-      color: var(--cinza-escuro);
-      font-size: 1rem;
-      max-width: 900px;
-    }
-
-    /* Container do chat - centralizado e reduzido */
-    .chat-area {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: var(--sombra);
-      overflow: hidden;
-      min-height: 600px;
-    }
-
-    .chat-cabecalho {
-      background: linear-gradient(135deg, var(--azul) 0%, #0d47a1 100%);
-      color: #fff;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .chat-cabecalho .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--amarelo);
-      color: var(--cinza-escuro);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .chat-cabecalho .info h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-    }
-
-    .chat-cabecalho .info span {
-      font-size: 0.8rem;
-      opacity: 0.9;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .ponto-status {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #4caf50;
-      display: inline-block;
-    }
-
-    .chat-corpo {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background: linear-gradient(180deg, #fafbfc 0%, #f0f3f7 100%);
-      overflow-y: auto;
-    }
-
-    .mensagem-boas-vindas {
-      background: #fff;
-      border: 1px solid var(--cinza-medio);
-      border-left: 4px solid var(--vermelho);
-      border-radius: 8px;
-      padding: 16px;
-      max-width: 90%;
-    }
-
-    .mensagem-boas-vindas strong {
-      color: var(--vermelho);
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .mensagem-ajudante {
-      align-self: flex-start;
-      background: #fff;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 12px 12px 12px 4px;
-      padding: 12px 16px;
-      max-width: 80%;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .mensagem-usuario {
-      align-self: flex-end;
-      background: var(--azul);
-      color: #fff;
-      border-radius: 12px 12px 4px 12px;
-      padding: 12px 16px;
-      max-width: 80%;
-      box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
-    }
-
-    .chat-rodape {
-      padding: 14px 16px;
-      background: #fff;
-      border-top: 1px solid var(--cinza-medio);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .chat-rodape input {
-      flex: 1;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 24px;
-      padding: 12px 18px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-      font-family: inherit;
-    }
-
-    .chat-rodape input:focus {
-      border-color: var(--azul);
-      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
-    }
-
-    .chat-rodape button {
-      background: var(--vermelho);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 46px;
-      height: 46px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.1s;
-      flex-shrink: 0;
-    }
-
-    .chat-rodape button:hover {
-      background: #b71c1c;
-    }
-
-    .chat-rodape button:active {
-      transform: scale(0.95);
-    }
-
-    .chat-rodape button svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
-    }
-
-    .chat-aviso {
-      font-size: 0.75rem;
-      color: #777;
-      text-align: center;
-      padding: 6px 10px 10px;
-      background: #fff;
-    }
-
-    /* Contatos das SATECs - agora abaixo do chat, coluna única centralizada */
-    .contatos {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .contatos-titulo {
-      background: var(--azul);
-      color: #fff;
-      border-radius: 10px;
-      padding: 14px 18px;
-      box-shadow: var(--sombra);
-    }
-
-    .contatos-titulo h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .contatos-titulo p {
-      font-size: 0.78rem;
-      opacity: 0.95;
-      margin-top: 4px;
-    }
-
-    .cartao-contato {
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px 16px;
-      box-shadow: var(--sombra);
-      border-left: 5px solid var(--vermelho);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .cartao-contato:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--sombra-forte);
-    }
-
-    .cartao-contato h3 {
-      color: var(--azul);
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cartao-contato .endereco {
-      font-size: 0.85rem;
-      color: var(--cinza-escuro);
-      margin-bottom: 8px;
-      display: flex;
-      gap: 8px;
-    }
-
-    .cartao-contato .responsavel {
-      font-size: 0.85rem;
-      color: var(--cinza-escuro);
-      margin-bottom: 8px;
-    }
-
-    .cartao-contato .telefone {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #25d366;
-      color: #fff;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-
-    .cartao-contato .telefone:hover {
-      background: #1da851;
-    }
-
-    .cartao-contato .telefone svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    .aviso-whats {
-      background: #fff8e1;
-      border: 1px solid var(--amarelo);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      color: #8d6e00;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .aviso-whats svg {
-      width: 18px;
-      height: 18px;
-      fill: var(--amarelo);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    /* Rodapé */
-    footer {
-      background: var(--cinza-escuro);
-      color: #cfd8dc;
-      padding: 24px 20px;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    footer .faixa-amarela {
-      margin-bottom: 18px;
-    }
-
-    footer p {
-      font-size: 0.85rem;
-      margin: 4px 0;
-    }
-
-    footer strong {
-      color: #fff;
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .cabecalho-conteudo {
-        justify-content: center;
-        text-align: center;
-      }
-
-      .titulo-setor h1 {
-        font-size: 1.15rem;
-      }
-
-      .nav-conteudo {
-        justify-content: center;
-      }
-
-      .nav-conteudo a {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-      }
-
-      .chat-area {
-        min-height: 420px;
-      }
-
-      .chat-cabecalho .info h3 {
-        font-size: 0.95rem;
-      }
-
-      main {
-        padding: 16px 12px;
-        gap: 18px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .logo-wrapper {
-        width: 56px;
-        height: 56px;
-      }
-
-      .titulo-setor h1 {
-        font-size: 1rem;
-      }
-
-      .titulo-setor p {
-        font-size: 0.75rem;
-      }
-
-      .chat-area {
-        min-height: 360px;
-      }
-
-      .chat-corpo {
-        padding: 14px;
-      }
-
-      .mensagem-boas-vindas,
-      .mensagem-ajudante,
-      .mensagem-usuario {
-        max-width: 95%;
-      }
-
-      .apresentacao {
-        padding: 18px 16px;
-      }
-
-      .apresentacao h2 {
-        font-size: 1.25rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAT Sertão | Centro de Atividades Técnicas do Sertão - CBMPE</title>
+<meta name="description" content="Site institucional do Centro de Atividades Técnicas do Sertão (CAT Sertão) do Corpo de Bombeiros Militar de Pernambuco (CBMPE)." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --vermelho: #C62828;
+    --vermelho-escuro: #8E1B1B;
+    --azul: #1B2A5B;
+    --azul-claro: #2B4184;
+    --ouro: #E8AC1E;
+    --ouro-claro: #F5D479;
+    --tinta: #201C16;
+    --areia: #F4ECDA;
+    --areia-clara: #FBF7EC;
+    --papel: #FFFDF8;
+    --linha: #E3D8BC;
+    --sombra: 0 10px 30px rgba(32, 28, 22, 0.10);
+    --sombra-forte: 0 18px 46px rgba(27, 42, 91, 0.22);
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', Arial, Helvetica, sans-serif;
+    --mono: 'IBM Plex Mono', Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    font-family: var(--sans);
+    color: var(--tinta);
+    background: var(--areia);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  :focus-visible{
+    outline: 3px solid var(--ouro);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Faixa institucional ---------- */
+  .barra-superior{
+    background: var(--azul);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 7px 14px;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Cabeçalho ---------- */
+  header{
+    background: linear-gradient(160deg, var(--vermelho) 0%, var(--vermelho-escuro) 100%);
+    color: #fff;
+    box-shadow: var(--sombra-forte);
+  }
+
+  .cabecalho-conteudo{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo-selo{
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.28), 0 0 0 3px var(--ouro);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .logo-selo img{ width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+
+  .titulo-setor .eyebrow{
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .titulo-setor h1{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: 0.01em;
+    margin-top: 2px;
+  }
+
+  .faixa-ouro{ height: 5px; background: linear-gradient(90deg, var(--ouro-claro), var(--ouro)); }
+
+  /* ---------- Navegação ---------- */
+  nav{
+    background: var(--papel);
+    border-bottom: 1px solid var(--linha);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-conteudo{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .nav-conteudo a{
+    text-decoration: none;
+    color: var(--tinta);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.01em;
+    padding: 16px 16px 13px;
+    border-bottom: 3px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  .nav-conteudo a:hover{ color: var(--vermelho); border-bottom-color: var(--ouro); }
+
+  /* ---------- Hero / selo ---------- */
+  .hero{
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(115deg, var(--azul) 0 42%, var(--areia-clara) 42% 100%);
+  }
+  .hero-conteudo{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 24px 56px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .anel-selo{
+    position: relative;
+    width: 240px;
+    height: 240px;
+    justify-self: center;
+  }
+  .anel-selo svg.anel{
+    position: absolute;
+    inset: 0;
+    animation: girar 44s linear infinite;
+  }
+  @keyframes girar{ to{ transform: rotate(360deg); } }
+  .anel-selo .medalhao{
+    position: absolute;
+    inset: 26px;
+    border-radius: 50%;
+    background: var(--papel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px var(--ouro), var(--sombra-forte);
+    overflow: hidden;
+  }
+  .anel-selo .medalhao img{ width: 88%; height: 88%; object-fit: contain; }
+
+  .hero-texto .eyebrow{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ouro-claro);
+  }
+  .hero-texto h2{
+    font-family: var(--serif);
+    font-weight: 900;
+    font-style: italic;
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    color: #fff;
+    line-height: 1.12;
+    margin: 10px 0 16px;
+    max-width: 11ch;
+  }
+  .hero-texto p{
+    color: rgba(255,255,255,0.88);
+    max-width: 46ch;
+    font-size: 1.02rem;
+  }
+  .hero-texto .cta-hero{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    background: var(--ouro);
+    color: var(--tinta);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 30px;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .hero-texto .cta-hero:hover{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(232,172,30,0.35); }
+
+  @media (max-width: 760px){
+    .hero-conteudo{ grid-template-columns: 1fr; text-align: center; padding: 44px 20px 40px; }
+    .anel-selo{ margin: 0 auto; }
+    .hero-texto h2{ max-width: none; }
+    .hero-texto p{ max-width: none; margin: 0 auto; }
+  }
+
+  /* ---------- Divisor com chama ---------- */
+  .divisor{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .divisor::before, .divisor::after{
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--linha);
+  }
+  .divisor svg{ width: 20px; height: 20px; fill: var(--vermelho); flex-shrink: 0; }
+
+  /* ---------- Layout principal ---------- */
+  main{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  section.bloco{ scroll-margin-top: 76px; }
+
+  .apresentacao{
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .apresentacao .eyebrow{
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--azul-claro);
+    font-weight: 600;
+  }
+  .apresentacao h2{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--vermelho-escuro);
+    margin: 8px 0 14px;
+  }
+  .apresentacao p{ color: #45403a; font-size: 1.02rem; }
+
+  /* ---------- Chat ---------- */
+  .chat-area{
+    max-width: 620px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--papel);
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+    overflow: hidden;
+    border: 1px solid var(--linha);
+  }
+
+  .chat-cabecalho{
+    background: linear-gradient(120deg, var(--azul) 0%, var(--azul-claro) 100%);
+    color: #fff;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .chat-cabecalho .avatar{
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--ouro);
+    color: var(--tinta);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 800; font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .chat-cabecalho .info h3{ font-family: var(--serif); font-size: 1.05rem; font-weight: 700; }
+  .chat-cabecalho .info span{ font-size: 0.78rem; opacity: 0.9; display: flex; align-items: center; gap: 6px; }
+  .ponto-status{ width: 7px; height: 7px; border-radius: 50%; background: #4CD07A; display: inline-block; }
+
+  .chat-corpo{
+    flex: 1;
+    min-height: 340px;
+    max-height: 460px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(232,172,30,0.06), transparent 40%),
+      var(--areia-clara);
+    overflow-y: auto;
+  }
+
+  .mensagem-boas-vindas{
+    background: #fff;
+    border: 1px solid var(--linha);
+    border-left: 4px solid var(--vermelho);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .mensagem-boas-vindas strong{ color: var(--vermelho-escuro); font-family: var(--serif); display: block; margin-bottom: 6px; font-size: 1.02rem; }
+
+  .mensagem-ajudante{
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid var(--linha);
+    border-radius: 12px 12px 12px 3px;
+    padding: 12px 16px;
+    max-width: 82%;
+    box-shadow: 0 2px 6px rgba(32,28,22,0.05);
+    font-size: 0.95rem;
+  }
+  .mensagem-usuario{
+    align-self: flex-end;
+    background: var(--azul);
+    color: #fff;
+    border-radius: 12px 12px 3px 12px;
+    padding: 12px 16px;
+    max-width: 82%;
+    box-shadow: 0 2px 6px rgba(27,42,91,0.28);
+    font-size: 0.95rem;
+  }
+  .mensagem-digitando{
+    align-self: flex-start;
+    display: flex;
+    gap: 5px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--linha);
+    border-radius: 12px 12px 12px 3px;
+  }
+  .mensagem-digitando span{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--azul-claro);
+    animation: pulso 1.2s infinite ease-in-out;
+  }
+  .mensagem-digitando span:nth-child(2){ animation-delay: .15s; }
+  .mensagem-digitando span:nth-child(3){ animation-delay: .3s; }
+  @keyframes pulso{ 0%, 80%, 100%{ opacity: .25; transform: scale(0.8); } 40%{ opacity: 1; transform: scale(1); } }
+
+  .chat-rodape{
+    padding: 14px 16px;
+    background: #fff;
+    border-top: 1px solid var(--linha);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .chat-rodape input{
+    flex: 1;
+    border: 1px solid var(--linha);
+    border-radius: 24px;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+    background: var(--areia-clara);
+  }
+  .chat-rodape input:focus{ border-color: var(--azul-claro); background: #fff; }
+  .chat-rodape button{
+    background: var(--vermelho);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 46px; height: 46px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .1s;
+    flex-shrink: 0;
+  }
+  .chat-rodape button:hover{ background: var(--vermelho-escuro); }
+  .chat-rodape button:active{ transform: scale(0.94); }
+  .chat-rodape button:disabled{ opacity: 0.5; cursor: not-allowed; }
+  .chat-rodape button svg{ width: 20px; height: 20px; fill: currentColor; }
+
+  .chat-aviso{
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: #8a8375;
+    text-align: center;
+    padding: 8px 10px 12px;
+    background: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- SATECs ---------- */
+  .contatos-titulo{ text-align: center; max-width: 620px; margin: 0 auto 22px; }
+  .contatos-titulo .eyebrow{
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--azul-claro); font-weight: 600;
+  }
+  .contatos-titulo h2{
+    font-family: var(--serif); font-weight: 700; color: var(--vermelho-escuro);
+    font-size: clamp(1.5rem, 3vw, 2rem); margin: 8px 0 10px;
+  }
+  .contatos-titulo p{ color: #45403a; font-size: 0.95rem; }
+
+  .aviso-whats{
+    max-width: 900px;
+    margin: 0 auto 22px;
+    background: #FDF6E3;
+    border: 1px solid var(--ouro);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: #6b5200;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .aviso-whats svg{ width: 18px; height: 18px; fill: var(--ouro); flex-shrink: 0; margin-top: 1px; }
+
+  .grade-contatos{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .cartao-contato{
+    background: var(--papel);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: var(--sombra);
+    border-top: 4px solid var(--vermelho);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cartao-contato:nth-child(even){ border-top-color: var(--azul); }
+  .cartao-contato:hover{ transform: translateY(-3px); box-shadow: var(--sombra-forte); }
+
+  .cartao-contato .selo-mini{
+    width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cartao-contato .selo-mini svg{ width: 100%; height: 100%; fill: var(--ouro); }
+
+  .cartao-contato h3{
+    font-family: var(--serif);
+    color: var(--azul);
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cartao-contato .endereco{
+    font-size: 0.85rem;
+    color: #55504a;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+  }
+  .cartao-contato .endereco svg{ width: 15px; height: 15px; fill: var(--vermelho); flex-shrink: 0; margin-top: 2px; }
+  .cartao-contato .responsavel{ font-size: 0.85rem; color: #55504a; margin-bottom: 12px; }
+  .cartao-contato .telefone{
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #25D366; color: #fff; text-decoration: none;
+    padding: 7px 14px; border-radius: 20px; font-size: 0.83rem; font-weight: 600;
+    transition: background .2s;
+  }
+  .cartao-contato .telefone:hover{ background: #1DA851; }
+  .cartao-contato .telefone svg{ width: 14px; height: 14px; fill: currentColor; }
+
+  /* ---------- Rodapé ---------- */
+  footer{
+    background: var(--azul);
+    color: #C8D0E4;
+    padding: 40px 24px 26px;
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+  }
+  footer .faixa-ouro{ position: absolute; top: 0; left: 0; right: 0; }
+  footer .brasao-rodape{ width: 46px; height: 46px; margin: 0 auto 14px; opacity: 0.9; }
+  footer p{ font-size: 0.85rem; margin: 4px 0; }
+  footer strong{ color: #fff; }
+  footer .rodape-fino{ font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; margin-top: 14px; opacity: 0.65; }
+</style>
 </head>
 <body>
-  <div class="barra-superior">Corpo de Bombeiros Militar de Pernambuco · CBMPE · 1º Batalhão de Bombeiros Militar · Comando do Interior</div>
 
-  <header>
-    <div class="cabecalho-conteudo">
-      <div class="logo-wrapper">
-        <img src="./CAT-SERTAO-SEM-FUNDO.png" alt="Logotipo do CAT Sertão" class="logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';" />
-        <div class="logo-fallback" id="logo-fallback">CAT<br>SERTÃO</div>
-      </div>
-      <div class="titulo-setor">
-        <h1>CAT Sertão</h1>
-        <p>Centro de Atividades Técnicas do Sertão</p>
+<div class="barra-superior">Corpo de Bombeiros Militar de Pernambuco · CBMPE · 1º Batalhão de Bombeiros Militar · Comando do Interior</div>
+
+<header>
+  <div class="cabecalho-conteudo">
+    <div class="logo-selo">
+      <img src="./CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão" />
+    </div>
+    <div class="titulo-setor">
+      <p class="eyebrow">Corpo de Bombeiros Militar de Pernambuco</p>
+      <h1>CAT Sertão</h1>
+    </div>
+  </div>
+  <div class="faixa-ouro"></div>
+</header>
+
+<nav>
+  <div class="nav-conteudo">
+    <a href="#inicio">Início</a>
+    <a href="#chat">Assistente Virtual</a>
+    <a href="#satecs">SATECs</a>
+    <a href="#contato">Contatos</a>
+  </div>
+</nav>
+
+<section class="hero" id="inicio">
+  <div class="hero-conteudo">
+    <div class="anel-selo" aria-hidden="true">
+      <svg class="anel" viewBox="0 0 240 240">
+        <defs>
+          <path id="curvaTexto" d="M 120,120 m -98,0 a 98,98 0 1,1 196,0 a 98,98 0 1,1 -196,0" />
+        </defs>
+        <text font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="3" fill="#F5D479">
+          <textPath href="#curvaTexto" startOffset="0%">
+            CORPO DE BOMBEIROS MILITAR DE PERNAMBUCO · SERTÃO PERNAMBUCANO ·
+          </textPath>
+        </text>
+      </svg>
+      <div class="medalhao">
+        <img src="./CAT-SERTAO-SEM-FUNDO.png" alt="" />
       </div>
     </div>
-    <div class="faixa-amarela"></div>
-  </header>
-
-  <nav>
-    <div class="nav-conteudo">
-      <a href="#inicio">Início</a>
-      <a href="#chat">Assistente Virtual</a>
-      <a href="#satecs">SATECs</a>
-      <a href="#contato">Contatos</a>
-    </div>
-  </nav>
-
-  <main>
-    <section class="apresentacao" id="inicio">
-      <h2>Bem-vindo ao CAT Sertão</h2>
+    <div class="hero-texto">
+      <p class="eyebrow">Centro de Atividades Técnicas</p>
+      <h2>Guardiões técnicos do sertão pernambucano</h2>
       <p>
-        O Centro de Atividades Técnicas do Sertão (CAT Sertão) é o setor do Corpo de Bombeiros Militar de Pernambuco
-        responsável por coordenar, orientar e apoiar as atividades técnicas desenvolvidas pelas Seções de Atividades
-        Técnicas (SATECs) na região do Sertão pernambucano. Utilize nosso assistente virtual abaixo para tirar dúvidas
-        sobre procedimentos, vistorias, projetos, prevenção e atendimentos técnicos.
+        Coordenamos, orientamos e apoiamos as Seções de Atividades Técnicas (SATECs) da região —
+        vistorias, projetos de segurança contra incêndio e prevenção, do Sertão ao São Francisco.
       </p>
-    </section>
+      <a class="cta-hero" href="#chat">
+        Falar com o assistente virtual
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
 
-    <section class="chat-area" id="chat" aria-label="Assistente virtual do CAT Sertão">
-      <div class="chat-cabecalho">
-        <div class="avatar">CAT</div>
-        <div class="info">
-          <h3>Assistente Virtual CAT Sertão</h3>
-          <span><span class="ponto-status"></span> Online · Responde em tempo real</span>
-        </div>
-      </div>
+<main>
 
-      <div class="chat-corpo" id="chat-corpo">
-        <div class="mensagem-boas-vindas">
-          <strong>Olá! Seja bem-vindo ao CAT Sertão.</strong>
-          Sou o assistente virtual do Centro de Atividades Técnicas do Sertão do CBMPE. Posso ajudá-lo com dúvidas sobre
-          vistorias técnicas, projetos de segurança contra incêndio, prevenção e procedimentos das SATECs da região.
-          Como posso ajudá-lo hoje?
-        </div>
-        <div class="mensagem-ajudante">
-          Você pode, por exemplo, perguntar sobre: documentos para vistoria, endereço das SATECs, prazos de análise de
-          projetos ou contatos por WhatsApp.
-        </div>
-      </div>
+  <section class="bloco apresentacao">
+    <p class="eyebrow">Bem-vindo</p>
+    <h2>Um só ponto de apoio para as SATECs do Sertão</h2>
+    <p>
+      O CAT Sertão é o setor do CBMPE responsável por orientar as Seções de Atividades Técnicas
+      da região. Utilize o assistente virtual abaixo para tirar dúvidas sobre procedimentos,
+      vistorias, projetos e atendimentos técnicos.
+    </p>
+  </section>
 
-      <div class="chat-rodape">
-        <input type="text" id="chat-input" placeholder="Digite sua mensagem..." autocomplete="off" aria-label="Mensagem" />
-        <button id="chat-enviar" aria-label="Enviar mensagem">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-        </button>
-      </div>
-      <div class="chat-aviso">
-        Assistente conectado ao agente de inteligência artificial do n8n. As respostas são geradas automaticamente e
-        têm caráter informativo.
-      </div>
-    </section>
+  <div class="divisor" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 2c-1.5 3-4 4.5-4 8a4 4 0 008 0c0-1-.3-1.8-.8-2.6.1 1-.3 1.8-1 2.2.4-2-.5-4.4-2.2-7.6z"/></svg>
+  </div>
 
-    <aside class="contatos" id="satecs">
-      <div class="contatos-titulo">
-        <h2>SATECs do Sertão</h2>
-        <p>Seções de Atividades Técnicas vinculadas ao CAT Sertão</p>
+  <section class="bloco chat-area" id="chat" aria-label="Assistente virtual do CAT Sertão">
+    <div class="chat-cabecalho">
+      <div class="avatar">CAT</div>
+      <div class="info">
+        <h3>Assistente Virtual CAT Sertão</h3>
+        <span><span class="ponto-status"></span> Online · Responde em tempo real</span>
       </div>
+    </div>
 
-      <div class="aviso-whats">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.38A9.93 9.93 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm1.07-5.69l-.9.92c-.72.72-1.17 1.31-1.17 2.77h-2v-.5c0-1.04.43-1.98 1.17-2.73l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.21z"/></svg>
-        <span><strong>Atenção:</strong> os telefones listados abaixo são exclusivamente para contato via <strong>WhatsApp</strong>. Não realizamos atendimento telefônico convencional por estes números.</span>
+    <div class="chat-corpo" id="chat-corpo">
+      <div class="mensagem-boas-vindas">
+        <strong>Olá! Seja bem-vindo ao CAT Sertão.</strong>
+        Sou o assistente virtual do Centro de Atividades Técnicas do Sertão do CBMPE. Posso ajudá-lo com dúvidas sobre
+        vistorias técnicas, projetos de segurança contra incêndio, prevenção e procedimentos das SATECs da região.
+        Como posso ajudá-lo hoje?
       </div>
+      <div class="mensagem-ajudante">
+        Você pode, por exemplo, perguntar sobre: documentos para vistoria, endereço das SATECs, prazos de análise de
+        projetos ou contatos por WhatsApp.
+      </div>
+    </div>
+
+    <div class="chat-rodape">
+      <input type="text" id="chat-input" placeholder="Digite sua mensagem..." autocomplete="off" aria-label="Mensagem" />
+      <button id="chat-enviar" aria-label="Enviar mensagem">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+      </button>
+    </div>
+    <div class="chat-aviso">
+      Assistente conectado ao agente de inteligência artificial do n8n · Respostas automáticas e informativas
+    </div>
+  </section>
+
+  <div class="divisor" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 2c-1.5 3-4 4.5-4 8a4 4 0 008 0c0-1-.3-1.8-.8-2.6.1 1-.3 1.8-1 2.2.4-2-.5-4.4-2.2-7.6z"/></svg>
+  </div>
+
+  <section class="bloco" id="satecs">
+    <div class="contatos-titulo">
+      <p class="eyebrow">Rede regional</p>
+      <h2>SATECs do Sertão</h2>
+      <p>Seções de Atividades Técnicas vinculadas ao CAT Sertão</p>
+    </div>
+
+    <div class="aviso-whats">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.38A9.93 9.93 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm1.07-5.69l-.9.92c-.72.72-1.17 1.31-1.17 2.77h-2v-.5c0-1.04.43-1.98 1.17-2.73l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.21z"/></svg>
+      <span><strong>Atenção:</strong> os telefones listados abaixo são exclusivamente para contato via <strong>WhatsApp</strong>. Não realizamos atendimento telefônico convencional por estes números.</span>
+    </div>
+
+    <div class="grade-contatos">
 
       <div class="cartao-contato">
-        <h3>1ª SATEC - Salgueiro</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>1ª SATEC - Salgueiro</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Av. Antônio C. de Souza, s/n - Centro, Salgueiro - PE, CEP 56000-000</span>
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Cb JANAYRA</p>
@@ -659,9 +651,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>2ª SATEC - Petrolina</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>2ª SATEC - Petrolina</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Av. Clementino Coelho, 1000 - Centro, Petrolina - PE, CEP 56304-205</span>
         </div>
         <p class="responsavel"><strong>Responsáveis:</strong> Sgt GEAN e Cb D BARROS</p>
@@ -672,9 +664,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>3ª SATEC - Serra Talhada</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>3ª SATEC - Serra Talhada</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Rua Manoel Valeriano, 200 - Centro, Serra Talhada - PE, CEP 56870-000</span>
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Cb DIONÍZIO</p>
@@ -685,9 +677,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>Posto - Petrolândia</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>Posto - Petrolândia</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Av. Luís Pereira Sobrinho, s/n - Centro, Petrolândia - PE, CEP 56460-000</span>
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sd Ruan</p>
@@ -698,9 +690,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>Posto - Afogados da Ingazeira</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>Posto - Afogados da Ingazeira</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Rua Capitão Tomaz, 150 - Centro, Afogados da Ingazeira - PE, CEP 56800-000</span>
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sgt Taciana</p>
@@ -711,9 +703,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>4ª SATEC - Arcoverde</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>4ª SATEC - Arcoverde</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Av. Joaquim Nabuco, 300 - Centro, Arcoverde - PE, CEP 56500-000</span>
         </div>
         <p class="responsavel"><strong>Responsável:</strong> Sgt EMMERSON</p>
@@ -724,9 +716,9 @@
       </div>
 
       <div class="cartao-contato">
-        <h3>5ª SATEC - Araripina / Ouricuri</h3>
+        <h3><span class="selo-mini"><svg viewBox="0 0 24 24"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.3L12 15.9 6.5 18.5l1-6.3L3 7.9 9 7z"/></svg></span>5ª SATEC - Araripina / Ouricuri</h3>
         <div class="endereco">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1976D2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
           <span>Rua João Pessoa, 250 - Centro, Ouricuri - PE, CEP 56200-000 (atende também Araripina)</span>
         </div>
         <p class="responsavel"><strong>Contato:</strong> WhatsApp da 2ª SATEC (Petrolina)</p>
@@ -735,97 +727,126 @@
           (87) 9.8835-2828
         </a>
       </div>
-    </aside>
-  </main>
 
-  <footer id="contato">
-    <div class="faixa-amarela"></div>
-    <p><strong>Centro de Atividades Técnicas do Sertão · CAT Sertão</strong></p>
-    <p>Corpo de Bombeiros Militar de Pernambuco · CBMPE</p>
-    <p>Os telefones das SATECs são exclusivos para atendimento via WhatsApp.</p>
-    <p>&copy; <span id="ano-atual"></span> CAT Sertão · CBMPE. Todos os direitos reservados.</p>
-  </footer>
+    </div>
+  </section>
 
-  <!-- Integração do widget de chat do n8n (@n8n/chat) -->
-  <script>
-    window.N8N_CHAT_CONFIG = {
-      webhookUrl: 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat',
-      mode: 'window',
-      chatInputKey: 'chatInput',
-      chatSessionKey: 'sessionId',
-      metadata: {
-        origem: 'site-cat-sertao',
-        setor: 'CAT Sertão',
-        organizacao: 'CBMPE'
-      },
-      theme: {
-        primaryColor: '#D32F2F',
-        secondaryColor: '#1976D2',
-        accentColor: '#FBC02D',
-        fontFamily: 'Roboto, Arial, Helvetica, sans-serif'
-      },
-      i18n: {
-        title: 'Assistente CAT Sertão',
-        subtitle: 'Online · Responde em tempo real',
-        footer: 'Atendimento informativo automatizado',
-        getStarted: 'Iniciar conversa',
-        inputPlaceholder: 'Digite sua mensagem...',
-        closeButton: 'Fechar'
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/index.umd.js"></script>
+</main>
 
-  <!-- Script local: ano dinâmico e envio de mensagens para o widget do n8n -->
-  <script>
-    (function () {
-      const ano = document.getElementById('ano-atual');
-      if (ano) ano.textContent = new Date().getFullYear();
+<footer id="contato">
+  <div class="faixa-ouro"></div>
+  <img class="brasao-rodape" src="./CAT-SERTAO-SEM-FUNDO.png" alt="" aria-hidden="true" />
+  <p><strong>Centro de Atividades Técnicas do Sertão · CAT Sertão</strong></p>
+  <p>Corpo de Bombeiros Militar de Pernambuco · CBMPE</p>
+  <p>Os telefones das SATECs são exclusivos para atendimento via WhatsApp.</p>
+  <p class="rodape-fino">© <span id="ano-atual"></span> CAT SERTÃO · CBMPE · TODOS OS DIREITOS RESERVADOS</p>
+</footer>
 
-      const input = document.getElementById('chat-input');
-      const btn = document.getElementById('chat-enviar');
-      const corpo = document.getElementById('chat-corpo');
+<script>
+(function () {
+  const ano = document.getElementById('ano-atual');
+  if (ano) ano.textContent = new Date().getFullYear();
 
-      function rolarParaBaixo() {
-        if (corpo) corpo.scrollTop = corpo.scrollHeight;
-      }
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-enviar');
+  const corpo = document.getElementById('chat-corpo');
 
-      function enviarMensagem() {
-        const texto = (input && input.value || '').trim();
-        if (!texto) return;
+  const WEBHOOK_URL = 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat';
 
-        const balao = document.createElement('div');
-        balao.className = 'mensagem-usuario';
-        balao.textContent = texto;
-        corpo.appendChild(balao);
+  function rolarParaBaixo() {
+    if (corpo) corpo.scrollTop = corpo.scrollHeight;
+  }
 
-        input.value = '';
-        rolarParaBaixo();
+  function getSessionId() {
+    let id = localStorage.getItem('catsertao_session_id');
+    if (!id) {
+      id = (crypto.randomUUID ? crypto.randomUUID() : 'sess-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+      localStorage.setItem('catsertao_session_id', id);
+    }
+    return id;
+  }
 
-        // Encaminha a mensagem ao agente do n8n quando o widget estiver disponível
-        try {
-          if (window.N8NChat && typeof window.N8NChat.sendMessage === 'function') {
-            window.N8NChat.sendMessage(texto);
-          } else if (window.n8nChat && typeof window.n8nChat.sendMessage === 'function') {
-            window.n8nChat.sendMessage(texto);
+  function mostrarDigitando() {
+    const digitando = document.createElement('div');
+    digitando.className = 'mensagem-digitando';
+    digitando.id = 'digitando-indicador';
+    digitando.innerHTML = '<span></span><span></span><span></span>';
+    corpo.appendChild(digitando);
+    rolarParaBaixo();
+  }
+
+  function removerDigitando() {
+    const digitando = document.getElementById('digitando-indicador');
+    if (digitando) digitando.remove();
+  }
+
+  async function enviarMensagem() {
+    const texto = (input && input.value || '').trim();
+    if (!texto) return;
+
+    const balao = document.createElement('div');
+    balao.className = 'mensagem-usuario';
+    balao.textContent = texto;
+    corpo.appendChild(balao);
+
+    input.value = '';
+    btn.disabled = true;
+    rolarParaBaixo();
+    mostrarDigitando();
+
+    try {
+      const resposta = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'sendMessage',
+          sessionId: getSessionId(),
+          chatInput: texto,
+          metadata: {
+            origem: 'site-cat-sertao',
+            setor: 'CAT Sertão',
+            organizacao: 'CBMPE'
           }
-        } catch (erro) {
-          console.warn('Não foi possível encaminhar a mensagem ao widget do n8n:', erro);
-        }
-      }
+        })
+      });
 
-      if (btn) btn.addEventListener('click', enviarMensagem);
-      if (input) {
-        input.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            enviarMensagem();
-          }
-        });
-      }
+      if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
 
+      const dados = await resposta.json();
+      const textoResposta = dados.output || dados.text || dados.chatInput || 'Desculpe, não consegui gerar uma resposta agora.';
+
+      removerDigitando();
+      const balaoResposta = document.createElement('div');
+      balaoResposta.className = 'mensagem-ajudante';
+      balaoResposta.textContent = textoResposta;
+      corpo.appendChild(balaoResposta);
       rolarParaBaixo();
-    })();
-  </script>
+    } catch (erro) {
+      console.error('Erro ao falar com o assistente:', erro);
+      removerDigitando();
+      const balaoErro = document.createElement('div');
+      balaoErro.className = 'mensagem-ajudante';
+      balaoErro.textContent = 'Não foi possível conectar ao assistente no momento. Tente novamente em instantes ou fale com uma SATEC pelo WhatsApp.';
+      corpo.appendChild(balaoErro);
+      rolarParaBaixo();
+    } finally {
+      btn.disabled = false;
+      input.focus();
+    }
+  }
+
+  if (btn) btn.addEventListener('click', enviarMensagem);
+  if (input) {
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        enviarMensagem();
+      }
+    });
+  }
+
+  rolarParaBaixo();
+})();
+</script>
 </body>
 </html>
