@@ -1017,6 +1017,16 @@
 
   const WEBHOOK_URL = 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat';
 
+  // Gerar um ID de sessão único para o usuário (persiste durante a sessão no navegador)
+  function getSessionId() {
+    let sessionId = sessionStorage.getItem('cat_session_id');
+    if (!sessionId) {
+      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem('cat_session_id', sessionId);
+    }
+    return sessionId;
+  }
+
   function rolarParaBaixo() {
     if (corpo) corpo.scrollTop = corpo.scrollHeight;
   }
@@ -1061,23 +1071,42 @@
     mostrar_digitacao();
 
     try {
+      const sessionId = getSessionId();
+      
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_input: texto })
+        body: JSON.stringify({ 
+          chat_input: texto,
+          sessionId: sessionId
+        })
       });
 
       remover_digitacao();
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Erro do servidor (status ' + response.status + '):', errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
-      const respostaTexto = data?.response?.generations?.[0]?.[0]?.text || 'Desculpe, não consegui processar sua mensagem.';
+      console.log('Resposta:', data);
+
+      // Tenta diferentes possíveis locais da resposta
+      const respostaTexto = 
+        data?.output || 
+        data?.response || 
+        data?.message || 
+        data?.text ||
+        data?.response?.generations?.[0]?.[0]?.text ||
+        'Resposta recebida';
+
       criar_bolha_assistente(respostaTexto);
     } catch (error) {
       remover_digitacao();
       console.error('Erro:', error);
-      criar_bolha_assistente('⚠️ Erro ao conectar com o servidor. Tente novamente.');
+      criar_bolha_assistente('⚠️ Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.');
     } finally {
       btn.disabled = false;
       input.focus();
