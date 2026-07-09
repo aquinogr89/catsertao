@@ -302,38 +302,246 @@ footer .rodape-fino{font-family:var(--mono);font-size:.65rem;letter-spacing:.06e
     rolarParaBaixo();
   }
 
+(function () {
+  const ano = document.getElementById('ano-atual');
+  if (ano) ano.textContent = new Date().getFullYear();
+
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-enviar');
+  const corpo = document.getElementById('chat-corpo');
+
+  const WEBHOOK_URL = 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat';
+
+  // --- Configurações de otimização ---
+  const TIMEOUT_MS = 5000;
+  const MAX_TENTATIVAS = 3;
+  const RATE_LIMIT_JANELA_MS = 60000; // 1 minuto
+  const RATE_LIMIT_MAX_REQUISICOES = 5;
+
+  // --- Controle de rate limiting ---
+  const timestampsRequisicoes = [];
+
+  function verificarRateLimit() {
+    const agora = Date.now();
+    while (timestampsRequisicoes.length > 0 && (agora - timestampsRequisicoes[0]) > RATE_LIMIT_JANELA_MS) {
+      timestampsRequisicoes.shift();
+    }
+    if (timestampsRequisicoes.length >= RATE_LIMIT_MAX_REQUISICOES) {
+      const tempoRestante = Math.ceil((RATE_LIMIT_JANELA_MS - (agora - timestampsRequisicoes[0])) / 1000);
+      return { permitido: false, tempoRestante };
+    }
+    timestampsRequisicoes.push(agora);
+    return { permitido: true, tempoRestante: 0 };
+  }
+
+  // --- Feedback visual de status ---
+  function mostrarStatus(mensagem, tipo) {
+    let barra = document.getElementById('chat-status-bar');
+    if (!barra) {
+      barra = document.createElement('div');
+      barra.id = 'chat-status-bar';
+      barra.style.cssText = 'padding:8px 14px;font-family:var(--mono);font-size:.7rem;text-align:center;border-top:1px solid var(--linha);background:#fff;transition:opacity .3s;';
+      const rodape = document.querySelector('.chat-rodape');
+      if (rodape && rodape.parentNode) {
+        rodape.parentNode.insertBefore(barra, rodape.nextSibling);
+      }
+    }
+    const cores = {
+      info: 'color:var(--azul-claro);',
+      aviso: 'color:var(--ouro);',
+      erro: 'color:var(--vermelho);',
+      sucesso: 'color:#2E7D32;'
+    };
+    barra.style.cssText += cores[tipo] || cores.info;
+    barra.textContent = mensagem;
+    barra.style.opacity = '1';
+    clearTimeout(barra._timeoutId);
+    barra._timeoutId = setTimeout(function () {
+      barra.style.opacity = '0';
+    }, 4000);
+  }
+
+  function atualizarBotaoEnviar(estado) {
+    if (!btn) return;
+    if (estado === 'enviando') {
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      btn.style.cursor = 'wait';
+    } else if (estado === 'tentando') {
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      btn.style.cursor = 'wait';
+    } else {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    }
+  }
+
+  function getSessionId() {
+    let sessionId = sessionStorage.getItem('cat_session_id');
+    if (!sessionId) {
+      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem('cat_session_id', sessionId);
+    }
+    return sessionId;
+  }
+
+  function rolarParaBaixo() { if (corpo) corpo.scrollTop = corpo.scrollHeight; }
+
+  function criar_bolha_usuario(texto) {
+    const div = document.createElement('div');
+    div.className = 'mensagem-usuario';
+    div.textContent = texto;
+    corpo.appendChild(div);
+    rolarParaBaixo();
+  }
+
+  function mostrar_digitacao() {
+    const div = document.createElement('div');
+    div.className = 'mensagem-digitando';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    div.id = 'digitando';
+    corpo.appendChild(div);
+    rolarParaBaixo();
+  }
+
+  function remover_digitacao() {
+    const digitando = document.getElementById('digitando');
+    if (digitando) digitando.remove();
+  }
+
+  function criar_bolha_assistente(texto) {
+    const div = document.createElement('div');
+    div.className = 'mensagem-ajudante';
+    div.innerHTML = (window.marked ? marked.parse(texto) : texto);
+    corpo.appendChild(div);
+    rolarParaBaixo();
+  }
+
+  // --- Função de fetch com timeout via AbortController ---
+  function fetchComTimeout(url, opcoes, timeoutMs) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(function () { controller.abort(); }, timeoutMs);
+    return fetch(url, Object.assign({}, opcoes, { signal: controller.signal }))
+      .then(function (response) {
+        clearTimeout(timeoutId);
+        return response;
+      })
+      .catch(function (error) {
+        clearTimeout(timeoutId);
+        throw error;
+      });
+  }
+
+  // --- Função de sleep para backoff ---
+  function sleep(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  }
+
+  // --- Versão otimizada de enviar_mensagem ---
   async function enviar_mensagem() {
     const texto = input.value.trim();
     if (!texto) return;
+
+    // Rate limiting
+    const verificacao = verificarRateLimit();
+    if (!verificacao.permitido) {
+      mostrarStatus('Muitas mensagens enviadas. Aguarde ' + verificacao.tempoRestante + 's para tentar novamente.', 'aviso');
+      criar_bolha_assistente('⏳ Você enviou muitas mensagens em pouco tempo. Aguarde cerca de ' + verificacao.tempoRestante + ' segundos e tente novamente.');
+      return;
+    }
+
     input.value = '';
-    btn.disabled = true;
+    atualizarBotaoEnviar('enviando');
     criar_bolha_usuario(texto);
     mostrar_digitacao();
-    try {
-      const sessionId = getSessionId();
-      const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatInput: texto, sessionId: sessionId })
-      });
-      remover_digitacao();
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Erro do servidor (' + response.status + '):', errorText);
-        throw new Error('HTTP ' + response.status);
+
+    const sessionId = getSessionId();
+    const payload = JSON.stringify({ chatInput: texto, sessionId: sessionId });
+    const opcoesFetch = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    };
+
+    let ultimaMensagemErro = null;
+
+    for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+      try {
+        if (tentativa > 1) {
+          const backoffMs = Math.pow(2, tentativa - 1) * 1000; // 2s, 4s
+          mostrarStatus('Reconectando... tentativa ' + tentativa + ' de ' + MAX_TENTATIVAS + ' em ' + (backoffMs / 1000) + 's', 'info');
+          atualizarBotaoEnviar('tentando');
+          await sleep(backoffMs);
+        } else {
+          mostrarStatus('Enviando mensagem...', 'info');
+        }
+
+        const response = await fetchComTimeout(WEBHOOK_URL, opcoesFetch, TIMEOUT_MS);
+
+        remover_digitacao();
+
+        if (!response.ok) {
+          const errorText = await response.text().catch(function () { return ''; });
+          console.error('Erro do servidor (' + response.status + '):', errorText);
+          ultimaMensagemErro = 'HTTP ' + response.status;
+          if (tentativa < MAX_TENTATIVAS) {
+            mostrarStatus('Erro do servidor (' + response.status + '). Tentando novamente...', 'erro');
+            continue;
+          }
+          throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+        const respostaTexto =
+          data?.output || data?.response || data?.message || data?.text ||
+          data?.response?.generations?.[0]?.[0]?.text || 'Resposta recebida';
+        criar_bolha_assistente(respostaTexto);
+        mostrarStatus('Mensagem enviada com sucesso.', 'sucesso');
+        atualizarBotaoEnviar('ativo');
+        return;
+
+      } catch (error) {
+        remover_digitacao();
+
+        if (error.name === 'AbortError') {
+          console.error('Timeout na tentativa ' + tentativa + ': requisição excedeu ' + TIMEOUT_MS + 'ms');
+          ultimaMensagemErro = 'Tempo limite excedido';
+          if (tentativa < MAX_TENTATIVAS) {
+            mostrarStatus('Tempo limite excedido. Tentando novamente...', 'erro');
+            continue;
+          }
+        } else if (error instanceof TypeError) {
+          console.error('Erro de rede na tentativa ' + tentativa + ':', error);
+          ultimaMensagemErro = 'Sem conexão com o servidor';
+          if (tentativa < MAX_TENTATIVAS) {
+            mostrarStatus('Sem conexão. Tentando novamente...', 'erro');
+            continue;
+          }
+        } else {
+          console.error('Erro na tentativa ' + tentativa + ':', error);
+          ultimaMensagemErro = error.message || 'Erro desconhecido';
+          if (tentativa < MAX_TENTATIVAS) {
+            mostrarStatus('Erro: ' + ultimaMensagemErro + '. Tentando novamente...', 'erro');
+            continue;
+          }
+        }
+
+        // Todas as tentativas falharam
+        let mensagemUsuario = '⚠️ Não foi possível conectar com o servidor após ' + MAX_TENTATIVAS + ' tentativas.';
+        if (ultimaMensagemErro === 'Tempo limite excedido') {
+          mensagemUsuario = '⚠️ O servidor demorou muito para responder após ' + MAX_TENTATIVAS + ' tentativas. Verifique sua conexão e tente novamente em instantes.';
+        } else if (ultimaMensagemErro === 'Sem conexão com o servidor') {
+          mensagemUsuario = '⚠️ Sem conexão com o servidor. Verifique sua internet e tente novamente.';
+        } else if (ultimaMensagemErro && ultimaMensagemErro.indexOf('HTTP') === 0) {
+          mensagemUsuario = '⚠️ Erro do servidor (' + ultimaMensagemErro + '). Tente novamente em alguns instantes.';
+        }
+        criar_bolha_assistente(mensagemUsuario);
+        mostrarStatus('Falha: ' + ultimaMensagemErro, 'erro');
+        atualizarBotaoEnviar('ativo');
+        return;
       }
-      const data = await response.json();
-      const respostaTexto =
-        data?.output || data?.response || data?.message || data?.text ||
-        data?.response?.generations?.[0]?.[0]?.text || 'Resposta recebida';
-      criar_bolha_assistente(respostaTexto);
-    } catch (error) {
-      remover_digitacao();
-      console.error('Erro:', error);
-      criar_bolha_assistente('⚠️ Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.');
-    } finally {
-      btn.disabled = false;
-      input.focus();
     }
   }
 
@@ -346,6 +554,7 @@ footer .rodape-fino{font-family:var(--mono);font-size:.65rem;letter-spacing:.06e
   input.addEventListener('focus', () => {
     setTimeout(() => input.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
   });
+})();
 })();
 </script>
 </body>
