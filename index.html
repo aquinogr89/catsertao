@@ -302,401 +302,41 @@ footer .rodape-fino{font-family:var(--mono);font-size:.65rem;letter-spacing:.06e
     rolarParaBaixo();
   }
 
-(function () {
-  const ano = document.getElementById('ano-atual');
-  if (ano) ano.textContent = new Date().getFullYear();
-
-  const input = document.getElementById('chat-input');
-  const btn = document.getElementById('chat-enviar');
-  const corpo = document.getElementById('chat-corpo');
-
-  const WEBHOOK_URL = 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat';
-
-  // --- Configurações de otimização ---
-  const TIMEOUT_MS = 5000;
-  const MAX_TENTATIVAS = 3;
-  const RATE_LIMIT_JANELA_MS = 60000; // 1 minuto
-  const RATE_LIMIT_MAX_REQUISICOES = 5;
-
-  // --- Controle de rate limiting ---
-  const timestampsRequisicoes = [];
-
-  function verificarRateLimit() {
-    const agora = Date.now();
-    while (timestampsRequisicoes.length > 0 && (agora - timestampsRequisicoes[0]) > RATE_LIMIT_JANELA_MS) {
-      timestampsRequisicoes.shift();
-    }
-    if (timestampsRequisicoes.length >= RATE_LIMIT_MAX_REQUISICOES) {
-      const tempoRestante = Math.ceil((RATE_LIMIT_JANELA_MS - (agora - timestampsRequisicoes[0])) / 1000);
-      return { permitido: false, tempoRestante };
-    }
-    timestampsRequisicoes.push(agora);
-    return { permitido: true, tempoRestante: 0 };
-  }
-
-  // --- Feedback visual de status ---
-  function mostrarStatus(mensagem, tipo) {
-    let barra = document.getElementById('chat-status-bar');
-    if (!barra) {
-      barra = document.createElement('div');
-      barra.id = 'chat-status-bar';
-      barra.style.cssText = 'padding:8px 14px;font-family:var(--mono);font-size:.7rem;text-align:center;border-top:1px solid var(--linha);background:#fff;transition:opacity .3s;';
-      const rodape = document.querySelector('.chat-rodape');
-      if (rodape && rodape.parentNode) {
-        rodape.parentNode.insertBefore(barra, rodape.nextSibling);
+  async function enviar_mensagem() {
+    const texto = input.value.trim();
+    if (!texto) return;
+    input.value = '';
+    btn.disabled = true;
+    criar_bolha_usuario(texto);
+    mostrar_digitacao();
+    try {
+      const sessionId = getSessionId();
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatInput: texto, sessionId: sessionId })
+      });
+      remover_digitacao();
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Erro do servidor (' + response.status + '):', errorText);
+        throw new Error('HTTP ' + response.status);
       }
-    }
-    const cores = {
-      info: 'color:var(--azul-claro);',
-      aviso: 'color:var(--ouro);',
-      erro: 'color:var(--vermelho);',
-      sucesso: 'color:#2E7D32;'
-    };
-    barra.style.cssText += cores[tipo] || cores.info;
-    barra.textContent = mensagem;
-    barra.style.opacity = '1';
-    clearTimeout(barra._timeoutId);
-    barra._timeoutId = setTimeout(function () {
-      barra.style.opacity = '0';
-    }, 4000);
-  }
-
-  function atualizarBotaoEnviar(estado) {
-    if (!btn) return;
-    if (estado === 'enviando') {
-      btn.disabled = true;
-      btn.style.opacity = '0.6';
-      btn.style.cursor = 'wait';
-    } else if (estado === 'tentando') {
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
-      btn.style.cursor = 'wait';
-    } else {
+      const data = await response.json();
+      const respostaTexto =
+        data?.output || data?.response || data?.message || data?.text ||
+        data?.response?.generations?.[0]?.[0]?.text || 'Resposta recebida';
+      criar_bolha_assistente(respostaTexto);
+    } catch (error) {
+      remover_digitacao();
+      console.error('Erro:', error);
+      criar_bolha_assistente('⚠️ Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.');
+    } finally {
       btn.disabled = false;
-      btn.style.opacity = '1';
-      btn.style.cursor = 'pointer';
+      input.focus();
     }
   }
 
-  function getSessionId() {
-    let sessionId = sessionStorage.getItem('cat_session_id');
-    if (!sessionId) {
-      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-      sessionStorage.setItem('cat_session_id', sessionId);
-    }
-    return sessionId;
-  }
-
-  function rolarParaBaixo() { if (corpo) corpo.scrollTop = corpo.scrollHeight; }
-
-  function criar_bolha_usuario(texto) {
-    const div = document.createElement('div');
-    div.className = 'mensagem-usuario';
-    div.textContent = texto;
-    corpo.appendChild(div);
-    rolarParaBaixo();
-  }
-
-  function mostrar_digitacao() {
-    const div = document.createElement('div');
-    div.className = 'mensagem-digitando';
-    div.innerHTML = '<span></span><span></span><span></span>';
-    div.id = 'digitando';
-    corpo.appendChild(div);
-    rolarParaBaixo();
-  }
-
-  function remover_digitacao() {
-    const digitando = document.getElementById('digitando');
-    if (digitando) digitando.remove();
-  }
-
-  function criar_bolha_assistente(texto) {
-    const div = document.createElement('div');
-    div.className = 'mensagem-ajudante';
-    div.innerHTML = (window.marked ? marked.parse(texto) : texto);
-    corpo.appendChild(div);
-    rolarParaBaixo();
-  }
-
-  // --- Função de fetch com timeout via AbortController ---
-  function fetchComTimeout(url, opcoes, timeoutMs) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(function () { controller.abort(); }, timeoutMs);
-    return fetch(url, Object.assign({}, opcoes, { signal: controller.signal }))
-      .then(function (response) {
-        clearTimeout(timeoutId);
-        return response;
-      })
-      .catch(function (error) {
-        clearTimeout(timeoutId);
-        throw error;
-      });
-  }
-
-  // --- Função de sleep para backoff ---
-  function sleep(ms) {
-    return new Promise(function (resolve) { setTimeout(resolve, ms); });
-  }
-
- /*
- * enviar_mensagem()
- * Função standalone para o chat do CAT Sertão.
- * - Timeout de 5s por tentativa
- * - Retry até 3x em caso de falha
- * - Rate limiting (mínimo 1.5s entre envios)
- * - Trata respostas JSON, texto puro e HTML
- * - Usa os elementos e funções existentes da página
- */
-function enviar_mensagem() {
-  // --- Configurações ----------------------------------------------------------
-  const WEBHOOK_URL = "https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat";
-  const TIMEOUT_MS = 5000;
-  const MAX_RETRIES = 3;
-  const RATE_LIMIT_MS = 1500;
-
-  // --- Estado interno de rate limiting ---------------------------------------
-  if (!enviar_mensagem._ultimoEnvio) {
-    enviar_mensagem._ultimoEnvio = 0;
-  }
-  if (enviar_mensagem._enviando === undefined) {
-    enviar_mensagem._enviando = false;
-  }
-
-  // --- Helpers de DOM ---------------------------------------------------------
-  const getInput = () => document.getElementById("chat-input");
-  const getCorpo = () => document.getElementById("chat-corpo");
-  const getBotao = () => document.getElementById("chat-enviar");
-
-  // --- Helpers de UI ----------------------------------------------------------
-  function mostrarErroNoChat(mensagem) {
-    console.error("[enviar_mensagem] Erro:", mensagem);
-    const corpo = getCorpo();
-    if (!corpo) return;
-    const divErro = document.createElement("div");
-    divErro.className = "chat-erro";
-    divErro.style.cssText = "color:#b00020;background:#fde8e8;padding:8px 12px;border-radius:8px;margin:8px 0;font-size:14px;";
-    divErro.textContent = "⚠️ " + mensagem;
-    corpo.appendChild(divErro);
-    if (typeof rolarParaBaixo === "function") {
-      rolarParaBaixo();
-    }
-  }
-
-  function setBloqueado(bloqueado) {
-    const botao = getBotao();
-    const input = getInput();
-    if (botao) botao.disabled = bloqueado;
-    if (input) input.disabled = bloqueado;
-    if (!bloqueado && input) input.focus();
-  }
-
-  // --- Helper de fetch com timeout -------------------------------------------
-  function fetchComTimeout(url, opcoes, timeoutMs) {
-    return new Promise((resolve, reject) => {
-      const controller = new AbortController();
-      const timer = setTimeout(() => {
-        controller.abort();
-        reject(new Error("Tempo limite de " + (timeoutMs / 1000) + "s atingido."));
-      }, timeoutMs);
-
-      opcoes = opcoes || {};
-      opcoes.signal = controller.signal;
-
-      fetch(url, opcoes)
-        .then((resp) => {
-          clearTimeout(timer);
-          resolve(resp);
-        })
-        .catch((err) => {
-          clearTimeout(timer);
-          reject(err);
-        });
-    });
-  }
-
-  // --- Normalização da resposta ----------------------------------------------
-  function normalizarResposta(texto, contentType) {
-    console.log("[enviar_mensagem] Resposta bruta:", texto);
-    console.log("[enviar_mensagem] Content-Type:", contentType);
-
-    // Tenta interpretar como JSON
-    if (contentType && contentType.indexOf("application/json") !== -1) {
-      try {
-        const dados = JSON.parse(texto);
-        // Formatos comuns: { "resposta": "..." }, { "message": "..." }, { "text": "..." },
-        // { "output": "..." }, [ { "resposta": "..." } ], ou string direta
-        let conteudo = null;
-        if (typeof dados === "string") {
-          conteudo = dados;
-        } else if (Array.isArray(dados) && dados.length > 0) {
-          conteudo = dados[0].resposta || dados[0].message || dados[0].text || dados[0].output || null;
-        } else if (dados && typeof dados === "object") {
-          conteudo = dados.resposta || dados.message || dados.text || dados.output || dados.reply || null;
-        }
-        if (conteudo && typeof conteudo === "string") {
-          return conteudo;
-        }
-        // Se não encontrou campo conhecido, retorna JSON formatado
-        return "```json\n" + JSON.stringify(dados, null, 2) + "\n```";
-      } catch (e) {
-        console.warn("[enviar_mensagem] Falha ao parsear JSON, usando texto puro:", e);
-        return texto;
-      }
-    }
-
-    // HTML
-    if (contentType && contentType.indexOf("text/html") !== -1) {
-      return texto;
-    }
-
-    // Texto puro (padrão)
-    return texto;
-  }
-
-  // --- Início da execução ----------------------------------------------------
-  console.log("[enviar_mensagem] Iniciando envio de mensagem.");
-
-  // Rate limiting
-  const agora = Date.now();
-  const diff = agora - enviar_mensagem._ultimoEnvio;
-  if (diff < RATE_LIMIT_MS) {
-    const espera = RATE_LIMIT_MS - diff;
-    console.log("[enviar_mensagem] Rate limit: aguardando " + espera + "ms antes de enviar.");
-    mostrarErroNoChat("Aguarde alguns instantes antes de enviar novamente.");
-    return;
-  }
-
-  // Evita envios concorrentes
-  if (enviar_mensagem._enviando) {
-    console.warn("[enviar_mensagem] Já existe um envio em andamento.");
-    return;
-  }
-
-  const input = getInput();
-  const corpo = getCorpo();
-
-  if (!input) {
-    console.error("[enviar_mensagem] Elemento #chat-input não encontrado.");
-    mostrarErroNoChat("Campo de entrada não encontrado (#chat-input).");
-    return;
-  }
-  if (!corpo) {
-    console.error("[enviar_mensagem] Elemento #chat-corpo não encontrado.");
-    mostrarErroNoChat("Corpo do chat não encontrado (#chat-corpo).");
-    return;
-  }
-
-  const mensagem = (input.value || "").trim();
-  if (!mensagem) {
-    console.log("[enviar_mensagem] Mensagem vazia, nada a enviar.");
-    return;
-  }
-
-  // Valida funções auxiliares
-  const fns = ["criar_bolha_usuario", "mostrar_digitacao", "remover_digitacao", "criar_bolha_assistente", "rolarParaBaixo"];
-  for (let i = 0; i < fns.length; i++) {
-    if (typeof window[fns[i]] !== "function") {
-      console.error("[enviar_mensagem] Função ausente: " + fns[i]);
-      mostrarErroNoChat("Função necessária não encontrada: " + fns[i]);
-      return;
-    }
-  }
-
-  // Marca estado de envio
-  enviar_mensagem._enviando = true;
-  enviar_mensagem._ultimoEnvio = Date.now();
-  setBloqueado(true);
-
-  // Cria bolha do usuário
-  console.log("[enviar_mensagem] Criando bolha do usuário.");
-  criar_bolha_usuario(mensagem);
-  input.value = "";
-  if (typeof rolarParaBaixo === "function") rolarParaBaixo();
-
-  // Mostra indicador de digitação
-  console.log("[enviar_mensagem] Mostrando indicador de digitação.");
-  mostrar_digitacao();
-  if (typeof rolarParaBaixo === "function") rolarParaBaixo();
-
-  // --- Envio com retry -------------------------------------------------------
-  let tentativa = 0;
-
-  function tentarEnvio() {
-    tentativa++;
-    console.log("[enviar_mensagem] Tentativa " + tentativa + " de " + MAX_RETRIES + ".");
-
-    const opcoes = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/plain, text/html, */*"
-      },
-      body: JSON.stringify({
-        mensagem: mensagem,
-        timestamp: new Date().toISOString(),
-        origem: "cat_sertao_chat"
-      })
-    };
-
-    fetchComTimeout(WEBHOOK_URL, opcoes, TIMEOUT_MS)
-      .then(function (resp) {
-        console.log("[enviar_mensagem] Resposta HTTP " + resp.status + " na tentativa " + tentativa + ".");
-        if (!resp.ok) {
-          throw new Error("Servidor retornou HTTP " + resp.status + " (" + resp.statusText + ").");
-        }
-        const contentType = resp.headers.get("content-type") || "";
-        return resp.text().then(function (txt) {
-          return { texto: txt, contentType: contentType };
-        });
-      })
-      .then(function (resultado) {
-        const conteudo = normalizarResposta(resultado.texto, resultado.contentType);
-        console.log("[enviar_mensagem] Conteúdo normalizado:", conteudo);
-
-        // Remove indicador de digitação
-        if (typeof remover_digitacao === "function") {
-          remover_digitacao();
-        }
-
-        // Cria bolha do assistente
-        if (typeof criar_bolha_assistente === "function") {
-          criar_bolha_assistente(conteudo);
-        }
-        if (typeof rolarParaBaixo === "function") {
-          rolarParaBaixo();
-        }
-
-        // Libera UI
-        enviar_mensagem._enviando = false;
-        setBloqueado(false);
-        console.log("[enviar_mensagem] Envio concluído com sucesso.");
-      })
-      .catch(function (erro) {
-        console.warn("[enviar_mensagem] Falha na tentativa " + tentava + ":", erro);
-
-        if (tentativa < MAX_RETRIES) {
-          // Pequeno backoff antes de tentar novamente
-          const backoff = 800 * tentativa;
-          console.log("[enviar_mensagem] Aguardando " + backoff + "ms antes da próxima tentativa.");
-          setTimeout(tentarEnvio, backoff);
-        } else {
-          // Esgotou tentativas
-          if (typeof remover_digitacao === "function") {
-            remover_digitacao();
-          }
-          const msgErro = (erro && erro.message) ? erro.message : String(erro);
-          mostrarErroNoChat("Não foi possível enviar a mensagem após " + MAX_RETRIES + " tentativas. " + msgErro);
-
-          enviar_mensagem._enviando = false;
-          setBloqueado(false);
-          console.error("[enviar_mensagem] Envio falhou definitivamente.", erro);
-        }
-      });
-  }
-
-  tentarEnvio();
-}
   btn.addEventListener('click', enviar_mensagem);
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); enviar_mensagem(); }
@@ -706,7 +346,6 @@ function enviar_mensagem() {
   input.addEventListener('focus', () => {
     setTimeout(() => input.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
   });
-})();
 })();
 </script>
 </body>
