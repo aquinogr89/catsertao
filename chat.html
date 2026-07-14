@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistente CAT Sertão</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{ font-family:'Public Sans', sans-serif; }
+  #n8n-chat{
+    height:100%;
+    --chat--color-primary: #C1121F;
+    --chat--color-primary-shade-50: #97121A;
+    --chat--color-secondary: #14204A;
+    --chat--color-secondary-shade-50: #1B2A5B;
+    --chat--border-radius: 10px;
+    --chat--spacing: 14px;
+    --chat--font-family: 'Public Sans', sans-serif;
+    --chat--header--background: #14204A;
+    --chat--header--color: #fff;
+    --chat--header--padding: 18px 20px;
+    --chat--heading--font-size: 18px;
+    --chat--subtitle--line-height: 1.4;
+    --chat--message--font-size: 14.5px;
+    --chat--message--border-radius: 12px;
+    --chat--message--bot--background: #fff;
+    --chat--message--bot--color: #1C1B19;
+    --chat--message--bot--border: 1px solid #E5E0D5;
+    --chat--message--user--background: #14204A;
+    --chat--message--user--color: #fff;
+    --chat--message--user--border: none;
+    --chat--toggle--background: #C1121F;
+    --chat--toggle--hover--background: #97121A;
+    --chat--toggle--color: #fff;
+    --chat--input--border: 1px solid #D8D1C3;
+    --chat--input--border-active: 1px solid #C1121F;
+  }
+</style>
+</head>
+<body>
+<div id="n8n-chat"></div>
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+  // O widget chama scrollIntoView() nas mensagens para rolar ate a mais recente.
+  // Por padrao essa API atravessa a fronteira do iframe e rola a pagina pai
+  // tambem (comportamento normal da spec, nao um bug do navegador) — por isso
+  // o site inteiro "pulava" a cada mensagem enviada. Substituimos por uma
+  // versao que rola apenas o container com scroll mais proximo DENTRO deste
+  // documento (o proprio chat), sem nunca tocar na janela pai.
+  Element.prototype.scrollIntoView = function () {
+    var node = this.parentElement;
+    while (node && node !== document.documentElement) {
+      var overflowY = getComputedStyle(node).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        node.scrollTop = this.offsetTop + this.offsetHeight - node.clientHeight + 24;
+        return;
+      }
+      node = node.parentElement;
+    }
+  };
+
+  createChat({
+    webhookUrl: 'https://sternplatypus-n8n.cloudfy.live/webhook/ac8fae67-dc53-436e-981b-32751a37a991/chat',
+    target: '#n8n-chat',
+    mode: 'fullscreen',
+    showWelcomeScreen: false,
+    loadPreviousSession: true,
+    initialMessages: [
+      'Olá! 👋',
+      'Sou o assistente do CAT Sertão. Em que posso ajudar você hoje?'
+    ],
+    i18n: {
+      en: {
+        title: 'Assistente do CAT Sertão',
+        subtitle: 'Atendimento automático — pergunte à vontade.',
+        footer: '',
+        getStarted: 'Nova conversa',
+        inputPlaceholder: 'Digite sua mensagem…',
+        closeButtonTooltip: 'Fechar'
+      }
+    }
+  });
+</script>
+</body>
+</html>
