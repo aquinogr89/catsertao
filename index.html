@@ -25,6 +25,11 @@
     --green:#1E8E4E; --green-hover:#177a41; --green-dot:#7DE6A5;
   }
   *{ margin:0; padding:0; box-sizing:border-box; }
+  /* Regras de layout (display:flex/grid/inline em elementos ou no atributo style)
+     vencem o atributo "hidden" nativo mesmo sem serem mais especificas, porque
+     CSS de autor sempre supera o stylesheet padrao do navegador. Por isso todo
+     show/hide no JS usa esta classe com !important em vez do atributo hidden. */
+  .u-hidden{ display:none !important; }
   body{ font-family:'Public Sans', sans-serif; color:var(--ink); background:#FBFAF8; }
   h1,h2{ font-family:'Oswald', sans-serif; }
   a{ color:inherit; }
@@ -180,14 +185,14 @@
       <label class="field" for="gate-pass">Senha
         <input id="gate-pass" type="password" autocomplete="current-password" placeholder="Digite a senha">
       </label>
-      <p id="gate-error" class="field-error" hidden></p>
+      <p id="gate-error" class="field-error u-hidden"></p>
       <button type="submit" class="btn-red">Entrar</button>
       <p class="gate-footnote">Uso interno · CBMPE</p>
     </form>
   </div>
 </div>
 
-<div id="app" hidden style="min-height:100vh; display:flex; flex-direction:column;">
+<div id="app" class="u-hidden" style="min-height:100vh; display:flex; flex-direction:column;">
 
   <div style="height:5px; background:linear-gradient(90deg,#C1121F 0 33%,#E8B302 33% 66%,#1B2A5B 66% 100%);"></div>
 
@@ -276,10 +281,10 @@
               <button type="submit" class="btn-navy">Acessar tabela</button>
             </form>
           </div>
-          <p id="termo-error" class="field-error" hidden></p>
+          <p id="termo-error" class="field-error u-hidden"></p>
         </div>
 
-        <div id="termo-unlocked" hidden>
+        <div id="termo-unlocked" class="u-hidden">
           <div class="cat-filter-row">
             <input id="termo-search" type="search" placeholder="Buscar por nome, unidade, status…">
             <span id="termo-count" class="count-badge"></span>
@@ -288,7 +293,7 @@
           </div>
           <div class="table-wrap">
             <p id="termo-status" class="table-status"></p>
-            <table id="termo-table" class="termo-table" hidden></table>
+            <table id="termo-table" class="termo-table u-hidden"></table>
           </div>
         </div>
       </div>
@@ -311,7 +316,7 @@
       </div>
 
       <div id="satec-grid" class="satec-grid"></div>
-      <div id="satec-empty" class="empty-state" hidden></div>
+      <div id="satec-empty" class="empty-state u-hidden"></div>
     </section>
 
   </main>
@@ -333,6 +338,9 @@
 (function () {
   'use strict';
 
+  function show(el) { el.classList.remove('u-hidden'); }
+  function hide(el) { el.classList.add('u-hidden'); }
+
   /* ===================== Acesso geral (dados públicos, senha apenas para não deixar escancarado) ===================== */
   var GATE_USER = 'catsertao';
   var GATE_PASS = 'satecpetrolina';
@@ -342,8 +350,8 @@
   var chatInitialized = false;
 
   function showApp() {
-    gateEl.hidden = true;
-    appEl.hidden = false;
+    hide(gateEl);
+    show(appEl);
     document.getElementById('footer-year').textContent = new Date().getFullYear();
     renderSatecs();
     initChat();
@@ -358,11 +366,11 @@
     var errEl = document.getElementById('gate-error');
     if (u === GATE_USER && p === GATE_PASS) {
       sessionStorage.setItem('cat_auth', '1');
-      errEl.hidden = true;
+      hide(errEl);
       showApp();
     } else {
       errEl.textContent = 'Usuário ou senha incorretos.';
-      errEl.hidden = false;
+      show(errEl);
     }
   });
 
@@ -505,12 +513,12 @@
     var emptyEl = document.getElementById('satec-empty');
 
     if (filtered.length === 0) {
-      gridEl.hidden = true;
-      emptyEl.hidden = false;
+      hide(gridEl);
+      show(emptyEl);
       emptyEl.textContent = 'Nenhuma unidade encontrada para “' + q + '”.';
     } else {
-      gridEl.hidden = false;
-      emptyEl.hidden = true;
+      show(gridEl);
+      hide(emptyEl);
       gridEl.innerHTML = filtered.map(satecCardHtml).join('');
     }
   }
@@ -539,17 +547,17 @@
 
   function showTermoUnlocked(rows) {
     termoRows = rows || [];
-    termoLockedEl.hidden = true;
-    termoUnlockedEl.hidden = false;
+    hide(termoLockedEl);
+    show(termoUnlockedEl);
     renderTermoTable();
   }
 
   function showTermoLocked(message) {
-    termoUnlockedEl.hidden = true;
-    termoLockedEl.hidden = false;
+    hide(termoUnlockedEl);
+    show(termoLockedEl);
     if (message) {
       termoErrorEl.textContent = message;
-      termoErrorEl.hidden = false;
+      show(termoErrorEl);
     }
   }
 
@@ -564,35 +572,35 @@
     document.getElementById('termo-count').textContent = filtered.length + ' registro(s)';
 
     if (termoRows.length === 0) {
-      termoTableEl.hidden = true;
-      termoStatusEl.hidden = false;
+      hide(termoTableEl);
+      show(termoStatusEl);
       termoStatusEl.textContent = 'Nenhum termo de compromisso registrado ainda.';
       return;
     }
     if (filtered.length === 0) {
-      termoTableEl.hidden = true;
-      termoStatusEl.hidden = false;
+      hide(termoTableEl);
+      show(termoStatusEl);
       termoStatusEl.textContent = 'Nenhum registro encontrado para essa busca.';
       return;
     }
 
-    termoStatusEl.hidden = true;
+    hide(termoStatusEl);
     var headers = Object.keys(termoRows[0]);
     var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead>';
     var tbody = '<tbody>' + filtered.map(function (row) {
       return '<tr>' + headers.map(function (h) { return '<td>' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + '</tr>';
     }).join('') + '</tbody>';
     termoTableEl.innerHTML = thead + tbody;
-    termoTableEl.hidden = false;
+    show(termoTableEl);
   }
 
   document.getElementById('termo-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var pass = document.getElementById('termo-pass').value;
-    termoErrorEl.hidden = true;
+    hide(termoErrorEl);
     if (TERMO_API_URL.indexOf('COLOQUE_AQUI') === 0) {
       termoErrorEl.textContent = 'A tabela ainda não foi conectada (falta configurar o Apps Script). Avise o administrador do site.';
-      termoErrorEl.hidden = false;
+      show(termoErrorEl);
       return;
     }
     termoApi({ action: 'login', password: pass }).then(function (res) {
@@ -603,11 +611,11 @@
         showTermoUnlocked(res.rows);
       } else {
         termoErrorEl.textContent = res.error || 'Senha incorreta.';
-        termoErrorEl.hidden = false;
+        show(termoErrorEl);
       }
     }).catch(function () {
       termoErrorEl.textContent = 'Não foi possível conectar à tabela agora. Tente novamente em instantes.';
-      termoErrorEl.hidden = false;
+      show(termoErrorEl);
     });
   });
 
