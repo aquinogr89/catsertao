@@ -90,7 +90,7 @@
   .banner-warn-inner{ padding:9px 28px; font-size:12.5px; line-height:1.45; display:flex; gap:9px; align-items:center; }
   .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
 
-  main.content{ flex:1; padding:34px 28px 8px; }
+  main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
 
   /* Cards grid (docs) */
   .cards-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
@@ -159,10 +159,15 @@
 
   @media (max-width: 640px){
     .pad-x{ padding-left:16px; padding-right:16px; }
-    .top-actions{ margin-left:0; align-self:auto; }
+    .top-inner{ flex-wrap:wrap; row-gap:14px; }
+    .top-logo{ width:58px; height:58px; }
+    .top-logo img{ width:46px; height:46px; }
+    .top-actions{ flex-basis:100%; margin-left:0; align-self:auto; }
+    .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
     .cards-grid, .satec-grid{ grid-template-columns:1fr; }
     .cat-filter-row{ flex-direction:column; align-items:stretch; }
     .cat-filter-row input{ max-width:none; min-width:0; }
+    #chat-frame{ height:480px; }
     .bottom-inner{ flex-direction:column; align-items:flex-start; }
     .bottom-copy{ margin-left:0; }
   }
