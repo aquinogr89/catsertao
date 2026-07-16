@@ -411,6 +411,16 @@
   // cole a mesma URL /exec aqui e em rti-catsertao/app.js (SHEETS_API_URL).
   var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQwjmNoPHYD0lOvqaAsOs9wQntZ24p68y9cAGn1yck7cUgmZia_-6aH2yv1dqPvmcIGQ/exec';
   var SESSION_KEY = 'cat_session';
+
+  // Em ambiente de teste local (localhost/127.0.0.1), o link "Cadastrar RTI"
+  // aponta para o rti-catsertao rodando localmente em vez da URL pública do
+  // GitHub Pages — assim dá para testar o fluxo integrado entre os dois
+  // sites sem precisar lembrar de reverter isso antes do merge.
+  var RTI_URL_PRODUCAO = 'https://aquinogr89.github.io/rti-catsertao/';
+  var RTI_URL_LOCAL = 'http://localhost:5501/';
+  var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  var RTI_URL = isLocalhost ? RTI_URL_LOCAL : RTI_URL_PRODUCAO;
+  document.getElementById('nav-rti').href = RTI_URL;
   var PERFIL_LABEL = { admin_master: 'Admin Master', admin: 'Admin', user1: 'Vistoriador', user2: 'Acesso Básico' };
 
   var gateEl = document.getElementById('gate');
