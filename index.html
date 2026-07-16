@@ -51,8 +51,14 @@
   .btn-ghost{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12.5px; color:var(--muted); background:#fff; border:1px solid var(--border-2); padding:9px 14px; border-radius:8px; cursor:pointer; }
   .btn-ghost:hover{ border-color:var(--red); color:var(--red); }
   .field{ display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--muted); text-transform:uppercase; }
-  .field input{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
-  .field input:focus{ border-color:var(--red); background:#fff; }
+  .field input, .field select{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
+  .field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
+  .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
+  .btn-danger{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:6px 11px; border-radius:7px; cursor:pointer; }
+  .btn-danger:hover{ background:#F5D5D5; }
+  .status-pill{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
+  .status-pill.ativo{ background:#E9F7EF; color:var(--green-hover); }
+  .status-pill.inativo{ background:var(--chip-bg); color:var(--muted-3); }
   .field-error{ font-size:12.5px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:9px 11px; border-radius:9px; text-align:center; }
 
   /* Login gate (acesso geral) */
@@ -101,15 +107,8 @@
   .doc-desc{ font-size:13px; line-height:1.45; color:var(--muted-2); }
   .doc-arrow{ margin-left:auto; flex:0 0 auto; color:var(--red); font-size:22px; font-weight:700; padding-left:6px; }
 
-  /* Termo de Compromisso */
+  /* Termo de Compromisso / painéis com tabela (também reaproveitado por Usuários) */
   .termo-panel{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px; box-shadow:0 10px 30px -18px rgba(20,32,74,.45); }
-  .termo-locked{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
-  .termo-locked-text{ display:flex; flex-direction:column; gap:2px; flex:1; min-width:220px; }
-  .termo-locked-text strong{ font-family:'Oswald',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.03em; }
-  .termo-locked-text span{ font-size:13px; color:var(--muted-2); }
-  .termo-form{ display:flex; gap:10px; flex-wrap:wrap; }
-  .termo-form input{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:11px 15px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); min-width:200px; }
-  .termo-form input:focus{ border-color:var(--red); background:#fff; }
   .termo-panel .field-error{ width:100%; margin-top:12px; }
   .cat-filter-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
   .cat-filter-row input{ flex:1; min-width:220px; max-width:440px; font-family:'Public Sans',sans-serif; font-size:14.5px; padding:11px 15px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
@@ -210,7 +209,7 @@
         <div class="top-sub">CAT Sertão</div>
       </div>
       <div class="top-actions">
-        <span class="badge-live"><span class="dot"></span>USO INTERNO</span>
+        <span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span>
         <button id="logout-btn" type="button" class="btn-logout">Sair</button>
       </div>
     </div>
@@ -220,8 +219,12 @@
     <div class="quicknav-inner wrap">
       <a href="#atendimento">Atendimento</a>
       <a href="#documentos">Documentos</a>
-      <a href="#termo">Termo de Compromisso</a>
+      <a id="nav-termo" href="#termo" class="u-hidden">Termo de Compromisso</a>
       <a href="#satecs">SATECs</a>
+      <a id="nav-rti" href="https://aquinogr89.github.io/rti-catsertao/" class="u-hidden">Cadastrar RTI ↗</a>
+      <a id="nav-usuarios" href="#usuarios" class="u-hidden">Usuários</a>
+      <a id="nav-log" href="#log" class="u-hidden">LOG</a>
+      <a href="#conta">Minha Conta</a>
     </div>
   </nav>
 
@@ -267,39 +270,22 @@
       </div>
     </section>
 
-    <section class="section" id="termo">
+    <section class="section u-hidden" id="termo-section">
       <div class="eyebrow"><span>Conformidade</span><span class="rule"></span></div>
       <h2>Termo de Compromisso</h2>
-      <p class="lead">Preencha o termo de compromisso técnico pelo formulário oficial. A tabela de controle com os termos já registrados fica em uma área com senha própria, separada do acesso geral do site.</p>
+      <p class="lead">Preencha o termo de compromisso técnico pelo formulário oficial. A tabela de controle com os termos já registrados abaixo é visível apenas para Admin Master e Admin, e cada consulta é registrada no LOG de auditoria.</p>
 
       <a class="btn-outline-navy" href="https://sternplatypus-n8n.cloudfy.live/form/termo-de-compromisso" target="_blank" rel="noopener">Preencher Termo de Compromisso ↗</a>
 
       <div class="termo-panel">
-        <div id="termo-locked">
-          <div class="termo-locked">
-            <div class="termo-locked-text">
-              <strong>Tabela de controle</strong>
-              <span>Área restrita. Requer uma senha específica, diferente da senha geral do site.</span>
-            </div>
-            <form id="termo-form" class="termo-form" autocomplete="off">
-              <input id="termo-pass" type="password" placeholder="Senha de controle" autocomplete="off">
-              <button type="submit" class="btn-navy">Acessar tabela</button>
-            </form>
-          </div>
-          <p id="termo-error" class="field-error u-hidden"></p>
+        <div class="cat-filter-row">
+          <input id="termo-search" type="search" placeholder="Buscar por nome, unidade, status…">
+          <span id="termo-count" class="count-badge"></span>
+          <button id="termo-refresh" type="button" class="btn-ghost">Atualizar</button>
         </div>
-
-        <div id="termo-unlocked" class="u-hidden">
-          <div class="cat-filter-row">
-            <input id="termo-search" type="search" placeholder="Buscar por nome, unidade, status…">
-            <span id="termo-count" class="count-badge"></span>
-            <button id="termo-refresh" type="button" class="btn-ghost">Atualizar</button>
-            <button id="termo-logout" type="button" class="btn-ghost">Sair da tabela</button>
-          </div>
-          <div class="table-wrap">
-            <p id="termo-status" class="table-status"></p>
-            <table id="termo-table" class="termo-table u-hidden"></table>
-          </div>
+        <div class="table-wrap">
+          <p id="termo-status" class="table-status"></p>
+          <table id="termo-table" class="termo-table u-hidden"></table>
         </div>
       </div>
     </section>
@@ -324,6 +310,79 @@
       <div id="satec-empty" class="empty-state u-hidden"></div>
     </section>
 
+    <section class="section u-hidden" id="usuarios-section">
+      <div class="eyebrow"><span>Administração</span><span class="rule"></span></div>
+      <h2>Usuários</h2>
+      <p class="lead">Admin Master gerencia qualquer usuário, inclusive outros Admins. Admin só pode criar/desativar usuários dos perfis Vistoriador (user1) e Acesso Básico (user2).</p>
+
+      <div class="termo-panel" style="margin-bottom:18px;">
+        <form id="usuario-form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+          <label class="field" style="flex:1; min-width:160px;">Login
+            <input id="novo-usuario-login" type="text" placeholder="ex: joao.silva" autocomplete="off" required>
+          </label>
+          <label class="field" style="flex:1; min-width:160px;">Senha provisória
+            <input id="novo-usuario-senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="new-password" required>
+          </label>
+          <label class="field" style="min-width:180px;">Perfil
+            <select id="novo-usuario-perfil"></select>
+          </label>
+          <button type="submit" class="btn-navy">Criar usuário</button>
+        </form>
+        <p id="usuario-form-msg" class="field-error u-hidden" style="margin-top:12px;"></p>
+      </div>
+
+      <div class="table-wrap">
+        <p id="usuarios-status" class="table-status"></p>
+        <table id="usuarios-table" class="termo-table u-hidden"></table>
+      </div>
+    </section>
+
+    <section class="section u-hidden" id="log-section">
+      <div class="eyebrow"><span>Auditoria</span><span class="rule"></span></div>
+      <h2>LOG de acesso</h2>
+      <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
+
+      <div class="cat-filter-row">
+        <select id="log-filtro-acao">
+          <option value="">Todas as ações</option>
+          <option value="login">login</option>
+          <option value="login_falho">login_falho</option>
+          <option value="logout">logout</option>
+          <option value="cadastro_rti">cadastro_rti</option>
+          <option value="acesso_termo">acesso_termo</option>
+          <option value="criacao_usuario">criacao_usuario</option>
+          <option value="desativacao_usuario">desativacao_usuario</option>
+          <option value="alteracao_senha">alteracao_senha</option>
+        </select>
+        <input id="log-filtro-inicio" type="date" title="Data inicial">
+        <input id="log-filtro-fim" type="date" title="Data final">
+        <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
+        <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
+      </div>
+      <div class="table-wrap">
+        <p id="log-status" class="table-status"></p>
+        <table id="log-table" class="termo-table u-hidden"></table>
+      </div>
+    </section>
+
+    <section class="section" id="conta">
+      <div class="eyebrow"><span>Conta</span><span class="rule"></span></div>
+      <h2>Minha Conta</h2>
+      <p class="lead">Troque sua senha a qualquer momento. Se este é o seu primeiro acesso como admin_master, troque a senha inicial agora.</p>
+      <div class="termo-panel" style="max-width:420px;">
+        <form id="senha-form" style="display:flex; flex-direction:column; gap:14px;">
+          <label class="field">Senha atual
+            <input id="senha-atual" type="password" autocomplete="current-password" required>
+          </label>
+          <label class="field">Nova senha
+            <input id="senha-nova" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
+          </label>
+          <button type="submit" class="btn-red">Alterar senha</button>
+          <p id="senha-form-msg" class="field-error u-hidden"></p>
+        </form>
+      </div>
+    </section>
+
   </main>
 
   <footer class="bottom pad-x">
@@ -345,42 +404,124 @@
 
   function show(el) { el.classList.remove('u-hidden'); }
   function hide(el) { el.classList.add('u-hidden'); }
+  function toggle(el, visible) { if (!el) return; if (visible) show(el); else hide(el); }
 
-  /* ===================== Acesso geral (dados públicos, senha apenas para não deixar escancarado) ===================== */
-  var GATE_USER = 'catsertao';
-  var GATE_PASS = 'satecpetrolina';
+  /* ===================== Backend único (auth + RTI), compartilhado com o site rti-catsertao ===================== */
+  // Depois de implantar apps-script/Code.gs + Auth.gs (rti-catsertao) como Web App,
+  // cole a mesma URL /exec aqui e em rti-catsertao/app.js (SHEETS_API_URL).
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQwjmNoPHYD0lOvqaAsOs9wQntZ24p68y9cAGn1yck7cUgmZia_-6aH2yv1dqPvmcIGQ/exec';
+  var SESSION_KEY = 'cat_session';
+  var PERFIL_LABEL = { admin_master: 'Admin Master', admin: 'Admin', user1: 'Vistoriador', user2: 'Acesso Básico' };
 
   var gateEl = document.getElementById('gate');
   var appEl = document.getElementById('app');
   var chatInitialized = false;
+  var session = null; // { token, login, perfil }
+
+  function api(payload) {
+    return fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(function (res) { return res.json(); });
+  }
+
+  function saveSession(s) {
+    session = s;
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  }
+  function clearSession() {
+    session = null;
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+  function loadSession() {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
+    catch (e) { return null; }
+  }
+
+  function applyPerfilVisibility() {
+    var perfil = session.perfil;
+    var canRTI = perfil === 'admin_master' || perfil === 'admin' || perfil === 'user1';
+    var canTermo = perfil === 'admin_master' || perfil === 'admin';
+    var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
+    var canLog = perfil === 'admin_master';
+
+    toggle(document.getElementById('nav-rti'), canRTI);
+    toggle(document.getElementById('nav-termo'), canTermo);
+    toggle(document.getElementById('termo-section'), canTermo);
+    toggle(document.getElementById('nav-usuarios'), canUsuarios);
+    toggle(document.getElementById('usuarios-section'), canUsuarios);
+    toggle(document.getElementById('nav-log'), canLog);
+    toggle(document.getElementById('log-section'), canLog);
+
+    document.getElementById('session-login').textContent = session.login;
+    document.getElementById('session-perfil').textContent = PERFIL_LABEL[perfil] || perfil;
+  }
 
   function showApp() {
     hide(gateEl);
     show(appEl);
     document.getElementById('footer-year').textContent = new Date().getFullYear();
+    applyPerfilVisibility();
     renderSatecs();
     initChat();
+    if (session.perfil === 'admin_master' || session.perfil === 'admin') {
+      carregarTermo();
+      carregarUsuarios();
+    }
+    if (session.perfil === 'admin_master') carregarLog();
   }
 
-  if (sessionStorage.getItem('cat_auth') === '1') showApp();
+  function showGate(message) {
+    clearSession();
+    hide(appEl);
+    show(gateEl);
+    var errEl = document.getElementById('gate-error');
+    if (message) { errEl.textContent = message; show(errEl); }
+    else { hide(errEl); }
+  }
+
+  var saved = loadSession();
+  if (saved && saved.token) {
+    api({ action: 'validarToken', token: saved.token }).then(function (res) {
+      if (res.ok) { saveSession({ token: saved.token, login: res.login, perfil: res.perfil }); showApp(); }
+      else { showGate(); }
+    }).catch(function () { showGate(); });
+  }
 
   document.getElementById('gate-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var u = document.getElementById('gate-user').value.trim().toLowerCase();
-    var p = document.getElementById('gate-pass').value;
+    var login = document.getElementById('gate-user').value.trim();
+    var senha = document.getElementById('gate-pass').value;
     var errEl = document.getElementById('gate-error');
-    if (u === GATE_USER && p === GATE_PASS) {
-      sessionStorage.setItem('cat_auth', '1');
-      hide(errEl);
-      showApp();
-    } else {
-      errEl.textContent = 'Usuário ou senha incorretos.';
+    hide(errEl);
+
+    if (!login || !senha) {
+      errEl.textContent = 'Informe usuário e senha.';
       show(errEl);
+      return;
     }
+
+    var btn = e.target.querySelector('button[type=submit]');
+    btn.disabled = true;
+    api({ action: 'login', login: login, senha: senha }).then(function (res) {
+      if (res.ok) {
+        saveSession({ token: res.token, login: res.login, perfil: res.perfil });
+        document.getElementById('gate-pass').value = '';
+        showApp();
+      } else {
+        errEl.textContent = res.error || 'Usuário ou senha incorretos.';
+        show(errEl);
+      }
+    }).catch(function () {
+      errEl.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente.';
+      show(errEl);
+    }).finally(function () { btn.disabled = false; });
   });
 
   document.getElementById('logout-btn').addEventListener('click', function () {
-    sessionStorage.removeItem('cat_auth');
+    if (session) api({ action: 'logout', token: session.token }).catch(function () {});
+    clearSession();
     location.reload();
   });
 
@@ -509,129 +650,224 @@
 
   document.getElementById('satec-search').addEventListener('input', renderSatecs);
 
-  /* ===================== Termo de Compromisso — área com senha própria ===================== */
-  // Troque pela URL de implantação (/exec) do Apps Script depois de publicá-lo. Veja instruções de deploy.
-  var TERMO_API_URL = 'https://script.google.com/macros/s/AKfycbzoXIqeyf10Pfjw510sMzyhTbPgtax3kuSXsF0GjCEx_LwV_s3u-Ka71ElKmzoqRxbL/exec';
-
-  var termoLockedEl = document.getElementById('termo-locked');
-  var termoUnlockedEl = document.getElementById('termo-unlocked');
-  var termoErrorEl = document.getElementById('termo-error');
+  /* ===================== Termo de Compromisso — visível para admin_master/admin ===================== */
   var termoStatusEl = document.getElementById('termo-status');
   var termoTableEl = document.getElementById('termo-table');
   var termoRows = [];
-  var termoToken = sessionStorage.getItem('termo_token') || null;
 
-  function termoApi(payload) {
-    return fetch(TERMO_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    }).then(function (res) { return res.json(); });
-  }
-
-  function showTermoUnlocked(rows) {
-    termoRows = rows || [];
-    hide(termoLockedEl);
-    show(termoUnlockedEl);
-    renderTermoTable();
-  }
-
-  function showTermoLocked(message) {
-    hide(termoUnlockedEl);
-    show(termoLockedEl);
-    if (message) {
-      termoErrorEl.textContent = message;
-      show(termoErrorEl);
-    }
-  }
-
-  function renderTermoTable() {
-    var q = document.getElementById('termo-search').value.trim().toLowerCase();
-    var filtered = !q ? termoRows : termoRows.filter(function (row) {
+  function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery) {
+    var filtered = !filterQuery ? rows : rows.filter(function (row) {
       return Object.keys(row).some(function (k) {
-        return String(row[k]).toLowerCase().indexOf(q) !== -1;
+        return String(row[k]).toLowerCase().indexOf(filterQuery) !== -1;
       });
     });
 
-    document.getElementById('termo-count').textContent = filtered.length + ' registro(s)';
-
-    if (termoRows.length === 0) {
-      hide(termoTableEl);
-      show(termoStatusEl);
-      termoStatusEl.textContent = 'Nenhum termo de compromisso registrado ainda.';
+    if (rows.length === 0) {
+      hide(tableEl);
+      show(statusEl);
+      statusEl.textContent = emptyMsg;
       return;
     }
     if (filtered.length === 0) {
-      hide(termoTableEl);
-      show(termoStatusEl);
-      termoStatusEl.textContent = 'Nenhum registro encontrado para essa busca.';
+      hide(tableEl);
+      show(statusEl);
+      statusEl.textContent = 'Nenhum registro encontrado para essa busca.';
       return;
     }
 
-    hide(termoStatusEl);
-    var headers = Object.keys(termoRows[0]);
+    hide(statusEl);
+    var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
     var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead>';
     var tbody = '<tbody>' + filtered.map(function (row) {
       return '<tr>' + headers.map(function (h) { return '<td>' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + '</tr>';
     }).join('') + '</tbody>';
-    termoTableEl.innerHTML = thead + tbody;
-    show(termoTableEl);
+    tableEl.innerHTML = thead + tbody;
+    show(tableEl);
+    return filtered.length;
   }
 
-  document.getElementById('termo-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var pass = document.getElementById('termo-pass').value;
-    hide(termoErrorEl);
-    if (TERMO_API_URL.indexOf('COLOQUE_AQUI') === 0) {
-      termoErrorEl.textContent = 'A tabela ainda não foi conectada (falta configurar o Apps Script). Avise o administrador do site.';
-      show(termoErrorEl);
-      return;
-    }
-    termoApi({ action: 'login', password: pass }).then(function (res) {
-      if (res.ok) {
-        termoToken = res.token;
-        sessionStorage.setItem('termo_token', res.token);
-        document.getElementById('termo-pass').value = '';
-        showTermoUnlocked(res.rows);
-      } else {
-        termoErrorEl.textContent = res.error || 'Senha incorreta.';
-        show(termoErrorEl);
+  function renderTermoTable() {
+    var q = document.getElementById('termo-search').value.trim().toLowerCase();
+    var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q);
+    document.getElementById('termo-count').textContent = (n == null ? termoRows.length : n) + ' registro(s)';
+  }
+
+  function carregarTermo() {
+    show(termoStatusEl);
+    hide(termoTableEl);
+    termoStatusEl.textContent = 'Carregando...';
+    api({ action: 'obterTermo', token: session.token }).then(function (res) {
+      if (!res.ok) {
+        termoStatusEl.textContent = res.error || 'Não foi possível carregar a tabela.';
+        return;
       }
+      termoRows = res.rows || [];
+      renderTermoTable();
     }).catch(function () {
-      termoErrorEl.textContent = 'Não foi possível conectar à tabela agora. Tente novamente em instantes.';
-      show(termoErrorEl);
+      termoStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
     });
-  });
+  }
 
-  document.getElementById('termo-refresh').addEventListener('click', function () {
-    if (!termoToken) return;
-    termoApi({ action: 'list', token: termoToken }).then(function (res) {
-      if (res.ok) {
-        showTermoUnlocked(res.rows);
-      } else {
-        sessionStorage.removeItem('termo_token');
-        termoToken = null;
-        showTermoLocked(res.error || 'Sessão expirada. Faça login novamente.');
-      }
-    });
-  });
-
-  document.getElementById('termo-logout').addEventListener('click', function () {
-    if (termoToken) termoApi({ action: 'logout', token: termoToken }).catch(function () {});
-    sessionStorage.removeItem('termo_token');
-    termoToken = null;
-    termoRows = [];
-    showTermoLocked();
-  });
-
+  document.getElementById('termo-refresh').addEventListener('click', carregarTermo);
   document.getElementById('termo-search').addEventListener('input', renderTermoTable);
 
-  if (termoToken && TERMO_API_URL.indexOf('COLOQUE_AQUI') !== 0) {
-    termoApi({ action: 'list', token: termoToken }).then(function (res) {
-      if (res.ok) showTermoUnlocked(res.rows);
-      else { sessionStorage.removeItem('termo_token'); termoToken = null; }
-    }).catch(function () {});
+  /* ===================== Usuários — visível para admin_master/admin ===================== */
+  var usuariosRows = [];
+  var usuariosStatusEl = document.getElementById('usuarios-status');
+  var usuariosTableEl = document.getElementById('usuarios-table');
+
+  function montarOpcoesPerfil() {
+    var select = document.getElementById('novo-usuario-perfil');
+    var opcoes = session.perfil === 'admin_master' ? ['admin', 'user1', 'user2'] : ['user1', 'user2'];
+    select.innerHTML = opcoes.map(function (p) {
+      return '<option value="' + p + '">' + PERFIL_LABEL[p] + '</option>';
+    }).join('');
   }
+
+  function podeGerenciarPerfilLocal(perfilAlvo) {
+    if (session.perfil === 'admin_master') return true;
+    return perfilAlvo === 'user1' || perfilAlvo === 'user2';
+  }
+
+  function renderUsuariosTable() {
+    if (usuariosRows.length === 0) {
+      hide(usuariosTableEl);
+      show(usuariosStatusEl);
+      usuariosStatusEl.textContent = 'Nenhum usuário cadastrado ainda.';
+      return;
+    }
+    hide(usuariosStatusEl);
+    var thead = '<thead><tr><th>Login</th><th>Perfil</th><th>Status</th><th>Criado por</th><th>Criado em</th><th></th></tr></thead>';
+    var tbody = '<tbody>' + usuariosRows.map(function (u) {
+      var pill = u.ativo ? '<span class="status-pill ativo">Ativo</span>' : '<span class="status-pill inativo">Inativo</span>';
+      var acao = (u.ativo && podeGerenciarPerfilLocal(u.perfil))
+        ? '<button type="button" class="btn-danger" data-desativar="' + escapeHtml(u.login) + '">Desativar</button>'
+        : '';
+      return '<tr><td>' + escapeHtml(u.login) + '</td><td>' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td>' + pill + '</td><td>' + escapeHtml(u.criado_por) + '</td><td>' + escapeHtml(u.criado_em) + '</td><td>' + acao + '</td></tr>';
+    }).join('') + '</tbody>';
+    usuariosTableEl.innerHTML = thead + tbody;
+    show(usuariosTableEl);
+  }
+
+  function carregarUsuarios() {
+    montarOpcoesPerfil();
+    show(usuariosStatusEl);
+    hide(usuariosTableEl);
+    usuariosStatusEl.textContent = 'Carregando...';
+    api({ action: 'listarUsuarios', token: session.token }).then(function (res) {
+      if (!res.ok) {
+        usuariosStatusEl.textContent = res.error || 'Não foi possível carregar os usuários.';
+        return;
+      }
+      usuariosRows = res.usuarios || [];
+      renderUsuariosTable();
+    }).catch(function () {
+      usuariosStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
+    });
+  }
+
+  document.getElementById('usuario-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msgEl = document.getElementById('usuario-form-msg');
+    hide(msgEl);
+    var login = document.getElementById('novo-usuario-login').value.trim();
+    var senha = document.getElementById('novo-usuario-senha').value;
+    var perfil = document.getElementById('novo-usuario-perfil').value;
+
+    api({ action: 'criarUsuario', token: session.token, login: login, senha: senha, perfil: perfil }).then(function (res) {
+      if (res.ok) {
+        e.target.reset();
+        montarOpcoesPerfil();
+        carregarUsuarios();
+      } else {
+        msgEl.textContent = res.error || 'Não foi possível criar o usuário.';
+        show(msgEl);
+      }
+    }).catch(function () {
+      msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
+      show(msgEl);
+    });
+  });
+
+  usuariosTableEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-desativar]');
+    if (!btn) return;
+    var login = btn.getAttribute('data-desativar');
+    if (!window.confirm('Desativar o usuário "' + login + '"?')) return;
+    api({ action: 'desativarUsuario', token: session.token, login: login }).then(function (res) {
+      if (res.ok) carregarUsuarios();
+      else window.alert(res.error || 'Não foi possível desativar o usuário.');
+    });
+  });
+
+  /* ===================== LOG de auditoria — visível apenas para admin_master ===================== */
+  var logStatusEl = document.getElementById('log-status');
+  var logTableEl = document.getElementById('log-table');
+
+  function renderLogTable(rows) {
+    if (rows.length === 0) {
+      hide(logTableEl);
+      show(logStatusEl);
+      logStatusEl.textContent = 'Nenhum registro para os filtros selecionados.';
+      return;
+    }
+    hide(logStatusEl);
+    var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
+    var tbody = '<tbody>' + rows.map(function (r) {
+      return '<tr><td>' + escapeHtml(r.timestamp) + '</td><td>' + escapeHtml(r.login) + '</td><td>' + escapeHtml(r.perfil) + '</td><td>' + escapeHtml(r.acao) + '</td><td>' + escapeHtml(r.detalhe) + '</td></tr>';
+    }).join('') + '</tbody>';
+    logTableEl.innerHTML = thead + tbody;
+    show(logTableEl);
+  }
+
+  function carregarLog() {
+    show(logStatusEl);
+    hide(logTableEl);
+    logStatusEl.textContent = 'Carregando...';
+    var acao = document.getElementById('log-filtro-acao').value;
+    var inicio = document.getElementById('log-filtro-inicio').value;
+    var fim = document.getElementById('log-filtro-fim').value;
+    api({ action: 'listarLog', token: session.token, acao: acao, dataInicio: inicio, dataFim: fim }).then(function (res) {
+      if (!res.ok) {
+        logStatusEl.textContent = res.error || 'Não foi possível carregar o LOG.';
+        return;
+      }
+      renderLogTable(res.log || []);
+    }).catch(function () {
+      logStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
+    });
+  }
+
+  document.getElementById('log-filtrar').addEventListener('click', carregarLog);
+  document.getElementById('log-refresh').addEventListener('click', carregarLog);
+
+  /* ===================== Minha Conta — alterar senha (todos os perfis) ===================== */
+  document.getElementById('senha-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msgEl = document.getElementById('senha-form-msg');
+    hide(msgEl);
+    var senhaAtual = document.getElementById('senha-atual').value;
+    var senhaNova = document.getElementById('senha-nova').value;
+
+    api({ action: 'alterarSenha', token: session.token, senhaAtual: senhaAtual, senhaNova: senhaNova }).then(function (res) {
+      msgEl.classList.remove('u-hidden');
+      if (res.ok) {
+        e.target.reset();
+        msgEl.style.color = 'var(--green-hover)';
+        msgEl.style.background = '#E9F7EF';
+        msgEl.style.borderColor = '#BFE8D2';
+        msgEl.textContent = 'Senha alterada com sucesso.';
+      } else {
+        msgEl.style.color = '';
+        msgEl.style.background = '';
+        msgEl.style.borderColor = '';
+        msgEl.textContent = res.error || 'Não foi possível alterar a senha.';
+      }
+    }).catch(function () {
+      msgEl.classList.remove('u-hidden');
+      msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
+    });
+  });
 
 })();
 </script>
