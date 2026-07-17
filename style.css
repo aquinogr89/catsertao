@@ -139,6 +139,24 @@ table.termo-table tr:hover td{ background:#FAF8F3; }
 .access-denied{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:32px; text-align:center; color:var(--muted); box-shadow:0 10px 30px -18px rgba(20,32,74,.45); }
 .access-denied strong{ display:block; color:var(--ink); font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px; font-size:15px; }
 
+/* Botões flutuantes: subir ao menu (index.html) e voltar ao site principal
+   (páginas utilitárias abertas em nova aba). Ficam fixos na tela mesmo com
+   a página rolada, ao contrário do link "Voltar" no topo do conteúdo. */
+.btn-float{
+  position:fixed; z-index:900; width:48px; height:48px; border-radius:50%;
+  background:var(--navy); color:#fff; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  line-height:1; box-shadow:0 8px 20px -8px rgba(0,0,0,.5); text-decoration:none;
+}
+.btn-float:hover{ background:var(--navy-2); color:#fff; }
+.btn-float.top{ bottom:24px; right:24px; }
+.btn-float.back{ bottom:24px; left:24px; }
+@media (max-width: 640px){
+  .btn-float{ width:44px; height:44px; font-size:18px; }
+  .btn-float.top{ bottom:16px; right:16px; }
+  .btn-float.back{ bottom:16px; left:16px; }
+}
+
 footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 .bottom-inner{ padding:22px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; }
 .bottom-inner img{ width:38px; height:38px; object-fit:contain; background:#fff; border-radius:8px; padding:3px; }

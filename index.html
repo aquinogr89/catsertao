@@ -81,6 +81,8 @@
     </div>
   </div>
 
+  <button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao menu" aria-label="Voltar ao menu">↑</button>
+
   <main class="content pad-x wrap">
 
     <section class="section" id="atendimento">
@@ -271,6 +273,10 @@
     if (session) api({ action: 'logout', token: session.token }).catch(function () {});
     CatAuth.clearSession();
     location.reload();
+  });
+
+  document.getElementById('btn-scroll-top').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   /* ===================== Assistente virtual (n8n chat) ===================== */
