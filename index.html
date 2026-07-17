@@ -193,6 +193,8 @@
   document.getElementById('gate-nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('gate-nav-triagem').href = CatAuth.TRIAGEM_URL;
 
+  CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
+
   var gateEl = document.getElementById('gate');
   var appEl = document.getElementById('app');
   var chatInitialized = false;

@@ -152,6 +152,7 @@
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = PERFIL_LABEL[session.perfil] || session.perfil;
     show(document.getElementById('usuarios-content'));
+    CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     montarOpcoesPerfil();
     carregarUsuarios();

@@ -81,6 +81,7 @@
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
     show(document.getElementById('conta-content'));
+    CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     document.getElementById('senha-form').addEventListener('submit', function (e) {
       e.preventDefault();

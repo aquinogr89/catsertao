@@ -87,6 +87,54 @@ var CatAuth = (function () {
     });
   }
 
+  // ===================== Logout por inatividade =====================
+  // 30 min sem interação (mouse, teclado, toque, scroll) desloga sozinho.
+  // O "último momento de atividade" fica no localStorage (INATIVIDADE_KEY),
+  // não numa variável em memória, porque o usuário pode ter mais de uma aba
+  // aberta ao mesmo tempo (ex.: Usuários numa aba, Mapa de RTI em outra) —
+  // um timer isolado por aba deslogaria uma aba parada mesmo com atividade
+  // em outra. Como localStorage é compartilhado entre abas da mesma origem,
+  // atividade em qualquer aba mantém todas vivas.
+  var INATIVIDADE_KEY = 'cat_last_activity';
+  var INATIVIDADE_LIMITE_MS = 30 * 60 * 1000; // 30 minutos
+  var INATIVIDADE_CHECK_MS = 30 * 1000; // confere a cada 30s
+  var INATIVIDADE_THROTTLE_MS = 5 * 1000; // não escreve no localStorage a cada pixel de mousemove
+
+  function registrarAtividade() {
+    var agora = Date.now();
+    var ultimo = Number(localStorage.getItem(INATIVIDADE_KEY) || 0);
+    if (agora - ultimo > INATIVIDADE_THROTTLE_MS) {
+      localStorage.setItem(INATIVIDADE_KEY, String(agora));
+    }
+  }
+
+  /**
+   * Liga o monitor de inatividade nesta página. onTimeout é chamado quando o
+   * limite é atingido, depois da sessão já ter sido limpa (local e, best
+   * effort, no servidor). Passa limiteMs só para testes locais (ex.: alguns
+   * segundos) — em produção usa o padrão de 30 minutos.
+   */
+  function iniciarMonitorInatividade(onTimeout, limiteMs) {
+    var limite = limiteMs || INATIVIDADE_LIMITE_MS;
+    registrarAtividade(); // carregar a página já conta como atividade
+
+    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function (evt) {
+      document.addEventListener(evt, registrarAtividade, { passive: true });
+    });
+
+    setInterval(function () {
+      var saved = loadSession();
+      if (!saved) return; // ninguém logado nesta aba, nada a fazer
+
+      var ultimo = Number(localStorage.getItem(INATIVIDADE_KEY) || 0);
+      if (Date.now() - ultimo > limite) {
+        api({ action: 'logout', token: saved.token }).catch(function () {});
+        clearSession();
+        if (typeof onTimeout === 'function') onTimeout();
+      }
+    }, INATIVIDADE_CHECK_MS);
+  }
+
   return {
     APPS_SCRIPT_URL: APPS_SCRIPT_URL,
     PERFIL_LABEL: PERFIL_LABEL,
@@ -101,6 +149,7 @@ var CatAuth = (function () {
     clearSession: clearSession,
     loadSession: loadSession,
     getSession: getSession,
-    requireSession: requireSession
+    requireSession: requireSession,
+    iniciarMonitorInatividade: iniciarMonitorInatividade
   };
 })();
