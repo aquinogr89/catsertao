@@ -114,10 +114,17 @@
     var thead = '<thead><tr><th>Login</th><th>Perfil</th><th>Status</th><th>Criado por</th><th>Criado em</th><th></th></tr></thead>';
     var tbody = '<tbody>' + usuariosRows.map(function (u) {
       var pill = u.ativo ? '<span class="status-pill ativo">Ativo</span>' : '<span class="status-pill inativo">Inativo</span>';
-      var acao = (u.ativo && podeGerenciarPerfilLocal(u.perfil))
-        ? '<button type="button" class="btn-danger" data-desativar="' + escapeHtml(u.login) + '">Desativar</button>'
-        : '';
-      return '<tr><td>' + escapeHtml(u.login) + '</td><td>' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td>' + pill + '</td><td>' + escapeHtml(u.criado_por) + '</td><td>' + escapeHtml(u.criado_em) + '</td><td>' + acao + '</td></tr>';
+      var acoes = '';
+      if (podeGerenciarPerfilLocal(u.perfil)) {
+        if (u.ativo) {
+          acoes = '<button type="button" class="btn-danger" data-desativar="' + escapeHtml(u.login) + '">Desativar</button>';
+        } else {
+          acoes =
+            '<button type="button" class="btn-ghost" data-reativar="' + escapeHtml(u.login) + '">Reativar</button> ' +
+            '<button type="button" class="btn-danger" data-excluir="' + escapeHtml(u.login) + '">Excluir</button>';
+        }
+      }
+      return '<tr><td>' + escapeHtml(u.login) + '</td><td>' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td>' + pill + '</td><td>' + escapeHtml(u.criado_por) + '</td><td>' + escapeHtml(u.criado_em) + '</td><td>' + acoes + '</td></tr>';
     }).join('') + '</tbody>';
     usuariosTableEl.innerHTML = thead + tbody;
     show(usuariosTableEl);
@@ -173,14 +180,36 @@
     });
 
     usuariosTableEl.addEventListener('click', function (e) {
-      var btn = e.target.closest('button[data-desativar]');
-      if (!btn) return;
-      var login = btn.getAttribute('data-desativar');
-      if (!window.confirm('Desativar o usuário "' + login + '"?')) return;
-      api({ action: 'desativarUsuario', token: session.token, login: login }).then(function (res) {
-        if (res.ok) carregarUsuarios();
-        else window.alert(res.error || 'Não foi possível desativar o usuário.');
-      });
+      var btnDesativar = e.target.closest('button[data-desativar]');
+      if (btnDesativar) {
+        var loginDesativar = btnDesativar.getAttribute('data-desativar');
+        if (!window.confirm('Desativar o usuário "' + loginDesativar + '"?')) return;
+        api({ action: 'desativarUsuario', token: session.token, login: loginDesativar }).then(function (res) {
+          if (res.ok) carregarUsuarios();
+          else window.alert(res.error || 'Não foi possível desativar o usuário.');
+        });
+        return;
+      }
+
+      var btnReativar = e.target.closest('button[data-reativar]');
+      if (btnReativar) {
+        var loginReativar = btnReativar.getAttribute('data-reativar');
+        api({ action: 'reativarUsuario', token: session.token, login: loginReativar }).then(function (res) {
+          if (res.ok) carregarUsuarios();
+          else window.alert(res.error || 'Não foi possível reativar o usuário.');
+        });
+        return;
+      }
+
+      var btnExcluir = e.target.closest('button[data-excluir]');
+      if (btnExcluir) {
+        var loginExcluir = btnExcluir.getAttribute('data-excluir');
+        if (!window.confirm('Excluir definitivamente o usuário "' + loginExcluir + '"? Essa ação não pode ser desfeita.')) return;
+        api({ action: 'excluirUsuario', token: session.token, login: loginExcluir }).then(function (res) {
+          if (res.ok) carregarUsuarios();
+          else window.alert(res.error || 'Não foi possível excluir o usuário.');
+        });
+      }
     });
   }, function (err) {
     hide(document.getElementById('loading-msg'));
