@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOG de auditoria — CAT Sertão</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14204A">
+<link rel="icon" type="image/png" href="CAT-SERTAO-SEM-FUNDO.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
+
+<header class="top pad-x">
+  <div class="top-inner wrap">
+    <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
+    <div style="min-width:0;">
+      <div class="top-org">Corpo de Bombeiros Militar de Pernambuco</div>
+      <h1 class="top-title">LOG de Auditoria</h1>
+      <div class="top-sub">CAT Sertão</div>
+    </div>
+    <div class="top-actions">
+      <span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="content pad-x wrap">
+  <a class="util-back" href="index.html">← Voltar ao site principal</a>
+
+  <div id="loading-msg" class="table-status">Verificando sessão...</div>
+
+  <div id="denied-box" class="access-denied u-hidden">
+    <strong>Acesso não disponível</strong>
+    <p id="denied-text"></p>
+  </div>
+
+  <section id="log-content" class="section u-hidden">
+    <div class="eyebrow"><span>Auditoria</span><span class="rule"></span></div>
+    <h2>Histórico de acesso</h2>
+    <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
+
+    <div class="cat-filter-row">
+      <select id="log-filtro-acao">
+        <option value="">Todas as ações</option>
+        <option value="login">login</option>
+        <option value="login_falho">login_falho</option>
+        <option value="logout">logout</option>
+        <option value="cadastro_rti">cadastro_rti</option>
+        <option value="acesso_termo">acesso_termo</option>
+        <option value="criacao_usuario">criacao_usuario</option>
+        <option value="desativacao_usuario">desativacao_usuario</option>
+        <option value="alteracao_senha">alteracao_senha</option>
+      </select>
+      <input id="log-filtro-inicio" type="date" title="Data inicial">
+      <input id="log-filtro-fim" type="date" title="Data final">
+      <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
+      <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
+    </div>
+    <div class="table-wrap">
+      <p id="log-status" class="table-status"></p>
+      <table id="log-table" class="termo-table u-hidden"></table>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom pad-x">
+  <div class="bottom-inner wrap">
+    <img src="CAT-SERTAO-SEM-FUNDO.png" alt="">
+    <div style="line-height:1.5;">
+      <div class="bottom-org">CAT Sertão — CBMPE</div>
+      <div>Centro de Atividades Técnicas do Sertão · Uso interno da corporação</div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var show = CatAuth.show, hide = CatAuth.hide, api = CatAuth.api, escapeHtml = CatAuth.escapeHtml;
+  var session = null;
+  var logStatusEl = document.getElementById('log-status');
+  var logTableEl = document.getElementById('log-table');
+
+  function renderLogTable(rows) {
+    if (rows.length === 0) {
+      hide(logTableEl);
+      show(logStatusEl);
+      logStatusEl.textContent = 'Nenhum registro para os filtros selecionados.';
+      return;
+    }
+    hide(logStatusEl);
+    var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
+    var tbody = '<tbody>' + rows.map(function (r) {
+      return '<tr><td>' + escapeHtml(r.timestamp) + '</td><td>' + escapeHtml(r.login) + '</td><td>' + escapeHtml(r.perfil) + '</td><td>' + escapeHtml(r.acao) + '</td><td>' + escapeHtml(r.detalhe) + '</td></tr>';
+    }).join('') + '</tbody>';
+    logTableEl.innerHTML = thead + tbody;
+    show(logTableEl);
+  }
+
+  function carregarLog() {
+    show(logStatusEl);
+    hide(logTableEl);
+    logStatusEl.textContent = 'Carregando...';
+    var acao = document.getElementById('log-filtro-acao').value;
+    var inicio = document.getElementById('log-filtro-inicio').value;
+    var fim = document.getElementById('log-filtro-fim').value;
+    api({ action: 'listarLog', token: session.token, acao: acao, dataInicio: inicio, dataFim: fim }).then(function (res) {
+      if (!res.ok) {
+        logStatusEl.textContent = res.error || 'Não foi possível carregar o LOG.';
+        return;
+      }
+      renderLogTable(res.log || []);
+    }).catch(function () {
+      logStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
+    });
+  }
+
+  CatAuth.requireSession(['admin_master']).then(function (s) {
+    session = s;
+    hide(document.getElementById('loading-msg'));
+    document.getElementById('session-login').textContent = session.login;
+    document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
+    show(document.getElementById('log-content'));
+
+    carregarLog();
+    document.getElementById('log-filtrar').addEventListener('click', carregarLog);
+    document.getElementById('log-refresh').addEventListener('click', carregarLog);
+  }, function (err) {
+    hide(document.getElementById('loading-msg'));
+    var denied = document.getElementById('denied-box');
+    var text = document.getElementById('denied-text');
+    if (err.code === 'no_session' || err.code === 'invalid_session') {
+      text.textContent = 'Você precisa fazer login no site principal antes de acessar esta página.';
+    } else if (err.code === 'forbidden') {
+      text.textContent = 'O LOG de auditoria é visível apenas para o perfil Admin Master.';
+    } else {
+      text.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente em instantes.';
+    }
+    show(denied);
+  });
+})();
+</script>
+</body>
+</html>

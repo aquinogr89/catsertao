@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minha Conta — CAT Sertão</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14204A">
+<link rel="icon" type="image/png" href="CAT-SERTAO-SEM-FUNDO.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
+
+<header class="top pad-x">
+  <div class="top-inner wrap">
+    <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
+    <div style="min-width:0;">
+      <div class="top-org">Corpo de Bombeiros Militar de Pernambuco</div>
+      <h1 class="top-title">Minha Conta</h1>
+      <div class="top-sub">CAT Sertão</div>
+    </div>
+    <div class="top-actions">
+      <span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="content pad-x wrap">
+  <a class="util-back" href="index.html">← Voltar ao site principal</a>
+
+  <div id="loading-msg" class="table-status">Verificando sessão...</div>
+
+  <div id="denied-box" class="access-denied u-hidden">
+    <strong>Acesso não disponível</strong>
+    <p id="denied-text"></p>
+  </div>
+
+  <section id="conta-content" class="section u-hidden">
+    <div class="eyebrow"><span>Conta</span><span class="rule"></span></div>
+    <h2>Alterar senha</h2>
+    <p class="lead">Troque sua senha a qualquer momento. Se este é o seu primeiro acesso como admin_master, troque a senha inicial agora.</p>
+    <div class="termo-panel" style="max-width:420px;">
+      <form id="senha-form" style="display:flex; flex-direction:column; gap:14px;">
+        <label class="field">Senha atual
+          <input id="senha-atual" type="password" autocomplete="current-password" required>
+        </label>
+        <label class="field">Nova senha
+          <input id="senha-nova" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
+        </label>
+        <button type="submit" class="btn-red">Alterar senha</button>
+        <p id="senha-form-msg" class="field-error u-hidden"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom pad-x">
+  <div class="bottom-inner wrap">
+    <img src="CAT-SERTAO-SEM-FUNDO.png" alt="">
+    <div style="line-height:1.5;">
+      <div class="bottom-org">CAT Sertão — CBMPE</div>
+      <div>Centro de Atividades Técnicas do Sertão · Uso interno da corporação</div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var show = CatAuth.show, hide = CatAuth.hide, api = CatAuth.api;
+
+  CatAuth.requireSession(null).then(function (session) {
+    hide(document.getElementById('loading-msg'));
+    document.getElementById('session-login').textContent = session.login;
+    document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
+    show(document.getElementById('conta-content'));
+
+    document.getElementById('senha-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msgEl = document.getElementById('senha-form-msg');
+      hide(msgEl);
+      var senhaAtual = document.getElementById('senha-atual').value;
+      var senhaNova = document.getElementById('senha-nova').value;
+
+      api({ action: 'alterarSenha', token: session.token, senhaAtual: senhaAtual, senhaNova: senhaNova }).then(function (res) {
+        show(msgEl);
+        if (res.ok) {
+          e.target.reset();
+          msgEl.style.color = 'var(--green-hover)';
+          msgEl.style.background = '#E9F7EF';
+          msgEl.style.borderColor = '#BFE8D2';
+          msgEl.textContent = 'Senha alterada com sucesso.';
+        } else {
+          msgEl.style.color = '';
+          msgEl.style.background = '';
+          msgEl.style.borderColor = '';
+          msgEl.textContent = res.error || 'Não foi possível alterar a senha.';
+        }
+      }).catch(function () {
+        show(msgEl);
+        msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
+      });
+    });
+  }, function (err) {
+    hide(document.getElementById('loading-msg'));
+    var denied = document.getElementById('denied-box');
+    var text = document.getElementById('denied-text');
+    if (err.code === 'no_session' || err.code === 'invalid_session') {
+      text.textContent = 'Você precisa fazer login no site principal antes de acessar esta página.';
+    } else {
+      text.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente em instantes.';
+    }
+    show(denied);
+  });
+})();
+</script>
+</body>
+</html>

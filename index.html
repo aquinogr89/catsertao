@@ -15,162 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --navy:#14204A; --navy-2:#1B2A5B; --red:#C1121F; --red-hover:#97121A; --gold:#E8B302;
-    --ink:#1C1B19; --muted:#57554F; --muted-2:#6B6A66; --muted-3:#8C8A83;
-    --border:#E5E0D5; --border-2:#D8D1C3; --field-bg:#FBFAF7;
-    --chip-bg:#F4F1EA; --chip-border:#E6E0D4;
-    --warn-bg:#FBF3D6; --warn-border:#F0DFA0; --warn-text:#7a5f00; --note-text:#8a6a00;
-    --green:#1E8E4E; --green-hover:#177a41; --green-dot:#7DE6A5;
-  }
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  /* Regras de layout (display:flex/grid/inline em elementos ou no atributo style)
-     vencem o atributo "hidden" nativo mesmo sem serem mais especificas, porque
-     CSS de autor sempre supera o stylesheet padrao do navegador. Por isso todo
-     show/hide no JS usa esta classe com !important em vez do atributo hidden. */
-  .u-hidden{ display:none !important; }
-  body{ font-family:'Public Sans', sans-serif; color:var(--ink); background:#FBFAF8; }
-  h1,h2{ font-family:'Oswald', sans-serif; }
-  a{ color:inherit; }
-  img{ display:block; max-width:100%; }
-  .pad-x{ padding-left:28px; padding-right:28px; }
-  .wrap{ max-width:1180px; margin:0 auto; }
-  .eyebrow{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
-  .eyebrow span:first-child{ font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:.2em; color:var(--red); text-transform:uppercase; }
-  .eyebrow .rule{ height:1px; flex:1; min-width:40px; background:#DDD6CA; }
-  .section{ margin-bottom:44px; }
-  .section h2{ font-weight:700; font-size:clamp(22px,2.6vw,30px); margin:0 0 6px; text-transform:uppercase; letter-spacing:.01em; }
-  .lead{ margin:0 0 18px; max-width:640px; color:var(--muted); font-size:15px; line-height:1.55; }
-  .btn-red{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--red); border:none; padding:13px; border-radius:10px; cursor:pointer; }
-  .btn-red:hover{ background:var(--red-hover); }
-  .btn-outline-navy{ display:inline-flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--navy); background:#fff; border:1.5px solid var(--navy); padding:12px 18px; border-radius:10px; text-decoration:none; margin-bottom:22px; }
-  .btn-outline-navy:hover{ background:var(--navy); color:#fff; }
-  .btn-navy{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:var(--navy); border:none; padding:12px 18px; border-radius:10px; cursor:pointer; white-space:nowrap; }
-  .btn-navy:hover{ background:var(--navy-2); }
-  .btn-ghost{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12.5px; color:var(--muted); background:#fff; border:1px solid var(--border-2); padding:9px 14px; border-radius:8px; cursor:pointer; }
-  .btn-ghost:hover{ border-color:var(--red); color:var(--red); }
-  .field{ display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--muted); text-transform:uppercase; }
-  .field input, .field select{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
-  .field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
-  .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
-  .btn-danger{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:6px 11px; border-radius:7px; cursor:pointer; }
-  .btn-danger:hover{ background:#F5D5D5; }
-  .status-pill{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
-  .status-pill.ativo{ background:#E9F7EF; color:var(--green-hover); }
-  .status-pill.inativo{ background:var(--chip-bg); color:var(--muted-3); }
-  .field-error{ font-size:12.5px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:9px 11px; border-radius:9px; text-align:center; }
-
-  /* Login gate (acesso geral) */
-  .gate{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:radial-gradient(120% 120% at 50% 0%, #1c2c62 0%, #14204A 55%, #0e1636 100%); }
-  .gate-card{ width:100%; max-width:400px; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(0,0,0,.6); }
-  .gate-card-head{ background:var(--navy); padding:28px 26px 24px; text-align:center; }
-  .gate-logo{ width:82px; height:82px; margin:0 auto 14px; background:#fff; border-radius:14px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  .gate-logo img{ width:66px; height:66px; object-fit:contain; }
-  .gate-org{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
-  .gate-title{ font-family:'Oswald',sans-serif; font-weight:700; font-size:22px; color:#fff; text-transform:uppercase; letter-spacing:.02em; margin-top:4px; }
-  .gate-form{ padding:26px; display:flex; flex-direction:column; gap:16px; }
-  .gate-hint{ text-align:center; color:var(--muted); font-size:13.5px; line-height:1.5; margin-bottom:2px; }
-  .gate-footnote{ text-align:center; font-size:11.5px; color:var(--muted-3); margin-top:2px; }
-
-  /* App shell */
-  header.top{ background:var(--navy); color:#fff; padding:22px 28px; }
-  .top-inner{ display:flex; align-items:center; gap:22px; }
-  .top-logo{ width:78px; height:78px; background:#fff; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  .top-logo img{ width:64px; height:64px; object-fit:contain; }
-  .top-org{ font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:.22em; color:var(--gold); text-transform:uppercase; }
-  .top-title{ font-weight:700; font-size:clamp(20px,3vw,30px); line-height:1.08; margin:5px 0 0; text-transform:uppercase; letter-spacing:.01em; }
-  .top-sub{ font-family:'Oswald',sans-serif; font-weight:500; font-size:14px; letter-spacing:.14em; color:#cfd4e6; margin-top:3px; text-transform:uppercase; }
-  .top-actions{ margin-left:auto; align-self:flex-start; display:flex; align-items:center; gap:10px; white-space:nowrap; }
-  .badge-live{ display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); padding:7px 13px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.04em; }
-  .badge-live .dot{ width:8px; height:8px; border-radius:50%; background:#3FBF6A; box-shadow:0 0 0 3px rgba(63,191,106,.25); }
-  .btn-logout{ display:flex; align-items:center; gap:7px; background:transparent; border:1px solid rgba(255,255,255,.28); color:#fff; font-family:'Public Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:.04em; padding:7px 13px; border-radius:999px; cursor:pointer; }
-  .btn-logout:hover{ background:rgba(255,255,255,.14); }
-
-  nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
-  .quicknav-inner{ display:flex; gap:22px; flex-wrap:wrap; padding:12px 28px; font-family:'Oswald',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
-  .quicknav-inner a{ text-decoration:none; color:var(--muted); }
-  .quicknav-inner a:hover{ color:var(--red); }
-
-  .banner-warn{ background:var(--warn-bg); border-bottom:1px solid var(--warn-border); color:var(--warn-text); }
-  .banner-warn-inner{ padding:9px 28px; font-size:12.5px; line-height:1.45; display:flex; gap:9px; align-items:center; }
-  .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
-
-  main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
-
-  /* Cards grid (docs) */
-  .cards-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
-  .doc-card{ display:flex; align-items:center; gap:15px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px 17px; box-shadow:0 6px 20px -16px rgba(20,32,74,.5); text-decoration:none; }
-  .doc-card:hover{ border-color:var(--red); }
-  .doc-kind{ width:46px; height:46px; flex:0 0 auto; border-radius:10px; background:var(--navy-2); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-weight:700; font-size:12px; letter-spacing:.04em; }
-  .doc-title{ font-family:'Oswald',sans-serif; font-weight:600; font-size:17px; line-height:1.2; color:var(--ink); text-transform:uppercase; letter-spacing:.01em; }
-  .doc-desc{ font-size:13px; line-height:1.45; color:var(--muted-2); }
-  .doc-arrow{ margin-left:auto; flex:0 0 auto; color:var(--red); font-size:22px; font-weight:700; padding-left:6px; }
-
-  /* Termo de Compromisso / painéis com tabela (também reaproveitado por Usuários) */
-  .termo-panel{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:22px; box-shadow:0 10px 30px -18px rgba(20,32,74,.45); }
-  .termo-panel .field-error{ width:100%; margin-top:12px; }
-  .cat-filter-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-  .cat-filter-row input{ flex:1; min-width:220px; max-width:440px; font-family:'Public Sans',sans-serif; font-size:14.5px; padding:11px 15px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
-  .count-badge{ font-size:13px; color:var(--muted-3); font-weight:500; }
-  .table-wrap{ overflow-x:auto; }
-  .table-status{ font-size:13.5px; color:var(--muted-3); padding:10px 2px; }
-  table.termo-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
-  table.termo-table th, table.termo-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
-  table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); background:#FAF8F3; position:sticky; top:0; }
-  table.termo-table tr:hover td{ background:#FAF8F3; }
-
-  /* SATEC cards */
-  .region-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:10px 0 18px; }
-  .chip-navy{ display:inline-flex; align-items:center; gap:7px; background:var(--navy); color:#fff; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:.14em; text-transform:uppercase; padding:6px 12px; border-radius:6px; }
-  .chip-warn{ display:inline-flex; align-items:center; gap:7px; background:var(--warn-bg); color:var(--note-text); border:1px solid var(--warn-border); font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:6px; }
-  .filter-hint{ font-size:12.5px; color:var(--muted-3); margin-top:8px; }
-  .satec-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
-  .satec-card{ display:flex; flex-direction:column; background:#fff; border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:0 6px 20px -16px rgba(20,32,74,.5); }
-  .satec-accent{ height:5px; }
-  .satec-body{ padding:18px 18px 16px; display:flex; flex-direction:column; gap:13px; flex:1; }
-  .satec-head{ display:flex; align-items:flex-start; gap:11px; }
-  .satec-tag{ font-family:'Oswald',sans-serif; font-weight:700; font-size:12px; letter-spacing:.08em; color:#fff; padding:6px 10px; border-radius:6px; white-space:nowrap; text-transform:uppercase; margin-top:2px; }
-  .satec-city{ font-family:'Oswald',sans-serif; font-weight:600; font-size:19px; line-height:1.15; text-transform:uppercase; letter-spacing:.01em; }
-  .satec-addr{ display:flex; flex-direction:column; gap:7px; }
-  .satec-addr-item{ display:flex; gap:9px; align-items:flex-start; font-size:13.5px; line-height:1.5; color:#4B4943; }
-  .satec-addr-item .sq{ width:7px; height:7px; border-radius:2px; background:var(--red); flex:0 0 auto; margin-top:6px; }
-  .satec-meta{ display:flex; flex-direction:column; gap:5px; padding-top:2px; border-top:1px dashed #E7E1D5; margin-top:auto; font-size:13px; color:var(--muted); }
-  .satec-meta .note{ font-size:12.5px; color:var(--note-text); background:var(--warn-bg); border:1px solid var(--warn-border); padding:6px 9px; border-radius:6px; }
-  .satec-munis-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.12em; color:var(--muted-3); text-transform:uppercase; }
-  .satec-munis{ display:flex; flex-wrap:wrap; gap:5px; }
-  .satec-munis span{ font-size:11.5px; color:#4B4943; background:var(--chip-bg); border:1px solid var(--chip-border); padding:3px 8px; border-radius:5px; line-height:1.3; }
-  .satec-btn{ display:flex; align-items:center; justify-content:center; gap:9px; font-weight:700; font-size:14px; padding:11px; border-radius:10px; letter-spacing:.01em; text-decoration:none; }
-  .satec-btn.wa{ background:var(--green); color:#fff; }
-  .satec-btn.wa:hover{ background:var(--green-hover); }
-  .satec-btn.wa .dot{ width:9px; height:9px; border-radius:50%; background:var(--green-dot); }
-  .satec-btn.map{ background:#fff; color:var(--red); border:1.5px solid var(--red); padding:9.5px; }
-  .satec-btn.map:hover{ background:var(--red); color:#fff; }
-  .satec-btn.mail{ background:#fff; color:var(--navy); border:1.5px solid var(--navy); padding:9.5px; word-break:break-all; text-align:center; }
-  .satec-btn.mail:hover{ background:var(--navy); color:#fff; }
-  .empty-state{ text-align:center; padding:48px 20px; color:var(--muted-3); font-size:15px; background:#fff; border:1px dashed #DDD6CA; border-radius:14px; }
-
-  footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
-  .bottom-inner{ padding:22px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; }
-  .bottom-inner img{ width:38px; height:38px; object-fit:contain; background:#fff; border-radius:8px; padding:3px; }
-  .bottom-org{ font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.06em; color:#fff; text-transform:uppercase; font-size:13px; }
-  .bottom-copy{ margin-left:auto; color:#8f96b3; }
-
-  @media (max-width: 640px){
-    .pad-x{ padding-left:16px; padding-right:16px; }
-    .top-inner{ flex-wrap:wrap; row-gap:14px; }
-    .top-logo{ width:58px; height:58px; }
-    .top-logo img{ width:46px; height:46px; }
-    .top-actions{ flex-basis:100%; margin-left:0; align-self:auto; }
-    .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
-    .cards-grid, .satec-grid{ grid-template-columns:1fr; }
-    .cat-filter-row{ flex-direction:column; align-items:stretch; }
-    .cat-filter-row input{ max-width:none; min-width:0; }
-    #chat-frame{ height:480px; }
-    .bottom-inner{ flex-direction:column; align-items:flex-start; }
-    .bottom-copy{ margin-left:0; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -221,10 +66,11 @@
       <a href="#documentos">Documentos</a>
       <a id="nav-termo" href="#termo" class="u-hidden">Termo de Compromisso</a>
       <a href="#satecs">SATECs</a>
-      <a id="nav-rti" href="https://aquinogr89.github.io/rti-catsertao/" class="u-hidden">Cadastrar RTI ↗</a>
-      <a id="nav-usuarios" href="#usuarios" class="u-hidden">Usuários</a>
-      <a id="nav-log" href="#log" class="u-hidden">LOG</a>
-      <a href="#conta">Minha Conta</a>
+      <a id="nav-rti" href="#" target="_blank">Mapa de RTI ↗</a>
+      <a id="nav-triagem" href="#" target="_blank">Triagem de Riscos ↗</a>
+      <a id="nav-usuarios" href="usuarios.html" target="_blank" class="u-hidden">Usuários ↗</a>
+      <a id="nav-log" href="log.html" target="_blank" class="u-hidden">LOG ↗</a>
+      <a href="conta.html" target="_blank">Minha Conta ↗</a>
     </div>
   </nav>
 
@@ -310,79 +156,6 @@
       <div id="satec-empty" class="empty-state u-hidden"></div>
     </section>
 
-    <section class="section u-hidden" id="usuarios-section">
-      <div class="eyebrow"><span>Administração</span><span class="rule"></span></div>
-      <h2>Usuários</h2>
-      <p class="lead">Admin Master gerencia qualquer usuário, inclusive outros Admins. Admin só pode criar/desativar usuários dos perfis Vistoriador (user1) e Acesso Básico (user2).</p>
-
-      <div class="termo-panel" style="margin-bottom:18px;">
-        <form id="usuario-form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
-          <label class="field" style="flex:1; min-width:160px;">Login
-            <input id="novo-usuario-login" type="text" placeholder="ex: joao.silva" autocomplete="off" required>
-          </label>
-          <label class="field" style="flex:1; min-width:160px;">Senha provisória
-            <input id="novo-usuario-senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="new-password" required>
-          </label>
-          <label class="field" style="min-width:180px;">Perfil
-            <select id="novo-usuario-perfil"></select>
-          </label>
-          <button type="submit" class="btn-navy">Criar usuário</button>
-        </form>
-        <p id="usuario-form-msg" class="field-error u-hidden" style="margin-top:12px;"></p>
-      </div>
-
-      <div class="table-wrap">
-        <p id="usuarios-status" class="table-status"></p>
-        <table id="usuarios-table" class="termo-table u-hidden"></table>
-      </div>
-    </section>
-
-    <section class="section u-hidden" id="log-section">
-      <div class="eyebrow"><span>Auditoria</span><span class="rule"></span></div>
-      <h2>LOG de acesso</h2>
-      <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
-
-      <div class="cat-filter-row">
-        <select id="log-filtro-acao">
-          <option value="">Todas as ações</option>
-          <option value="login">login</option>
-          <option value="login_falho">login_falho</option>
-          <option value="logout">logout</option>
-          <option value="cadastro_rti">cadastro_rti</option>
-          <option value="acesso_termo">acesso_termo</option>
-          <option value="criacao_usuario">criacao_usuario</option>
-          <option value="desativacao_usuario">desativacao_usuario</option>
-          <option value="alteracao_senha">alteracao_senha</option>
-        </select>
-        <input id="log-filtro-inicio" type="date" title="Data inicial">
-        <input id="log-filtro-fim" type="date" title="Data final">
-        <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
-        <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
-      </div>
-      <div class="table-wrap">
-        <p id="log-status" class="table-status"></p>
-        <table id="log-table" class="termo-table u-hidden"></table>
-      </div>
-    </section>
-
-    <section class="section" id="conta">
-      <div class="eyebrow"><span>Conta</span><span class="rule"></span></div>
-      <h2>Minha Conta</h2>
-      <p class="lead">Troque sua senha a qualquer momento. Se este é o seu primeiro acesso como admin_master, troque a senha inicial agora.</p>
-      <div class="termo-panel" style="max-width:420px;">
-        <form id="senha-form" style="display:flex; flex-direction:column; gap:14px;">
-          <label class="field">Senha atual
-            <input id="senha-atual" type="password" autocomplete="current-password" required>
-          </label>
-          <label class="field">Nova senha
-            <input id="senha-nova" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
-          </label>
-          <button type="submit" class="btn-red">Alterar senha</button>
-          <p id="senha-form-msg" class="field-error u-hidden"></p>
-        </form>
-      </div>
-    </section>
-
   </main>
 
   <footer class="bottom pad-x">
@@ -398,74 +171,38 @@
 
 </div>
 
+<script src="common.js"></script>
 <script>
 (function () {
   'use strict';
 
-  function show(el) { el.classList.remove('u-hidden'); }
-  function hide(el) { el.classList.add('u-hidden'); }
-  function toggle(el, visible) { if (!el) return; if (visible) show(el); else hide(el); }
+  var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api;
+  var escapeHtml = CatAuth.escapeHtml;
 
-  /* ===================== Backend único (auth + RTI), compartilhado com o site rti-catsertao ===================== */
-  // Depois de implantar apps-script/Code.gs + Auth.gs (rti-catsertao) como Web App,
-  // cole a mesma URL /exec aqui e em rti-catsertao/app.js (SHEETS_API_URL).
-  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQwjmNoPHYD0lOvqaAsOs9wQntZ24p68y9cAGn1yck7cUgmZia_-6aH2yv1dqPvmcIGQ/exec';
-  var SESSION_KEY = 'cat_session';
-
-  // Em ambiente de teste local (localhost/127.0.0.1), o link "Cadastrar RTI"
-  // aponta para o rti-catsertao rodando localmente em vez da URL pública do
-  // GitHub Pages — assim dá para testar o fluxo integrado entre os dois
-  // sites sem precisar lembrar de reverter isso antes do merge.
-  var RTI_URL_PRODUCAO = 'https://aquinogr89.github.io/rti-catsertao/';
-  var RTI_URL_LOCAL = 'http://localhost:5501/';
-  var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  var RTI_URL = isLocalhost ? RTI_URL_LOCAL : RTI_URL_PRODUCAO;
-  document.getElementById('nav-rti').href = RTI_URL;
-  var PERFIL_LABEL = { admin_master: 'Admin Master', admin: 'Admin', user1: 'Vistoriador', user2: 'Acesso Básico' };
+  document.getElementById('nav-rti').href = CatAuth.RTI_URL;
+  document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
 
   var gateEl = document.getElementById('gate');
   var appEl = document.getElementById('app');
   var chatInitialized = false;
   var session = null; // { token, login, perfil }
 
-  function api(payload) {
-    return fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    }).then(function (res) { return res.json(); });
-  }
-
-  function saveSession(s) {
-    session = s;
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
-  }
-  function clearSession() {
-    session = null;
-    sessionStorage.removeItem(SESSION_KEY);
-  }
-  function loadSession() {
-    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
-    catch (e) { return null; }
-  }
-
   function applyPerfilVisibility() {
     var perfil = session.perfil;
-    var canRTI = perfil === 'admin_master' || perfil === 'admin' || perfil === 'user1';
     var canTermo = perfil === 'admin_master' || perfil === 'admin';
     var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
     var canLog = perfil === 'admin_master';
 
-    toggle(document.getElementById('nav-rti'), canRTI);
+    // Mapa de RTI e Triagem de Riscos: visíveis para qualquer usuário logado
+    // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
+    // de cada site, revalidado no servidor).
     toggle(document.getElementById('nav-termo'), canTermo);
     toggle(document.getElementById('termo-section'), canTermo);
     toggle(document.getElementById('nav-usuarios'), canUsuarios);
-    toggle(document.getElementById('usuarios-section'), canUsuarios);
     toggle(document.getElementById('nav-log'), canLog);
-    toggle(document.getElementById('log-section'), canLog);
 
     document.getElementById('session-login').textContent = session.login;
-    document.getElementById('session-perfil').textContent = PERFIL_LABEL[perfil] || perfil;
+    document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[perfil] || perfil;
   }
 
   function showApp() {
@@ -475,15 +212,12 @@
     applyPerfilVisibility();
     renderSatecs();
     initChat();
-    if (session.perfil === 'admin_master' || session.perfil === 'admin') {
-      carregarTermo();
-      carregarUsuarios();
-    }
-    if (session.perfil === 'admin_master') carregarLog();
+    if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
   }
 
   function showGate(message) {
-    clearSession();
+    CatAuth.clearSession();
+    session = null;
     hide(appEl);
     show(gateEl);
     var errEl = document.getElementById('gate-error');
@@ -491,11 +225,14 @@
     else { hide(errEl); }
   }
 
-  var saved = loadSession();
+  var saved = CatAuth.loadSession();
   if (saved && saved.token) {
     api({ action: 'validarToken', token: saved.token }).then(function (res) {
-      if (res.ok) { saveSession({ token: saved.token, login: res.login, perfil: res.perfil }); showApp(); }
-      else { showGate(); }
+      if (res.ok) {
+        session = { token: saved.token, login: res.login, perfil: res.perfil };
+        CatAuth.saveSession(session);
+        showApp();
+      } else { showGate(); }
     }).catch(function () { showGate(); });
   }
 
@@ -516,7 +253,8 @@
     btn.disabled = true;
     api({ action: 'login', login: login, senha: senha }).then(function (res) {
       if (res.ok) {
-        saveSession({ token: res.token, login: res.login, perfil: res.perfil });
+        session = { token: res.token, login: res.login, perfil: res.perfil };
+        CatAuth.saveSession(session);
         document.getElementById('gate-pass').value = '';
         showApp();
       } else {
@@ -531,7 +269,7 @@
 
   document.getElementById('logout-btn').addEventListener('click', function () {
     if (session) api({ action: 'logout', token: session.token }).catch(function () {});
-    clearSession();
+    CatAuth.clearSession();
     location.reload();
   });
 
@@ -594,12 +332,6 @@
       mapUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.addresses[0].split('·')[0].trim() + ', ' + s.city.split('/')[0].trim() + ' - PE')
     });
   }).sort(function (a, b) { return (a.type === 'Posto' ? 1 : 0) - (b.type === 'Posto' ? 1 : 0); });
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
 
   function satecCardHtml(s) {
     var addrHtml = s.addresses.map(function (addr) {
@@ -721,163 +453,9 @@
   document.getElementById('termo-refresh').addEventListener('click', carregarTermo);
   document.getElementById('termo-search').addEventListener('input', renderTermoTable);
 
-  /* ===================== Usuários — visível para admin_master/admin ===================== */
-  var usuariosRows = [];
-  var usuariosStatusEl = document.getElementById('usuarios-status');
-  var usuariosTableEl = document.getElementById('usuarios-table');
-
-  function montarOpcoesPerfil() {
-    var select = document.getElementById('novo-usuario-perfil');
-    var opcoes = session.perfil === 'admin_master' ? ['admin', 'user1', 'user2'] : ['user1', 'user2'];
-    select.innerHTML = opcoes.map(function (p) {
-      return '<option value="' + p + '">' + PERFIL_LABEL[p] + '</option>';
-    }).join('');
-  }
-
-  function podeGerenciarPerfilLocal(perfilAlvo) {
-    if (session.perfil === 'admin_master') return true;
-    return perfilAlvo === 'user1' || perfilAlvo === 'user2';
-  }
-
-  function renderUsuariosTable() {
-    if (usuariosRows.length === 0) {
-      hide(usuariosTableEl);
-      show(usuariosStatusEl);
-      usuariosStatusEl.textContent = 'Nenhum usuário cadastrado ainda.';
-      return;
-    }
-    hide(usuariosStatusEl);
-    var thead = '<thead><tr><th>Login</th><th>Perfil</th><th>Status</th><th>Criado por</th><th>Criado em</th><th></th></tr></thead>';
-    var tbody = '<tbody>' + usuariosRows.map(function (u) {
-      var pill = u.ativo ? '<span class="status-pill ativo">Ativo</span>' : '<span class="status-pill inativo">Inativo</span>';
-      var acao = (u.ativo && podeGerenciarPerfilLocal(u.perfil))
-        ? '<button type="button" class="btn-danger" data-desativar="' + escapeHtml(u.login) + '">Desativar</button>'
-        : '';
-      return '<tr><td>' + escapeHtml(u.login) + '</td><td>' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td>' + pill + '</td><td>' + escapeHtml(u.criado_por) + '</td><td>' + escapeHtml(u.criado_em) + '</td><td>' + acao + '</td></tr>';
-    }).join('') + '</tbody>';
-    usuariosTableEl.innerHTML = thead + tbody;
-    show(usuariosTableEl);
-  }
-
-  function carregarUsuarios() {
-    montarOpcoesPerfil();
-    show(usuariosStatusEl);
-    hide(usuariosTableEl);
-    usuariosStatusEl.textContent = 'Carregando...';
-    api({ action: 'listarUsuarios', token: session.token }).then(function (res) {
-      if (!res.ok) {
-        usuariosStatusEl.textContent = res.error || 'Não foi possível carregar os usuários.';
-        return;
-      }
-      usuariosRows = res.usuarios || [];
-      renderUsuariosTable();
-    }).catch(function () {
-      usuariosStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
-    });
-  }
-
-  document.getElementById('usuario-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var msgEl = document.getElementById('usuario-form-msg');
-    hide(msgEl);
-    var login = document.getElementById('novo-usuario-login').value.trim();
-    var senha = document.getElementById('novo-usuario-senha').value;
-    var perfil = document.getElementById('novo-usuario-perfil').value;
-
-    api({ action: 'criarUsuario', token: session.token, login: login, senha: senha, perfil: perfil }).then(function (res) {
-      if (res.ok) {
-        e.target.reset();
-        montarOpcoesPerfil();
-        carregarUsuarios();
-      } else {
-        msgEl.textContent = res.error || 'Não foi possível criar o usuário.';
-        show(msgEl);
-      }
-    }).catch(function () {
-      msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
-      show(msgEl);
-    });
-  });
-
-  usuariosTableEl.addEventListener('click', function (e) {
-    var btn = e.target.closest('button[data-desativar]');
-    if (!btn) return;
-    var login = btn.getAttribute('data-desativar');
-    if (!window.confirm('Desativar o usuário "' + login + '"?')) return;
-    api({ action: 'desativarUsuario', token: session.token, login: login }).then(function (res) {
-      if (res.ok) carregarUsuarios();
-      else window.alert(res.error || 'Não foi possível desativar o usuário.');
-    });
-  });
-
-  /* ===================== LOG de auditoria — visível apenas para admin_master ===================== */
-  var logStatusEl = document.getElementById('log-status');
-  var logTableEl = document.getElementById('log-table');
-
-  function renderLogTable(rows) {
-    if (rows.length === 0) {
-      hide(logTableEl);
-      show(logStatusEl);
-      logStatusEl.textContent = 'Nenhum registro para os filtros selecionados.';
-      return;
-    }
-    hide(logStatusEl);
-    var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
-    var tbody = '<tbody>' + rows.map(function (r) {
-      return '<tr><td>' + escapeHtml(r.timestamp) + '</td><td>' + escapeHtml(r.login) + '</td><td>' + escapeHtml(r.perfil) + '</td><td>' + escapeHtml(r.acao) + '</td><td>' + escapeHtml(r.detalhe) + '</td></tr>';
-    }).join('') + '</tbody>';
-    logTableEl.innerHTML = thead + tbody;
-    show(logTableEl);
-  }
-
-  function carregarLog() {
-    show(logStatusEl);
-    hide(logTableEl);
-    logStatusEl.textContent = 'Carregando...';
-    var acao = document.getElementById('log-filtro-acao').value;
-    var inicio = document.getElementById('log-filtro-inicio').value;
-    var fim = document.getElementById('log-filtro-fim').value;
-    api({ action: 'listarLog', token: session.token, acao: acao, dataInicio: inicio, dataFim: fim }).then(function (res) {
-      if (!res.ok) {
-        logStatusEl.textContent = res.error || 'Não foi possível carregar o LOG.';
-        return;
-      }
-      renderLogTable(res.log || []);
-    }).catch(function () {
-      logStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
-    });
-  }
-
-  document.getElementById('log-filtrar').addEventListener('click', carregarLog);
-  document.getElementById('log-refresh').addEventListener('click', carregarLog);
-
-  /* ===================== Minha Conta — alterar senha (todos os perfis) ===================== */
-  document.getElementById('senha-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var msgEl = document.getElementById('senha-form-msg');
-    hide(msgEl);
-    var senhaAtual = document.getElementById('senha-atual').value;
-    var senhaNova = document.getElementById('senha-nova').value;
-
-    api({ action: 'alterarSenha', token: session.token, senhaAtual: senhaAtual, senhaNova: senhaNova }).then(function (res) {
-      msgEl.classList.remove('u-hidden');
-      if (res.ok) {
-        e.target.reset();
-        msgEl.style.color = 'var(--green-hover)';
-        msgEl.style.background = '#E9F7EF';
-        msgEl.style.borderColor = '#BFE8D2';
-        msgEl.textContent = 'Senha alterada com sucesso.';
-      } else {
-        msgEl.style.color = '';
-        msgEl.style.background = '';
-        msgEl.style.borderColor = '';
-        msgEl.textContent = res.error || 'Não foi possível alterar a senha.';
-      }
-    }).catch(function () {
-      msgEl.classList.remove('u-hidden');
-      msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
-    });
-  });
+  // Usuários, LOG e Minha Conta agora são páginas separadas (usuarios.html,
+  // log.html, conta.html), abertas em nova aba a partir do menu acima —
+  // cada uma revalida sessão e perfil no servidor por conta própria.
 
 })();
 </script>

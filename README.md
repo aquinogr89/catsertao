@@ -12,11 +12,23 @@ Publicado em: https://aquinogr89.github.io/catsertao/
 ## Estrutura
 
 ```
-index.html                página única (login, app, todas as seções)
-chat.html                  iframe isolado do widget de chat (n8n)
-apps-script/Code.gs        backend LEGADO do Termo de Compromisso (ver nota abaixo)
-CAT-SERTAO-SEM-FUNDO.png   logo usado no cabeçalho/rodapé
+index.html                login + Atendimento, Documentos, Termo, SATECs
+conta.html                  Minha Conta (troca de senha) — abre em nova aba
+usuarios.html               gestão de usuários — abre em nova aba
+log.html                    LOG de auditoria — abre em nova aba
+common.js                   sessão, chamadas à API, helpers — compartilhado por todas as páginas
+style.css                    estilos compartilhados por todas as páginas
+chat.html                   iframe isolado do widget de chat (n8n)
+apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota abaixo)
+CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
 ```
+
+`conta.html`, `usuarios.html` e `log.html` são páginas próprias (não seções
+da mesma página) para poderem abrir em **nova aba** a partir do menu — cada
+uma revalida a sessão e o perfil no servidor de forma independente (via
+`CatAuth.requireSession`, em `common.js`); se a sessão for inválida ou o
+perfil não tiver permissão, a página mostra uma mensagem de acesso negado
+em vez do conteúdo.
 
 > **Nota sobre `apps-script/Code.gs` deste repositório:** esse arquivo é o
 > backend **antigo**, autônomo, que só servia a "tabela de controle" do
@@ -37,19 +49,22 @@ pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
-| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Cadastrar RTI, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria. |
-| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Cadastrar RTI, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
-| `user1`        | Atendimento, Documentos, SATECs, Cadastrar RTI. Sem Termo, sem Usuários, sem LOG. |
-| `user2`        | Atendimento, Documentos, SATECs. Navegação básica — sem RTI, sem Termo, sem Usuários, sem LOG. |
+| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria. |
+| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
+| `user1`        | Atendimento, Documentos, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
+| `user2`        | Atendimento, Documentos, SATECs, Mapa de RTI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 
 Qualquer perfil pode trocar a própria senha em **Minha Conta**.
 
-O botão **"Cadastrar RTI"** do menu leva ao site
-[rti-catsertao](https://aquinogr89.github.io/rti-catsertao/), publicado sob o
-mesmo domínio `aquinogr89.github.io` — por isso o token de sessão
-(`sessionStorage`) é compartilhado entre os dois sites automaticamente,
-desde que a navegação aconteça na mesma aba (é assim que o link já está
-configurado; não abra em nova aba).
+Os links **"Mapa de RTI"** e **"Triagem de Riscos"** do menu são visíveis
+para **todos** os perfis logados e abrem em **nova aba**: o mapa de RTI
+([rti-catsertao](https://aquinogr89.github.io/rti-catsertao/)) é público
+para consulta, mas só cadastra ponto quem tem perfil autorizado — o site
+rti-catsertao revalida isso no próprio Apps Script a cada cadastro. Como
+os dois sites e as páginas utilitárias (`conta.html`, `usuarios.html`,
+`log.html`) ficam sob o mesmo domínio `aquinogr89.github.io`, o token de
+sessão (`sessionStorage`) é herdado automaticamente pela aba nova, mesmo
+sem passar por um novo login.
 
 ## Configurar o backend (Apps Script único, compartilhado com o rti-catsertao)
 
@@ -60,11 +75,17 @@ https://github.com/aquinogr89/rti-catsertao/blob/main/README.md
 
 Depois de implantar, copie a URL `/exec` gerada e cole em **dois lugares**:
 
-1. Neste repositório, em [`index.html`](index.html), na constante
-   `APPS_SCRIPT_URL` (dentro da tag `<script>`, próximo ao topo).
+1. Neste repositório, em [`common.js`](common.js), na constante
+   `APPS_SCRIPT_URL` (usada por `index.html`, `conta.html`, `usuarios.html`
+   e `log.html` — um único lugar para as quatro páginas).
 2. No repositório `rti-catsertao`, em `app.js`, na constante `SHEETS_API_URL`.
 
 As duas constantes devem apontar para a **mesma URL** — é o mesmo backend.
+
+Também em `common.js`, a constante `TRIAGEM_URL` aponta para
+`https://aquinogr89.github.io/triagem-catsertao/` (repositório
+[triagem-catsertao](https://github.com/aquinogr89/triagem-catsertao)) —
+ajuste se a URL publicada for outra.
 
 ## Testar localmente
 
