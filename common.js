@@ -2,7 +2,7 @@
 
 /**
  * Compartilhado por index.html, conta.html, usuarios.html e log.html.
- * Guarda a configuração do backend e a sessão de login (sessionStorage),
+ * Guarda a configuração do backend e a sessão de login (localStorage),
  * usados por todas as páginas do site.
  */
 var CatAuth = (function () {
@@ -38,16 +38,24 @@ var CatAuth = (function () {
     }).then(function (res) { return res.json(); });
   }
 
+  // localStorage (não sessionStorage): sessionStorage só é herdado por abas
+  // abertas via "Duplicar aba" — uma aba aberta por um link comum (mesmo com
+  // target="_blank") recebe um sessionStorage vazio, então as páginas que
+  // abrem em nova aba (Mapa de RTI, Usuários, LOG, Minha Conta) nunca viam a
+  // sessão. localStorage é realmente compartilhado entre todas as abas da
+  // mesma origem. A expiração de verdade continua sendo sempre no servidor
+  // (token de 8h, revalidado a cada chamada) — isso aqui é só onde o
+  // navegador guarda o token entre uma página e outra.
   function saveSession(s) {
     session = s;
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    localStorage.setItem(SESSION_KEY, JSON.stringify(s));
   }
   function clearSession() {
     session = null;
-    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(SESSION_KEY);
   }
   function loadSession() {
-    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
     catch (e) { return null; }
   }
   function getSession() { return session; }
