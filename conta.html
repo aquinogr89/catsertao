@@ -93,11 +93,19 @@
       api({ action: 'alterarSenha', token: session.token, senhaAtual: senhaAtual, senhaNova: senhaNova }).then(function (res) {
         show(msgEl);
         if (res.ok) {
+          // Trocar a senha encerra TODAS as sessões desse login (inclusive
+          // esta) e o servidor já emite um token novo só para este
+          // dispositivo — precisa salvar esse token, senão esta própria aba
+          // fica com um token que acabou de ser invalidado.
+          if (res.token) {
+            session.token = res.token;
+            CatAuth.saveSession(session);
+          }
           e.target.reset();
           msgEl.style.color = 'var(--green-hover)';
           msgEl.style.background = '#E9F7EF';
           msgEl.style.borderColor = '#BFE8D2';
-          msgEl.textContent = 'Senha alterada com sucesso.';
+          msgEl.textContent = 'Senha alterada com sucesso. Outras sessões abertas em outros dispositivos foram encerradas.';
         } else {
           msgEl.style.color = '';
           msgEl.style.background = '';

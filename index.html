@@ -193,8 +193,6 @@
   document.getElementById('gate-nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('gate-nav-triagem').href = CatAuth.TRIAGEM_URL;
 
-  CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
-
   var gateEl = document.getElementById('gate');
   var appEl = document.getElementById('app');
   var chatInitialized = false;
@@ -226,6 +224,9 @@
     renderSatecs();
     initChat();
     if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
+    // Só liga os listeners de atividade (mousemove/keydown/etc.) depois de
+    // confirmado o login — na tela de login não há sessão para monitorar.
+    CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
   }
 
   function showGate(message) {
