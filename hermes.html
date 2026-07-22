@@ -87,6 +87,47 @@
   .hz-note{ font-size:12.5px; color:#f0c33d; background:#241d00; border:1px solid #3d2e00; padding:9px 12px; border-radius:8px; margin:10px 0; }
 
   footer.bottom{ background:var(--hz-bg-alt); border-top:1px solid var(--hz-border); }
+
+  /* Chat flutuante "Fale com o Hermes" */
+  .hz-chat-launcher{
+    position:fixed; right:24px; bottom:24px; width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg,#0033cc,#0044ff); color:#fff; display:flex; align-items:center;
+    justify-content:center; font-size:26px; cursor:pointer; box-shadow:0 10px 24px -8px rgba(0,51,204,.6);
+    z-index:1000; transition:transform .15s ease; user-select:none; border:none;
+  }
+  .hz-chat-launcher:hover{ transform:scale(1.05); }
+
+  .hz-chat-panel{
+    position:fixed; right:24px; bottom:92px; width:380px; height:520px; max-height:calc(100vh - 120px);
+    background:#1a2040; border:1px solid var(--hz-border); border-radius:16px; box-shadow:0 24px 60px -20px rgba(0,0,0,.6);
+    display:flex; flex-direction:column; overflow:hidden; z-index:1000;
+    opacity:0; transform:translateY(16px) scale(.98); pointer-events:none; transition:opacity .22s ease, transform .22s ease;
+  }
+  .hz-chat-panel.open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+
+  .hz-chat-header{ padding:14px 16px; background:#141a33; border-bottom:1px solid var(--hz-border); display:flex; align-items:center; justify-content:space-between; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; color:var(--hz-ink); }
+  .hz-chat-close{ background:none; border:none; color:var(--hz-muted); font-size:20px; cursor:pointer; line-height:1; padding:0 4px; }
+  .hz-chat-close:hover{ color:#fff; }
+
+  .hz-chat-messages{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+  .hz-msg{ max-width:85%; padding:9px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; }
+  .hz-msg.bot{ align-self:flex-start; background:#252a4a; color:#dfe3f5; border-bottom-left-radius:4px; }
+  .hz-msg.user{ align-self:flex-end; background:#0033cc; color:#fff; border-bottom-right-radius:4px; }
+  .hz-msg em{ color:var(--hz-gold); font-style:italic; }
+  .hz-msg .hz-msg-link{ display:inline-block; margin-top:6px; color:#8fb8ff; text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; font-size:13px; }
+
+  .hz-chat-quick{ display:flex; flex-wrap:wrap; gap:6px; padding:0 14px 12px; }
+  .hz-chat-quick button{ background:#20264a; border:1px solid var(--hz-border); color:var(--hz-muted); font-size:12px; padding:7px 10px; border-radius:20px; cursor:pointer; text-align:left; }
+  .hz-chat-quick button:hover{ border-color:var(--hz-gold); color:var(--hz-ink); }
+
+  .hz-chat-form{ padding:12px; border-top:1px solid var(--hz-border); }
+  .hz-chat-form input{ width:100%; background:#10142a; border:1px solid var(--hz-border); color:var(--hz-ink); padding:10px 12px; border-radius:10px; font-size:13.5px; outline:none; box-sizing:border-box; }
+  .hz-chat-form input:focus{ border-color:var(--hz-gold); }
+
+  @media (max-width:480px){
+    .hz-chat-panel{ width:100%; height:85vh; right:0; left:0; bottom:0; border-radius:16px 16px 0 0; }
+    .hz-chat-launcher{ right:16px; bottom:16px; }
+  }
 </style>
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
@@ -417,6 +458,8 @@
             <strong>Script:</strong> <code>/data/workspace/upload_neoenergia_drive.py</code>
             <div class="hz-note">
               Estes arquivos são demonstrativos/faturas com dados de conta (endereço, número de instalação, consumo, valores) — link direto de visualização/download não é listado aqui de propósito. Como <code>hermes.html</code> é HTML estático em GitHub Pages, um link de Drive embutido nesta página ficaria acessível a qualquer pessoa com a URL, mesmo sem login — o mesmo problema de segurança já registrado na seção Configurações para senhas. Consulte a pasta diretamente pelo Google Drive (com a conta autorizada) em vez de por aqui.
+              <br><br>
+              <strong>Planejado (ainda não implementado):</strong> um endpoint no Apps Script que valide o token de sessão no servidor — como já acontece com o Termo de Compromisso (<code>obterTermo</code>) — e só então devolva os links dos arquivos. Uma senha conferida só em JavaScript no cliente (ex.: comparar com a string <code>"admin_master"</code>) não protege nada, porque todo o código-fonte desta página já chega ao navegador antes de qualquer verificação — por isso essa abordagem foi descartada.
             </div>
             <hr>
             <strong>Arquivos armazenados (6):</strong>
@@ -620,7 +663,7 @@
       <div class="hz-stats" style="margin-bottom:14px;">
         <div class="hz-stat"><div class="num" style="font-size:1.15em;">catsertao</div><div class="label">Portal principal</div></div>
         <div class="hz-stat"><div class="num" style="font-size:1.15em;">triagem-catsertao</div><div class="label">Classificação de risco por CNAE</div></div>
-        <div class="hz-stat"><div class="num" style="font-size:1.15em;">rti-catsertao</div><div class="label">Mapa de RTI + backend Apps Script</div></div>
+        <div class="hz-stat"><div class="num" style="font-size:1.15em;">rti-catsertao</div><div class="label">Mapa de SCI + backend Apps Script</div></div>
       </div>
 
       <div class="hz-note">
@@ -640,7 +683,7 @@
         <tr><th>Serviço</th><th>URL / detalhe</th></tr>
         <tr><td>CAT Sertão (portal)</td><td><a href="https://aquinogr89.github.io/catsertao/" target="_blank" rel="noopener">catsertao</a></td></tr>
         <tr><td>Triagem de Risco</td><td><a href="https://aquinogr89.github.io/triagem-catsertao/" target="_blank" rel="noopener">triagem-catsertao</a> — CNAE 8230-0/02 (casas de festas) = Risco III, cálculo de lotação automático</td></tr>
-        <tr><td>Mapa de RTI</td><td><a href="https://aquinogr89.github.io/rti-catsertao/" target="_blank" rel="noopener">rti-catsertao</a></td></tr>
+        <tr><td>Mapa de SCI</td><td><a href="https://aquinogr89.github.io/rti-catsertao/" target="_blank" rel="noopener">rti-catsertao</a></td></tr>
         <tr><td>Agente n8n + Gemini</td><td>sternplatypus-n8n.cloudfy.live — perguntas sobre normas SCI de PE</td></tr>
         <tr><td>Google Meet fixo</td><td><a href="https://meet.google.com/irz-gunn-oqo" target="_blank" rel="noopener">Instrução semanal</a></td></tr>
       </table>
@@ -778,6 +821,20 @@
         </div>
       </div>
     </section>
+
+    <button type="button" id="hz-chat-launcher" class="hz-chat-launcher" onclick="hzChatToggle()" title="Fale com o Hermes" aria-label="Fale com o Hermes">💬</button>
+
+    <div id="hz-chat-panel" class="hz-chat-panel">
+      <div class="hz-chat-header">
+        <span>🤖 Fale com o Hermes</span>
+        <button type="button" class="hz-chat-close" onclick="hzChatToggle()" aria-label="Fechar">×</button>
+      </div>
+      <div id="hz-chat-messages" class="hz-chat-messages"></div>
+      <div id="hz-chat-quick" class="hz-chat-quick"></div>
+      <form id="hz-chat-form" class="hz-chat-form">
+        <input id="hz-chat-input" type="text" placeholder="Pergunte sobre a página..." autocomplete="off">
+      </form>
+    </div>
 
   </div>
 </main>

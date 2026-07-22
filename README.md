@@ -3,7 +3,8 @@
 Portal interno do CAT Sertão (Centro de Atividades Técnicas do Sertão —
 Corpo de Bombeiros Militar de Pernambuco): atendimento (assistente virtual),
 documentos técnicos, Termo de Compromisso, SATECs/postos de atendimento,
-cadastro de Reserva Técnica de Incêndio (RTI, no site irmão
+Mapa de SCI — Sistema de Combate a Incêndio (reserva técnica de incêndio/RTI,
+AVCB, caldeira etc., no site irmão
 [rti-catsertao](https://github.com/aquinogr89/rti-catsertao)), gestão de
 usuários e LOG de auditoria.
 
@@ -61,15 +62,15 @@ pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
-| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`). |
-| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
-| `user1`        | Atendimento, Documentos, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
-| `user2`        | Atendimento, Documentos, SATECs, Mapa de RTI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
+| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de SCI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`). |
+| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de SCI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
+| `user1`        | Atendimento, Documentos, SATECs, Mapa de SCI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
+| `user2`        | Atendimento, Documentos, SATECs, Mapa de SCI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 
 Qualquer perfil pode trocar a própria senha em **Minha Conta**.
 
-Os links **"Mapa de RTI"** e **"Triagem de Riscos"** do menu são visíveis
-para **todos** os perfis logados e abrem em **nova aba**: o mapa de RTI
+Os links **"Mapa de SCI"** e **"Triagem de Riscos"** do menu são visíveis
+para **todos** os perfis logados e abrem em **nova aba**: o mapa de SCI
 ([rti-catsertao](https://aquinogr89.github.io/rti-catsertao/)) é público
 para consulta, mas só cadastra ponto quem tem perfil autorizado — o site
 rti-catsertao revalida isso no próprio Apps Script a cada cadastro. Como

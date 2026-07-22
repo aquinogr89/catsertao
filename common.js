@@ -41,7 +41,7 @@ var CatAuth = (function () {
   // localStorage (não sessionStorage): sessionStorage só é herdado por abas
   // abertas via "Duplicar aba" — uma aba aberta por um link comum (mesmo com
   // target="_blank") recebe um sessionStorage vazio, então as páginas que
-  // abrem em nova aba (Mapa de RTI, Usuários, LOG, Minha Conta) nunca viam a
+  // abrem em nova aba (Mapa de SCI, Usuários, LOG, Minha Conta) nunca viam a
   // sessão. localStorage é realmente compartilhado entre todas as abas da
   // mesma origem. A expiração de verdade continua sendo sempre no servidor
   // (token de 8h, revalidado a cada chamada) — isso aqui é só onde o
@@ -91,7 +91,7 @@ var CatAuth = (function () {
   // 30 min sem interação (mouse, teclado, toque, scroll) desloga sozinho.
   // O "último momento de atividade" fica no localStorage (INATIVIDADE_KEY),
   // não numa variável em memória, porque o usuário pode ter mais de uma aba
-  // aberta ao mesmo tempo (ex.: Usuários numa aba, Mapa de RTI em outra) —
+  // aberta ao mesmo tempo (ex.: Usuários numa aba, Mapa de SCI em outra) —
   // um timer isolado por aba deslogaria uma aba parada mesmo com atividade
   // em outra. Como localStorage é compartilhado entre abas da mesma origem,
   // atividade em qualquer aba mantém todas vivas.
