@@ -399,6 +399,38 @@
           </div>
         </div>
       </div>
+
+      <div class="hz-card">
+        <div class="hz-card-header" onclick="toggleCard(this)">
+          <div>
+            <div class="hz-title">Neoenergia Anexos — Google Drive</div>
+            <div class="hz-desc">Demonstrativos da Neoenergia arquivados automaticamente</div>
+          </div>
+          <div class="hz-meta">
+            <span class="hz-tag hz-tag-blue">6 arquivos</span>
+            <span class="hz-toggle">▼</span>
+          </div>
+        </div>
+        <div class="hz-card-body">
+          <div class="hz-card-body-inner">
+            <strong>Pasta no Drive:</strong> "Neoenergia Anexos" (não linkada aqui — ver nota abaixo)<br>
+            <strong>Script:</strong> <code>/data/workspace/upload_neoenergia_drive.py</code>
+            <div class="hz-note">
+              Estes arquivos são demonstrativos/faturas com dados de conta (endereço, número de instalação, consumo, valores) — link direto de visualização/download não é listado aqui de propósito. Como <code>hermes.html</code> é HTML estático em GitHub Pages, um link de Drive embutido nesta página ficaria acessível a qualquer pessoa com a URL, mesmo sem login — o mesmo problema de segurança já registrado na seção Configurações para senhas. Consulte a pasta diretamente pelo Google Drive (com a conta autorizada) em vez de por aqui.
+            </div>
+            <hr>
+            <strong>Arquivos armazenados (6):</strong>
+            <ul>
+              <li>Demonstrativo 2025-05-26</li>
+              <li>Demonstrativo 2025-07-26</li>
+              <li>Demonstrativo 2025-08-27</li>
+              <li>Demonstrativo 2025-11-07</li>
+              <li>Demonstrativo 2025-11-26</li>
+              <li>Relatório Resumo (PDF)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ============ WIKI DE NORMAS ============ -->
@@ -561,6 +593,11 @@
           <td><code>neoenergia_r2d2.py</code></td>
           <td>Download de anexos de e-mails da Neoenergia</td>
           <td><code>/data/scripts/</code></td>
+        </tr>
+        <tr>
+          <td><code>upload_neoenergia_drive.py</code></td>
+          <td>Sobe PDFs/PNGs da Neoenergia para o Google Drive</td>
+          <td><code>/data/workspace/</code></td>
         </tr>
         <tr>
           <td><code>google_calendar_helper.py</code></td>
