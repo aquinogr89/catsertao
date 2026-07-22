@@ -16,6 +16,7 @@ index.html                login + Atendimento, Documentos, Termo, SATECs
 conta.html                  Minha Conta (troca de senha) — abre em nova aba
 usuarios.html               gestão de usuários — abre em nova aba
 log.html                    LOG de auditoria — abre em nova aba
+hermes.html                 painel de bastidores do agente Hermes (skills, cron jobs, wiki de normas) — abre em nova aba, só Admin Master
 common.js                   sessão, chamadas à API, helpers — compartilhado por todas as páginas
 style.css                    estilos compartilhados por todas as páginas
 chat.html                   iframe isolado do widget de chat (n8n)
@@ -23,12 +24,23 @@ apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota aba
 CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
 ```
 
-`conta.html`, `usuarios.html` e `log.html` são páginas próprias (não seções
-da mesma página) para poderem abrir em **nova aba** a partir do menu — cada
-uma revalida a sessão e o perfil no servidor de forma independente (via
-`CatAuth.requireSession`, em `common.js`); se a sessão for inválida ou o
+`conta.html`, `usuarios.html`, `log.html` e `hermes.html` são páginas próprias
+(não seções da mesma página) para poderem abrir em **nova aba** a partir do
+menu — cada uma revalida a sessão e o perfil no servidor de forma independente
+(via `CatAuth.requireSession`, em `common.js`); se a sessão for inválida ou o
 perfil não tiver permissão, a página mostra uma mensagem de acesso negado
-em vez do conteúdo.
+em vez do conteúdo. `hermes.html` segue exatamente o mesmo modelo de
+`log.html` (`CatAuth.requireSession(['admin_master'])`), então só aparece na
+navegação e só carrega o conteúdo para quem está logado como `admin_master`
+(hoje, `geraldo.reis`).
+
+> **Sobre `hermes.html`:** é o painel de bastidores gerado e mantido pelo
+> agente Hermes (skills carregadas, cron jobs, wiki de normas do CBMPE,
+> scripts) — conteúdo de interesse só do Admin Master, por isso o gate
+> extra. Como o GitHub Pages serve arquivos estáticos sem controle de acesso
+> no servidor, o gate de sessão só esconde o conteúdo na tela — **nenhuma
+> senha ou segredo pode ser escrito no HTML desta página**, mesmo estando
+> atrás do login (ver "Observações de segurança" abaixo).
 
 > **Nota sobre `apps-script/Code.gs` deste repositório:** esse arquivo é o
 > backend **antigo**, autônomo, que só servia a "tabela de controle" do
@@ -49,7 +61,7 @@ pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
-| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria. |
+| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`). |
 | `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
 | `user1`        | Atendimento, Documentos, SATECs, Mapa de RTI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 | `user2`        | Atendimento, Documentos, SATECs, Mapa de RTI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
@@ -122,3 +134,8 @@ atualiza o site automaticamente em alguns segundos.
 - O `meta name="robots" content="noindex, nofollow"` já presente no
   `index.html` evita que buscadores indexem o site, mas isso **não é**
   controle de acesso — só o login é.
+- `hermes.html` é conteúdo estático (texto fixo no HTML, diferente das
+  tabelas de Termo/LOG/Usuários que só chegam via API depois do login) —
+  por isso ele nunca deve conter senha, token ou segredo em texto puro:
+  quem tiver a URL pode ler o HTML bruto (Ctrl+U / `curl`) mesmo sem passar
+  pelo gate de sessão em JavaScript.

@@ -75,6 +75,7 @@
       <a id="nav-triagem" href="#" target="_blank">Triagem de Riscos ↗</a>
       <a id="nav-usuarios" href="usuarios.html" target="_blank" class="u-hidden">Usuários ↗</a>
       <a id="nav-log" href="log.html" target="_blank" class="u-hidden">LOG ↗</a>
+      <a id="nav-hermes" href="hermes.html" target="_blank" class="u-hidden">Hermes Agent ↗</a>
       <a href="conta.html" target="_blank">Minha Conta ↗</a>
     </div>
   </nav>
@@ -203,6 +204,7 @@
     var canTermo = perfil === 'admin_master' || perfil === 'admin';
     var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
     var canLog = perfil === 'admin_master';
+    var canHermes = perfil === 'admin_master';
 
     // Mapa de RTI e Triagem de Riscos: visíveis para qualquer usuário logado
     // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
@@ -211,6 +213,7 @@
     toggle(document.getElementById('termo-section'), canTermo);
     toggle(document.getElementById('nav-usuarios'), canUsuarios);
     toggle(document.getElementById('nav-log'), canLog);
+    toggle(document.getElementById('nav-hermes'), canHermes);
 
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[perfil] || perfil;
