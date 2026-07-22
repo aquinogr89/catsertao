@@ -5,7 +5,7 @@ Corpo de Bombeiros Militar de Pernambuco): atendimento (assistente virtual),
 documentos técnicos, Termo de Compromisso, SATECs/postos de atendimento,
 Mapa de SCI — Sistema de Combate a Incêndio (reserva técnica de incêndio/RTI,
 AVCB, caldeira etc., no site irmão
-[rti-catsertao](https://github.com/aquinogr89/rti-catsertao)), gestão de
+[sci-catsertao](https://github.com/aquinogr89/sci-catsertao)), gestão de
 usuários e LOG de auditoria.
 
 Publicado em: https://aquinogr89.github.io/catsertao/
@@ -47,8 +47,8 @@ navegação e só carrega o conteúdo para quem está logado como `admin_master`
 > backend **antigo**, autônomo, que só servia a "tabela de controle" do
 > Termo de Compromisso com senha própria. Ele foi **substituído** pelo
 > backend unificado (`Auth.gs` + `Code.gs`) que vive no repositório
-> [rti-catsertao](https://github.com/aquinogr89/rti-catsertao/tree/main/apps-script),
-> que agora cuida de login, perfis, RTI, Termo de Compromisso e LOG — tudo
+> [sci-catsertao](https://github.com/aquinogr89/sci-catsertao/tree/main/apps-script),
+> que agora cuida de login, perfis, SCI, Termo de Compromisso e LOG — tudo
 > em um só lugar. O front-end deste site (`index.html`) não chama mais essa
 > implantação antiga. Se quiser, você pode desativar aquela implantação
 > separada no Apps Script depois de migrar (passo manual, opcional).
@@ -71,27 +71,27 @@ Qualquer perfil pode trocar a própria senha em **Minha Conta**.
 
 Os links **"Mapa de SCI"** e **"Triagem de Riscos"** do menu são visíveis
 para **todos** os perfis logados e abrem em **nova aba**: o mapa de SCI
-([rti-catsertao](https://aquinogr89.github.io/rti-catsertao/)) é público
+([sci-catsertao](https://aquinogr89.github.io/sci-catsertao/)) é público
 para consulta, mas só cadastra ponto quem tem perfil autorizado — o site
-rti-catsertao revalida isso no próprio Apps Script a cada cadastro. Como
+sci-catsertao revalida isso no próprio Apps Script a cada cadastro. Como
 os dois sites e as páginas utilitárias (`conta.html`, `usuarios.html`,
 `log.html`) ficam sob o mesmo domínio `aquinogr89.github.io`, o token de
 sessão (`sessionStorage`) é herdado automaticamente pela aba nova, mesmo
 sem passar por um novo login.
 
-## Configurar o backend (Apps Script único, compartilhado com o rti-catsertao)
+## Configurar o backend (Apps Script único, compartilhado com o sci-catsertao)
 
-O backend fica no repositório **rti-catsertao**
+O backend fica no repositório **sci-catsertao**
 (`apps-script/Code.gs` + `apps-script/Auth.gs`), não neste. Siga o
 passo a passo completo lá:
-https://github.com/aquinogr89/rti-catsertao/blob/main/README.md
+https://github.com/aquinogr89/sci-catsertao/blob/main/README.md
 
 Depois de implantar, copie a URL `/exec` gerada e cole em **dois lugares**:
 
 1. Neste repositório, em [`common.js`](common.js), na constante
    `APPS_SCRIPT_URL` (usada por `index.html`, `conta.html`, `usuarios.html`
    e `log.html` — um único lugar para as quatro páginas).
-2. No repositório `rti-catsertao`, em `app.js`, na constante `SHEETS_API_URL`.
+2. No repositório `sci-catsertao`, em `app.js`, na constante `SHEETS_API_URL`.
 
 As duas constantes devem apontar para a **mesma URL** — é o mesmo backend.
 
