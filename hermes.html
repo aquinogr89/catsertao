@@ -223,7 +223,7 @@
       <div class="hz-card">
         <div class="hz-card-header" onclick="toggleCard(this)">
           <div>
-            <div class="hz-title">eventos-temporarios-triagem-art</div>
+            <div class="hz-title">eventos-temporarios-arts</div>
             <div class="hz-desc">Triagem de risco e ARTs para eventos temporários</div>
           </div>
           <div class="hz-meta">
@@ -234,7 +234,7 @@
         <div class="hz-card-body">
           <div class="hz-card-body-inner">
             <strong>O que faz:</strong> guia de perguntas para triagem de eventos temporários (palcos, geradores, energia elétrica, controle de acesso) e lista de ARTs exigidas.
-            <div class="hz-note">Este skill (checklist de ARTs para eventos) é diferente do site público <code>triagem-catsertao</code> (classificação de risco por CNAE) listado na seção Repositórios — os dois têm "triagem" no nome mas cobrem coisas distintas. Ver observação na seção Repositórios.</div>
+            <div class="hz-note">Este skill (checklist de ARTs para eventos) é diferente do site público <code>triagem-catsertao</code> (classificação de risco por CNAE) listado na seção Repositórios — não é o mesmo sistema, apesar do nome antigo parecido.</div>
             <strong>ARTs exigidas em eventos:</strong>
             <ul>
               <li>ART Estrutural (montagem/desmontagem)</li>
@@ -297,10 +297,6 @@
       <div class="eyebrow"><span>Automação</span><span class="rule"></span></div>
       <h2>Cron jobs programados</h2>
 
-      <div class="hz-note">
-        <strong>Verificar:</strong> o job de domingo abaixo declara horário BRT no título ("9h") mas o schedule cron e a nota de fuso no corpo não batem entre si (ver detalhe no card). Vale conferir com o Hermes se a mensagem de escolha de tema realmente sai às 6h ou às 9h BRT.
-      </div>
-
       <div class="hz-card open">
         <div class="hz-card-header" onclick="toggleCard(this)">
           <div>
@@ -315,9 +311,8 @@
         </div>
         <div class="hz-card-body">
           <div class="hz-card-body-inner">
-            <strong>Schedule:</strong> <code>0 9 * * 0</code><br>
-            <span class="hz-note" style="display:inline-block;">Este schedule roda às 09:00 UTC, que equivale a <strong>06:00 BRT</strong> (UTC-3) — não 09:00 BRT como o texto original informava. Se a intenção é enviar às 9h BRT, o cron deveria ser <code>0 12 * * 0</code>.</span>
-            <br><strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
+            <strong>Schedule:</strong> <code>0 12 * * 0</code> (domingo 12:00 UTC = 09:00 BRT)<br>
+            <strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
             <strong>Entrega:</strong> Telegram<br>
             <strong>O que faz:</strong> envia 5 opções de tema + link do Google Meet fixo para o Geraldo escolher o tema da instrução de segunda-feira.
             <hr>
@@ -592,7 +587,7 @@
       </div>
 
       <div class="hz-note">
-        <strong>Nomes parecidos, coisas diferentes:</strong> o skill <code>eventos-temporarios-triagem-art</code> (checklist de ARTs para eventos temporários) não tem relação com o repositório público <code>triagem-catsertao</code> (calculadora de classificação de risco por CNAE/lotação). Vale o Hermes usar nomes menos parecidos nas próximas atualizações desta wiki, para não confundir os dois.
+        <strong>Nomes parecidos, coisas diferentes:</strong> o skill <code>eventos-temporarios-arts</code> (checklist de ARTs para eventos temporários) não tem relação com o repositório público <code>triagem-catsertao</code> (calculadora de classificação de risco por CNAE/lotação).
       </div>
 
       <p style="color:var(--hz-muted); font-size:.9em;">
