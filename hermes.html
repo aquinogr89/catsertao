@@ -109,20 +109,7 @@
   .hz-chat-close{ background:none; border:none; color:var(--hz-muted); font-size:20px; cursor:pointer; line-height:1; padding:0 4px; }
   .hz-chat-close:hover{ color:#fff; }
 
-  .hz-chat-messages{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
-  .hz-msg{ max-width:85%; padding:9px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; }
-  .hz-msg.bot{ align-self:flex-start; background:#252a4a; color:#dfe3f5; border-bottom-left-radius:4px; }
-  .hz-msg.user{ align-self:flex-end; background:#0033cc; color:#fff; border-bottom-right-radius:4px; }
-  .hz-msg em{ color:var(--hz-gold); font-style:italic; }
-  .hz-msg .hz-msg-link{ display:inline-block; margin-top:6px; color:#8fb8ff; text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; font-size:13px; }
-
-  .hz-chat-quick{ display:flex; flex-wrap:wrap; gap:6px; padding:0 14px 12px; }
-  .hz-chat-quick button{ background:#20264a; border:1px solid var(--hz-border); color:var(--hz-muted); font-size:12px; padding:7px 10px; border-radius:20px; cursor:pointer; text-align:left; }
-  .hz-chat-quick button:hover{ border-color:var(--hz-gold); color:var(--hz-ink); }
-
-  .hz-chat-form{ padding:12px; border-top:1px solid var(--hz-border); }
-  .hz-chat-form input{ width:100%; background:#10142a; border:1px solid var(--hz-border); color:var(--hz-ink); padding:10px 12px; border-radius:10px; font-size:13.5px; outline:none; box-sizing:border-box; }
-  .hz-chat-form input:focus{ border-color:var(--hz-gold); }
+  .hz-chat-iframe{ flex:1; width:100%; border:0; background:#fff; }
 
   @media (max-width:480px){
     .hz-chat-panel{ width:100%; height:85vh; right:0; left:0; bottom:0; border-radius:16px 16px 0 0; }
@@ -822,18 +809,14 @@
       </div>
     </section>
 
-    <button type="button" id="hz-chat-launcher" class="hz-chat-launcher" onclick="hzChatToggle()" title="Fale com o Hermes" aria-label="Fale com o Hermes">💬</button>
+    <button type="button" id="hz-chat-launcher" class="hz-chat-launcher" onclick="hzChatToggle()" title="Assistente CAT Sertão" aria-label="Assistente CAT Sertão">💬</button>
 
     <div id="hz-chat-panel" class="hz-chat-panel">
       <div class="hz-chat-header">
-        <span>🤖 Fale com o Hermes</span>
+        <span>🤖 Assistente CAT Sertão</span>
         <button type="button" class="hz-chat-close" onclick="hzChatToggle()" aria-label="Fechar">×</button>
       </div>
-      <div id="hz-chat-messages" class="hz-chat-messages"></div>
-      <div id="hz-chat-quick" class="hz-chat-quick"></div>
-      <form id="hz-chat-form" class="hz-chat-form">
-        <input id="hz-chat-input" type="text" placeholder="Pergunte sobre a página..." autocomplete="off">
-      </form>
+      <iframe id="hz-chat-frame" class="hz-chat-iframe" title="Assistente Virtual CAT Sertão"></iframe>
     </div>
 
   </div>
@@ -866,7 +849,6 @@ function toggleCard(el) {
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
     show(document.getElementById('hermes-content'));
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
-    window.hzInitChatWidget();
   }, function (err) {
     hide(document.getElementById('loading-msg'));
     var denied = document.getElementById('denied-box');
@@ -884,242 +866,25 @@ function toggleCard(el) {
 </script>
 <script>
 /*
-  Chat flutuante "Fale com o Hermes". Só é iniciado (window.hzInitChatWidget)
-  depois que o gate de sessão acima libera #hermes-content, então nunca
-  aparece pra quem não é admin_master. Busca local roda só sobre o texto já
-  visível na página (nenhuma chamada de rede) e cai pro Telegram quando não
-  encontra nada.
+  Chat flutuante do painel Hermes: mesmo assistente n8n + Gemini já em
+  produção em index.html (via chat.html), só que dentro de um painel
+  flutuante em vez de uma seção fixa. Carrega o iframe só no primeiro clique
+  (igual ao initChat() de index.html) para não inicializar o widget antes
+  de precisar.
 */
 (function () {
   'use strict';
 
-  var TELEGRAM_URL = 'https://t.me/aquinogr_bot';
-
-  var pageFAQ = {
-    'skill': 'Esta página documenta as skills do Hermes Agent usadas pelo CAT Sertão. Cada skill tem um card com descrição e instruções. Veja a seção Skills.',
-    'cron': 'Os cron jobs são tarefas automáticas agendadas. Estão listados na seção Cron Jobs com schedule, status e última execução.',
-    'agendad': 'Os cron jobs são tarefas automáticas agendadas. Estão listados na seção Cron Jobs com schedule, status e última execução.',
-    'neoenergia': 'Os demonstrativos da Neoenergia são baixados automaticamente pelo r2d2 e arquivados no Google Drive. Veja o card "Neoenergia Anexos" na seção Cron Jobs — os links não ficam nesta página por segurança (dados de conta).',
-    'norma': 'A base de conhecimento das normas do CBMPE (leis, decretos, normas técnicas, RTs, portarias) está na seção Wiki de Normas, com 57 documentos catalogados.',
-    'apresent': 'As apresentações .pptx/.pdf geradas pelo Hermes ficam listadas na seção Apresentações, junto com o template oficial do CBMPE.',
-    'script': 'Os scripts que automatizam tarefas (geração de slides, monitor de normas, Neoenergia etc.) estão listados na seção Scripts.',
-    'reposit': 'Os repositórios GitHub do CAT Sertão (catsertao, triagem-catsertao, sci-catsertao) estão descritos na seção Repositórios.',
-    'senha': 'Senhas e credenciais nunca ficam escritas nesta página — veja a nota na seção Configurações. Para trocar a sua, use Minha Conta.',
-    'extintor': 'As regras de extintores (COSCIP + NBR 12693) — distância, altura, classe e capacidade extintora — estão na seção Consultas Rápidas.',
-    'avcb': 'A validade do AVCB/AR (1 ano, Art. 258 do COSCIP) está na seção Consultas Rápidas.',
-    'eletroposto': 'Regras de sinalização e extintor para eletropostos (NT 17/2025) estão na seção Consultas Rápidas.'
-  };
-
-  var messagesEl, quickEl, formEl, inputEl, panelEl;
   var isOpen = false;
-  var initialized = false;
-
-  function makeEl(tag, cls) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    return e;
-  }
-
-  function scrollMessagesToEnd() {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function addMessage(role, html) {
-    var bubble = makeEl('div', 'hz-msg ' + (role === 'user' ? 'user' : 'bot'));
-    bubble.innerHTML = html;
-    messagesEl.appendChild(bubble);
-    scrollMessagesToEnd();
-    return bubble;
-  }
-
-  function addTelegramButton() {
-    var bubble = makeEl('div', 'hz-msg bot');
-    var link = document.createElement('a');
-    link.className = 'hz-msg-link';
-    link.href = TELEGRAM_URL;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.textContent = '📱 Abrir Telegram';
-    bubble.appendChild(link);
-    messagesEl.appendChild(bubble);
-    scrollMessagesToEnd();
-  }
-
-  function clearQuick() {
-    quickEl.innerHTML = '';
-  }
-
-  function addQuick(label, handler) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = label;
-    btn.addEventListener('click', handler);
-    quickEl.appendChild(btn);
-  }
-
-  function openTelegram() {
-    window.open(TELEGRAM_URL, '_blank', 'noopener');
-  }
-
-  function showWelcome() {
-    clearQuick();
-    addMessage('bot', 'Olá! 👋 Sou o Hermes, seu assistente do CAT Sertão. Como posso ajudar?');
-    addQuick('📋 O que tem nesta página?', function () {
-      addMessage('user', 'O que tem nesta página?');
-      addMessage('bot', 'Esta página reúne: Skills, Cron Jobs, Wiki de Normas, Apresentações, Scripts, Repositórios, Sites e Serviços, Configurações, Consultas Rápidas e Memória. Use a barra de navegação no topo ou me pergunte sobre um assunto específico.');
-    });
-    addQuick('🔧 Quero corrigir algo', function () {
-      addMessage('user', 'Quero corrigir algo');
-      addMessage('bot', 'Esta página é gerada e mantida pelo próprio Hermes. Me diga o que está errado (ou fale direto comigo no Telegram) que eu repasso a correção.');
-      addTelegramButton();
-    });
-    addQuick('📎 Adicionar nova skill', function () {
-      addMessage('user', 'Adicionar nova skill');
-      addMessage('bot', 'Novas skills são registradas por mim diretamente — esta página só documenta o que já existe. Me chame no Telegram pra combinar a nova skill.');
-      addTelegramButton();
-    });
-    addQuick('💬 Falar no Telegram', function () {
-      addMessage('user', 'Falar no Telegram');
-      openTelegram();
-    });
-  }
-
-  // Indexa cada seção de nível superior; quando a seção tem hz-cards, indexa
-  // cada card separadamente (pra poder abrir só o card certo e rolar até ele).
-  function collectIndex() {
-    var items = [];
-    var root = document.getElementById('hermes-content');
-    if (!root) return items;
-
-    var sections = root.querySelectorAll(':scope > section.section');
-    for (var i = 0; i < sections.length; i++) {
-      var section = sections[i];
-      var heading = section.querySelector('h2');
-      var title = heading ? heading.textContent.trim() : '';
-      var cards = section.querySelectorAll('.hz-card');
-
-      if (cards.length === 0) {
-        items.push({
-          label: title || 'Seção',
-          text: section.textContent.replace(/\s+/g, ' ').trim(),
-          target: section,
-          card: null
-        });
-      } else {
-        for (var j = 0; j < cards.length; j++) {
-          var card = cards[j];
-          var cardTitle = card.querySelector('.hz-title');
-          items.push({
-            label: (title ? title + ' — ' : '') + (cardTitle ? cardTitle.textContent.trim() : 'item'),
-            text: card.textContent.replace(/\s+/g, ' ').trim(),
-            target: card,
-            card: card
-          });
-        }
-      }
-    }
-    return items;
-  }
-
-  function excerptAround(text, query) {
-    var idx = text.toLowerCase().indexOf(query.toLowerCase());
-    if (idx === -1) return text.slice(0, 140) + '…';
-    var start = Math.max(0, idx - 60);
-    var end = Math.min(text.length, idx + query.length + 60);
-    return (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
-  }
-
-  function goToResult(item) {
-    if (item.card && item.card.className.indexOf('open') === -1) {
-      item.card.className += ' open';
-    }
-    item.target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function addResultBubble(item, query, index) {
-    var bubble = makeEl('div', 'hz-msg bot');
-    var prefix = index != null ? (index + 1) + '. ' : '';
-    var strong = document.createElement('strong');
-    strong.textContent = prefix + item.label;
-    var em = document.createElement('em');
-    em.textContent = excerptAround(item.text, query);
-    var link = document.createElement('a');
-    link.className = 'hz-msg-link';
-    link.href = '#';
-    link.textContent = 'Ver seção ↗';
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      goToResult(item);
-    });
-    bubble.appendChild(strong);
-    bubble.appendChild(document.createElement('br'));
-    bubble.appendChild(em);
-    bubble.appendChild(document.createElement('br'));
-    bubble.appendChild(link);
-    messagesEl.appendChild(bubble);
-  }
-
-  function runSearch(query) {
-    var q = query.trim();
-    if (!q) return;
-    addMessage('user', CatAuth.escapeHtml(q));
-
-    var qLower = q.toLowerCase();
-    var faqKey = null;
-    for (var key in pageFAQ) {
-      if (Object.prototype.hasOwnProperty.call(pageFAQ, key) && qLower.indexOf(key) !== -1) {
-        faqKey = key;
-        break;
-      }
-    }
-    if (faqKey) {
-      addMessage('bot', CatAuth.escapeHtml(pageFAQ[faqKey]));
-      return;
-    }
-
-    var index = collectIndex();
-    var results = [];
-    for (var i = 0; i < index.length && results.length < 5; i++) {
-      if (index[i].text.toLowerCase().indexOf(qLower) !== -1) results.push(index[i]);
-    }
-
-    if (results.length === 0) {
-      addMessage('bot', 'Não encontrei isso na página. Quer perguntar diretamente no Telegram?');
-      addTelegramButton();
-      return;
-    }
-
-    for (var r = 0; r < results.length; r++) {
-      addResultBubble(results[r], q, results.length > 1 ? r : null);
-    }
-    scrollMessagesToEnd();
-  }
+  var frameLoaded = false;
 
   window.hzChatToggle = function () {
     isOpen = !isOpen;
-    panelEl.classList.toggle('open', isOpen);
-    if (isOpen) inputEl.focus();
-  };
-
-  window.hzInitChatWidget = function () {
-    if (initialized) return;
-    initialized = true;
-
-    panelEl = document.getElementById('hz-chat-panel');
-    messagesEl = document.getElementById('hz-chat-messages');
-    quickEl = document.getElementById('hz-chat-quick');
-    formEl = document.getElementById('hz-chat-form');
-    inputEl = document.getElementById('hz-chat-input');
-
-    showWelcome();
-
-    formEl.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var q = inputEl.value;
-      if (!q.trim()) return;
-      inputEl.value = '';
-      runSearch(q);
-    });
+    document.getElementById('hz-chat-panel').classList.toggle('open', isOpen);
+    if (isOpen && !frameLoaded) {
+      frameLoaded = true;
+      document.getElementById('hz-chat-frame').src = 'chat.html';
+    }
   };
 })();
 </script>
