@@ -46,6 +46,7 @@
     <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
 
     <div class="cat-filter-row">
+      <input id="log-filtro-busca" type="search" placeholder="Buscar por login, ação, detalhe…">
       <select id="log-filtro-acao">
         <option value="">Todas as ações</option>
         <option value="login">login</option>
@@ -61,9 +62,15 @@
       </select>
       <input id="log-filtro-inicio" type="date" title="Data inicial">
       <input id="log-filtro-fim" type="date" title="Data final">
+      <select id="log-filtro-limite" title="Quantidade de registros">
+        <option value="10">10 mais recentes</option>
+        <option value="50">50 mais recentes</option>
+        <option value="100">100 mais recentes (máximo)</option>
+      </select>
       <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
       <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
     </div>
+    <p id="log-resumo" class="table-status u-hidden"></p>
     <div class="table-wrap">
       <p id="log-status" class="table-status"></p>
       <table id="log-table" class="termo-table u-hidden"></table>
@@ -91,14 +98,22 @@
   var logStatusEl = document.getElementById('log-status');
   var logTableEl = document.getElementById('log-table');
 
-  function renderLogTable(rows) {
+  var logResumoEl = document.getElementById('log-resumo');
+
+  function renderLogTable(rows, total) {
     if (rows.length === 0) {
       hide(logTableEl);
+      hide(logResumoEl);
       show(logStatusEl);
       logStatusEl.textContent = 'Nenhum registro para os filtros selecionados.';
       return;
     }
     hide(logStatusEl);
+    show(logResumoEl);
+    logResumoEl.textContent = rows.length < total
+      ? 'Mostrando os ' + rows.length + ' mais recentes de ' + total + ' registro(s) encontrado(s) — refine a busca ou aumente o limite para ver mais.'
+      : 'Mostrando todos os ' + total + ' registro(s) encontrado(s).';
+
     var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
     var tbody = '<tbody>' + rows.map(function (r) {
       return '<tr><td>' + escapeHtml(r.timestamp) + '</td><td>' + escapeHtml(r.login) + '</td><td>' + escapeHtml(r.perfil) + '</td><td>' + escapeHtml(r.acao) + '</td><td>' + escapeHtml(r.detalhe) + '</td></tr>';
@@ -110,16 +125,19 @@
   function carregarLog() {
     show(logStatusEl);
     hide(logTableEl);
+    hide(logResumoEl);
     logStatusEl.textContent = 'Carregando...';
+    var busca = document.getElementById('log-filtro-busca').value;
     var acao = document.getElementById('log-filtro-acao').value;
     var inicio = document.getElementById('log-filtro-inicio').value;
     var fim = document.getElementById('log-filtro-fim').value;
-    api({ action: 'listarLog', token: session.token, acao: acao, dataInicio: inicio, dataFim: fim }).then(function (res) {
+    var limite = document.getElementById('log-filtro-limite').value;
+    api({ action: 'listarLog', token: session.token, busca: busca, acao: acao, dataInicio: inicio, dataFim: fim, limite: Number(limite) }).then(function (res) {
       if (!res.ok) {
         logStatusEl.textContent = res.error || 'Não foi possível carregar o LOG.';
         return;
       }
-      renderLogTable(res.log || []);
+      renderLogTable(res.log || [], res.total != null ? res.total : (res.log || []).length);
     }).catch(function () {
       logStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
     });
@@ -136,6 +154,10 @@
     carregarLog();
     document.getElementById('log-filtrar').addEventListener('click', carregarLog);
     document.getElementById('log-refresh').addEventListener('click', carregarLog);
+    document.getElementById('log-filtro-limite').addEventListener('change', carregarLog);
+    document.getElementById('log-filtro-busca').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') carregarLog();
+    });
   }, function (err) {
     hide(document.getElementById('loading-msg'));
     var denied = document.getElementById('denied-box');
