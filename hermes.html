@@ -85,6 +85,7 @@
   .hz-panel{ background:var(--hz-card); border:1px solid var(--hz-border); border-radius:14px; padding:20px; margin:10px 0; }
 
   .hz-note{ font-size:12.5px; color:#f0c33d; background:#241d00; border:1px solid #3d2e00; padding:9px 12px; border-radius:8px; margin:10px 0; }
+  .hz-note.hz-note-info{ color:#7dd3fc; background:#031b2e; border-color:#0c3a52; }
 
   footer.bottom{ background:var(--hz-bg-alt); border-top:1px solid var(--hz-border); }
 
@@ -441,23 +442,46 @@
         </div>
         <div class="hz-card-body">
           <div class="hz-card-body-inner">
-            <strong>Pasta no Drive:</strong> "Neoenergia Anexos" (não linkada aqui — ver nota abaixo)<br>
+            <strong>Pasta no Drive:</strong> "Neoenergia Anexos"<br>
             <strong>Script:</strong> <code>/data/workspace/upload_neoenergia_drive.py</code>
-            <div class="hz-note">
-              Estes arquivos são demonstrativos/faturas com dados de conta (endereço, número de instalação, consumo, valores) — link direto de visualização/download não é listado aqui de propósito. Como <code>hermes.html</code> é HTML estático em GitHub Pages, um link de Drive embutido nesta página ficaria acessível a qualquer pessoa com a URL, mesmo sem login — o mesmo problema de segurança já registrado na seção Configurações para senhas. Consulte a pasta diretamente pelo Google Drive (com a conta autorizada) em vez de por aqui.
-              <br><br>
-              <strong>Planejado (ainda não implementado):</strong> um endpoint no Apps Script que valide o token de sessão no servidor — como já acontece com o Termo de Compromisso (<code>obterTermo</code>) — e só então devolva os links dos arquivos. Uma senha conferida só em JavaScript no cliente (ex.: comparar com a string <code>"admin_master"</code>) não protege nada, porque todo o código-fonte desta página já chega ao navegador antes de qualquer verificação — por isso essa abordagem foi descartada.
+            <div class="hz-note hz-note-info">
+              <strong>🔒 Acesso controlado pelo próprio Google Drive.</strong> Os 6 arquivos abaixo eram compartilhados como "qualquer pessoa com o link" — foram trocados para compartilhamento restrito, só a conta <code>geraldoreisaquino@gmail.com</code> tem permissão de leitura (conferido direto na API do Drive antes de publicar este link). Clicar sem estar logado nessa conta resulta em "Você precisa de acesso": quem protege o documento agora é o login do Google, não esta página — por isso os links diretos voltaram a aparecer aqui.
             </div>
             <hr>
-            <strong>Arquivos armazenados (6):</strong>
-            <ul>
-              <li>Demonstrativo 2025-05-26</li>
-              <li>Demonstrativo 2025-07-26</li>
-              <li>Demonstrativo 2025-08-27</li>
-              <li>Demonstrativo 2025-11-07</li>
-              <li>Demonstrativo 2025-11-26</li>
-              <li>Relatório Resumo (PDF)</li>
-            </ul>
+            <strong>Arquivos (6):</strong>
+            <table class="hz-table">
+              <tr><th>Arquivo</th><th>Ver</th><th>Download</th></tr>
+              <tr>
+                <td>Demonstrativo 2025-05-26</td>
+                <td><a href="https://drive.google.com/file/d/18VR9CMUsVSUF8ss9ep6z9A5K1ohu2SCD/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=18VR9CMUsVSUF8ss9ep6z9A5K1ohu2SCD&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+              <tr>
+                <td>Demonstrativo 2025-07-26</td>
+                <td><a href="https://drive.google.com/file/d/1qXnBe1Y3bZvzORNhXyEtVWmukzBlyhqm/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=1qXnBe1Y3bZvzORNhXyEtVWmukzBlyhqm&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+              <tr>
+                <td>Demonstrativo 2025-08-27</td>
+                <td><a href="https://drive.google.com/file/d/1sAayiXSU4A1tEKPZuOR9nFhriE2f6Lml/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=1sAayiXSU4A1tEKPZuOR9nFhriE2f6Lml&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+              <tr>
+                <td>Demonstrativo 2025-11-07</td>
+                <td><a href="https://drive.google.com/file/d/1Xiq5BMUccll-hubA2Ol73WFBGkasEVx_/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=1Xiq5BMUccll-hubA2Ol73WFBGkasEVx_&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+              <tr>
+                <td>Demonstrativo 2025-11-26</td>
+                <td><a href="https://drive.google.com/file/d/1uro8Tj7HTIXLCpM1ZuQeUlwXqgy3R_7p/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=1uro8Tj7HTIXLCpM1ZuQeUlwXqgy3R_7p&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+              <tr>
+                <td>Relatório Resumo (PDF)</td>
+                <td><a href="https://drive.google.com/file/d/1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z/view" target="_blank" rel="noopener">👁</a></td>
+                <td><a href="https://drive.google.com/uc?id=1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z&export=download" target="_blank" rel="noopener">⬇</a></td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
