@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#0b1020;font-family:Inter,system-ui,sans-serif;color:#1a1d29}
+  a{color:#002060;text-decoration:none}
+  a:hover{color:#C00000}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  .h{font-family:'Barlow Semi Condensed',Inter,sans-serif}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#c9c9d2;border-radius:6px}
+</style>
+</helmet>
+<div style="display:flex;flex-direction:column;height:100vh;min-height:640px;background:#f4f3ef">
+
+  <!-- TOP BAR -->
+  <header style="display:flex;align-items:center;gap:16px;padding:12px 22px;background:#0b1020;border-bottom:2px solid #FFC000">
+    <div style="width:38px;height:38px;border-radius:8px;background:#141a30;display:flex;align-items:center;justify-content:center;border:1px solid #2c3760;color:#FFC000;font-weight:700" class="h">CS</div>
+    <div>
+      <div class="h" style="color:#fff;font-weight:700;font-size:19px;line-height:1;letter-spacing:.3px">Hermes Agent</div>
+      <div style="color:#8891b5;font-size:10px;letter-spacing:1.2px;font-weight:500;margin-top:2px">CAT SERTÃO · CBMPE</div>
+    </div>
+    <div style="flex:1;display:flex;justify-content:center">
+      <div style="display:flex;align-items:center;gap:9px;width:min(420px,42vw);padding:9px 15px;background:#fff;border-radius:24px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)">
+        <span style="color:#9a9a9a;font-size:15px">🔍</span>
+        <input placeholder="Buscar skill, norma, arquivo…" style="border:0;outline:0;flex:1;font-size:13.5px;color:#333;background:transparent" />
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="color:#8891b5;font-size:11px">Admin Master</span>
+      <div style="width:32px;height:32px;border-radius:50%;background:#141a30;border:1px solid #2c3760;display:flex;align-items:center;justify-content:center;color:#cdd3e8;font-size:12px;font-weight:600">G</div>
+    </div>
+  </header>
+
+  <!-- STATUS STRIP -->
+  <div style="display:flex;align-items:center;gap:10px;padding:9px 22px;background:#111730;border-bottom:1px solid #222a4a;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:7px;padding:6px 13px;background:#0b1020;border:1px solid #2c3760;border-radius:20px">
+      <span style="width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 3px rgba(62,207,142,.15)"></span>
+      <span style="color:#cdd3e8;font-size:12px;font-weight:500">4 cron jobs · todos ok</span>
+    </div>
+    <div style="padding:6px 13px;background:#0b1020;border:1px solid #2c3760;border-radius:20px;color:#cdd3e8;font-size:12px">⏱ próximo: hoje 14:38</div>
+    <div style="padding:6px 13px;background:#0b1020;border:1px solid #2c3760;border-radius:20px;color:#cdd3e8;font-size:12px">57 normas monitoradas</div>
+    <div style="flex:1"></div>
+    <a href="https://aquinogr89.github.io/catsertao/index.html" style="color:#8891b5;font-size:12px">← Voltar ao portal</a>
+  </div>
+
+  <!-- BODY: sidebar + main -->
+  <div style="flex:1;display:flex;min-height:0">
+
+    <!-- SIDEBAR -->
+    <nav style="width:210px;flex:none;padding:16px 12px;background:#fff;border-right:1px solid #e3e1da;display:flex;flex-direction:column;gap:2px;overflow-y:auto">
+      <div class="h" style="font-size:11px;color:#a0a0a8;letter-spacing:1px;padding:4px 12px 8px;font-weight:600">SEÇÕES</div>
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+        <button onClick="{{ item.go }}" style="{{ item.style }}">
+          <span style="font-size:15px;width:20px;text-align:center">{{ item.icon }}</span>
+          <span style="flex:1;text-align:left">{{ item.label }}</span>
+          <sc-if value="{{ item.count }}" hint-placeholder-val="5"><span style="{{ item.badgeStyle }}">{{ item.count }}</span></sc-if>
+        </button>
+      </sc-for>
+      <div style="flex:1;min-height:14px"></div>
+      <button onClick="{{ navAdvanced }}" style="{{ advStyle }}">
+        <span style="font-size:14px;width:20px;text-align:center">⚙</span>
+        <span style="flex:1;text-align:left">Avançado</span>
+      </button>
+    </nav>
+
+    <!-- MAIN -->
+    <main style="flex:1;overflow-y:auto;padding:26px 34px 60px">
+
+      <!-- SKILLS -->
+      <sc-if value="{{ isSkills }}" hint-placeholder-val="{{ true }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">CONHECIMENTO</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Skills</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Conhecimento especializado que o Hermes carrega para executar tarefas no CAT Sertão.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:760px">
+
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 18px">
+              <div style="width:6px;height:40px;border-radius:4px;background:#FFC000"></div>
+              <div style="flex:1">
+                <div class="mono" style="font-size:15px;font-weight:600;color:#0b1020">briefing-semanal-catsertao</div>
+                <div style="font-size:13px;color:#6b6f7d;margin-top:2px">Fluxo completo da instrução semanal do CBMPE — temas, estudo, slides .pptx e mensagem de WhatsApp.</div>
+              </div>
+              <span style="font-size:10px;font-weight:600;letter-spacing:.5px;color:#002060;background:#eef1fa;padding:4px 9px;border-radius:20px">PRODUCTIVITY</span>
+              <button onClick="{{ open.briefing.toggle }}" style="{{ open.briefing.btn }}">detalhes {{ open.briefing.caret }}</button>
+            </div>
+            <sc-if value="{{ open.briefing.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:2px 18px 18px 38px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.7">
+                <div style="margin-top:12px"><b>Template:</b> <span class="mono" style="font-size:12px;background:#f4f3ef;padding:2px 6px;border-radius:5px">/data/workspace/Modelo_CBMPE_novo.pptx</span></div>
+                <div><b>Meet fixo:</b> <a href="https://meet.google.com/irz-gunn-oqo">meet.google.com/irz-gunn-oqo</a></div>
+                <div><b>Cores do template:</b> <span style="color:#002060">●</span> #002060 · <span style="color:#C00000">●</span> #C00000 · <span style="color:#FFC000">●</span> #FFC000</div>
+                <div style="margin-top:10px;padding:10px 12px;background:#fdf6f6;border-left:3px solid #C00000;border-radius:0 6px 6px 0"><b style="color:#C00000">Regras:</b> nunca criar novo evento/Meet · WhatsApp só texto · links permanentes no Telegram e Agenda.</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 18px">
+              <div style="width:6px;height:40px;border-radius:4px;background:#C00000"></div>
+              <div style="flex:1">
+                <div class="mono" style="font-size:15px;font-weight:600;color:#0b1020">cbmpe-normas-monitoring</div>
+                <div style="font-size:13px;color:#6b6f7d;margin-top:2px">Monitora as 57 normas do CBMPE e decretos da ALEPE (hash SHA-256) + base de conhecimento local.</div>
+              </div>
+              <span style="font-size:10px;font-weight:600;letter-spacing:.5px;color:#002060;background:#eef1fa;padding:4px 9px;border-radius:20px">PRODUCTIVITY</span>
+              <button onClick="{{ open.monitor.toggle }}" style="{{ open.monitor.btn }}">detalhes {{ open.monitor.caret }}</button>
+            </div>
+            <sc-if value="{{ open.monitor.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:2px 18px 18px 38px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.7">
+                <div style="margin-top:12px"><b>Fontes:</b> bombeiros.pe.gov.br (57 docs) · ALEPE Decreto 52.005/2021.</div>
+                <div><b>NTs em detalhe:</b> 1.01, 1.06, 3.04, 3.05, 303, 17/2025 · COSCIP (Decreto 19.644/97).</div>
+                <div><b>Wiki:</b> <span class="mono" style="font-size:12px;background:#f4f3ef;padding:2px 6px;border-radius:5px">/data/wiki/normas-cbmpe/</span></div>
+                <div><b>Script:</b> <span class="mono" style="font-size:12px;background:#f4f3ef;padding:2px 6px;border-radius:5px">monitor_cbmpe.py</span> (no_agent, zero tokens)</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 18px">
+              <div style="width:6px;height:40px;border-radius:4px;background:#002060"></div>
+              <div style="flex:1">
+                <div class="mono" style="font-size:15px;font-weight:600;color:#0b1020">eventos-temporarios-arts</div>
+                <div style="font-size:13px;color:#6b6f7d;margin-top:2px">Triagem de risco e lista de ARTs exigidas para eventos temporários (palcos, geradores, energia).</div>
+              </div>
+              <span style="font-size:10px;font-weight:600;letter-spacing:.5px;color:#C00000;background:#fbecec;padding:4px 9px;border-radius:20px">CBMPE</span>
+              <button onClick="{{ open.eventos.toggle }}" style="{{ open.eventos.btn }}">detalhes {{ open.eventos.caret }}</button>
+            </div>
+            <sc-if value="{{ open.eventos.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:2px 18px 18px 38px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.7">
+                <div style="margin-top:12px"><b>ARTs exigidas:</b> Estrutural · Baixa Tensão · Som e Iluminação · Aterramento · Grupo Gerador · Equipamentos Mecânicos.</div>
+                <div><b>Contato:</b> 2ª SATEC Petrolina — (87) 9 8835-2828.</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;gap:12px">
+            <div style="flex:1;background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+              <div style="width:6px;height:32px;border-radius:4px;background:#c9c9d2"></div>
+              <div><div class="mono" style="font-size:13.5px;font-weight:600;color:#0b1020">google-workspace</div><div style="font-size:12px;color:#6b6f7d">Gmail · Calendar · Drive · Docs · Sheets</div></div>
+            </div>
+            <div style="flex:1;background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+              <div style="width:6px;height:32px;border-radius:4px;background:#c9c9d2"></div>
+              <div><div class="mono" style="font-size:13.5px;font-weight:600;color:#0b1020">ocr-and-documents</div><div style="font-size:12px;color:#6b6f7d">Extração e edição de PDFs (+ nano-pdf)</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- APRESENTAÇÕES -->
+      <sc-if value="{{ isSlides }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">MATERIAL GERADO</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Apresentações</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Instruções semanais geradas no template oficial do CBMPE. Baixe o .pptx ou o .pdf.</p>
+        <div style="max-width:760px;background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+          <sc-for list="{{ slides }}" as="s" hint-placeholder-count="5">
+            <div style="{{ s.row }}">
+              <div style="flex:1"><div class="mono" style="font-size:13.5px;color:#0b1020">{{ s.name }}</div><div style="font-size:11.5px;color:#9a9aa4">{{ s.size }}</div></div>
+              <a href="#" style="font-size:12px;font-weight:600;color:#002060;padding:6px 12px;border:1px solid #d4d8e6;border-radius:8px">⬇ baixar</a>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:16px 0 0;font-size:12.5px;color:#9a9aa4">Template oficial: <span class="mono">Modelo_CBMPE.pptx</span> · geração via <span class="mono">gerar_apresentacao_cbmpe.py</span></p>
+      </section>
+      </sc-if>
+
+      <!-- CRON JOBS -->
+      <sc-if value="{{ isCron }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">AUTOMAÇÃO</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Cron Jobs</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Tarefas agendadas do Hermes. Todas rodaram com sucesso na última execução.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:760px">
+          <sc-for list="{{ crons }}" as="c" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px">
+              <span style="width:9px;height:9px;border-radius:50%;background:#3ecf8e;flex:none"></span>
+              <div style="flex:1">
+                <div style="font-size:14.5px;font-weight:600;color:#0b1020">{{ c.name }}</div>
+                <div style="font-size:12.5px;color:#6b6f7d;margin-top:2px">{{ c.desc }}</div>
+              </div>
+              <div style="text-align:right">
+                <div class="mono" style="font-size:11.5px;color:#4a4e5c;background:#f4f3ef;padding:3px 8px;border-radius:6px">{{ c.sched }}</div>
+                <div style="font-size:11px;color:#9a9aa4;margin-top:4px">próx.: {{ c.next }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- CONSULTAS RÁPIDAS -->
+      <sc-if value="{{ isFaq }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">REFERÊNCIA</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Consultas rápidas</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Respostas prontas das normas técnicas mais consultadas.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:760px">
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <button onClick="{{ open.ext.toggle }}" style="{{ faqHead }}"><span style="flex:1;text-align:left">Extintores (COSCIP Arts. 31–42 + NBR 12693)</span><span>{{ open.ext.caret }}</span></button>
+            <sc-if value="{{ open.ext.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:4px 18px 18px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.8">
+                <div style="margin-top:10px"><b>Classe C:</b> CO₂ 6 kg ou PQS 4–6 kg (círculo azul)</div>
+                <div><b>Distância máx.:</b> 15 m de qualquer ponto (Art. 32, II)</div>
+                <div><b>Altura:</b> ≤ 1,60 m (Art. 34, I)</div>
+                <div><b>Eletroposto (NT 17/2025):</b> PQS ABC 6 kg, sinalização círculo azul</div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <button onClick="{{ open.avcb.toggle }}" style="{{ faqHead }}"><span style="flex:1;text-align:left">Validade do AVCB / AR</span><span>{{ open.avcb.caret }}</span></button>
+            <sc-if value="{{ open.avcb.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:4px 18px 18px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.8">
+                <div style="margin-top:10px;padding:12px 14px;background:#f4f3ef;border-left:3px solid #002060;border-radius:0 6px 6px 0;font-style:italic">"O Atestado de Regularidade terá a validade de 1 (um) ano, a contar da data de sua emissão…" — Art. 258, COSCIP</div>
+                <div style="margin-top:10px">Regra geral: <b>1 ano</b> para todo AVCB/AR (Risco II e III).</div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+            <button onClick="{{ open.save.toggle }}" style="{{ faqHead }}"><span style="flex:1;text-align:left">NT 17/2025 — SAVE / eletropostos</span><span>{{ open.save.caret }}</span></button>
+            <sc-if value="{{ open.save.on }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:4px 18px 18px;border-top:1px dashed #e3e1da;font-size:13px;color:#4a4e5c;line-height:1.8">
+                <div style="margin-top:10px"><b>Chave de desligamento:</b> 1,80 m do piso à base da placa (item 5.1.5 "a")</div>
+                <div><b>Sinalização:</b> círculo azul · Termo correto: <b>eletroposto</b> (não "eletropóstico")</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- WIKI -->
+      <sc-if value="{{ isWiki }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">BASE DE CONHECIMENTO</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Wiki de Normas CBMPE</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">57 documentos catalogados. Classificação de risco baseada no Decreto 52.005/2021.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;max-width:760px">
+          <sc-for list="{{ wiki }}" as="w" hint-placeholder-count="6">
+            <div style="background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:16px">
+              <div class="h" style="font-size:30px;font-weight:700;color:{{ w.color }};line-height:1">{{ w.n }}</div>
+              <div style="font-size:13px;color:#0b1020;font-weight:600;margin-top:4px">{{ w.tipo }}</div>
+              <div style="font-size:11.5px;color:#9a9aa4;margin-top:2px">{{ w.ex }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:18px;max-width:760px;background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:16px 18px">
+          <div class="h" style="font-size:16px;font-weight:700;color:#0b1020;margin-bottom:8px">Classificação de risco — resumo</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1;min-width:180px;padding:12px;background:#f0f8f2;border:1px solid #cde8d5;border-radius:9px"><b style="color:#2a8a5a">Risco I</b><div style="font-size:12.5px;color:#4a4e5c">Baixo risco · dispensado (Art. 5º)</div></div>
+            <div style="flex:1;min-width:180px;padding:12px;background:#fdf6ec;border:1px solid #f0dcbd;border-radius:9px"><b style="color:#b8860b">Risco II</b><div style="font-size:12.5px;color:#4a4e5c">Exige AR, sem projeto (Art. 7º)</div></div>
+            <div style="flex:1;min-width:180px;padding:12px;background:#fdeeee;border:1px solid #f0c9c9;border-radius:9px"><b style="color:#C00000">Risco III</b><div style="font-size:12.5px;color:#4a4e5c">Projeto Técnico + AVCB (Art. 6º)</div></div>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- SITES -->
+      <sc-if value="{{ isSites }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#C00000;font-weight:600">PUBLICADO</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Sites & Serviços</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Portais e serviços do CAT Sertão em produção.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+          <sc-for list="{{ sites }}" as="s" hint-placeholder-count="4">
+            <a href="{{ s.url }}" style="background:#fff;border:1px solid #e3e1da;border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:14px;color:inherit">
+              <span style="font-size:18px">{{ s.icon }}</span>
+              <div style="flex:1"><div style="font-size:14.5px;font-weight:600;color:#0b1020">{{ s.name }}</div><div style="font-size:12px;color:#6b6f7d">{{ s.detail }}</div></div>
+              <span style="color:#002060;font-size:13px">→</span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- AVANÇADO -->
+      <sc-if value="{{ isAdvanced }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div class="h" style="font-size:13px;letter-spacing:1.5px;color:#9a9aa4;font-weight:600">BASTIDORES</div>
+        <h1 class="h" style="font-size:32px;margin:2px 0 4px;color:#0b1020;font-weight:700">Avançado</h1>
+        <p style="margin:0 0 22px;color:#6b6f7d;font-size:14.5px;max-width:640px">Detalhes operacionais internos — scripts, configurações e repositórios. Visível apenas ao Admin Master.</p>
+        <div style="max-width:760px;background:#fff;border:1px solid #e3e1da;border-radius:12px;overflow:hidden">
+          <div style="padding:14px 18px;background:#0b1020;color:#cdd3e8;font-size:13px;font-weight:600" class="h">Scripts e automações</div>
+          <sc-for list="{{ scripts }}" as="s" hint-placeholder-count="4">
+            <div style="{{ s.row }}">
+              <span class="mono" style="font-size:12.5px;color:#002060;flex:none;width:230px">{{ s.file }}</span>
+              <span style="font-size:12.5px;color:#6b6f7d;flex:1">{{ s.desc }}</span>
+              <span class="mono" style="font-size:11px;color:#9a9aa4">{{ s.loc }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="max-width:760px;margin-top:16px;padding:14px 16px;background:#fdf6f6;border:1px solid #f0c9c9;border-radius:12px;font-size:12.5px;color:#7a3030;line-height:1.6">
+          <b>⚠ Segurança:</b> este arquivo é servido estaticamente (GitHub Pages) — nada aqui é secreto por si só. Senhas ficam no gerenciador do Geraldo; os PDFs da Neoenergia são protegidos pelo login do Google Drive, não por esta página.
+        </div>
+      </section>
+      </sc-if>
+
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { section: 'skills', open: {} };
+
+  toggle(id){ this.setState(s => ({ open: { ...s.open, [id]: !s.open[id] } })); }
+  go(section){ this.setState({ section }); }
+
+  panel(id){
+    const on = !!this.state.open[id];
+    return {
+      on,
+      caret: on ? '▲' : '▼',
+      toggle: () => this.toggle(id),
+      btn: `font-size:12px;font-weight:600;color:${on?'#C00000':'#002060'};background:${on?'#fbecec':'#eef1fa'};border:0;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap`
+    };
+  }
+
+  navItem(id, icon, label, count, color){
+    const active = this.state.section === id;
+    return {
+      icon, label, count,
+      go: () => this.go(id),
+      style: `display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;border-radius:9px;cursor:pointer;font-family:'Barlow Semi Condensed',sans-serif;font-size:15px;font-weight:${active?600:500};background:${active?'#002060':'transparent'};color:${active?'#fff':'#41454f'};text-align:left`,
+      badgeStyle: `font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;background:${active?'rgba(255,255,255,.2)':'#f0eef4'};color:${active?'#fff':color}`
+    };
+  }
+
+  renderVals(){
+    const s = this.state.section;
+    const advActive = s === 'advanced';
+    return {
+      nav: [
+        this.navItem('skills','🧩','Skills',5,'#002060'),
+        this.navItem('slides','📊','Apresentações',10,'#C00000'),
+        this.navItem('cron','⏱','Cron Jobs',4,'#b8860b'),
+        this.navItem('faq','💬','Consultas',null,'#002060'),
+        this.navItem('wiki','📚','Wiki de Normas',57,'#002060'),
+        this.navItem('sites','🌐','Sites & Serviços',null,'#002060'),
+      ],
+      navAdvanced: () => this.go('advanced'),
+      advStyle: `display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;border-top:1px dashed #e3e1da;margin-top:6px;border-radius:9px;cursor:pointer;font-family:'Barlow Semi Condensed',sans-serif;font-size:15px;font-weight:${advActive?600:500};background:${advActive?'#0b1020':'transparent'};color:${advActive?'#fff':'#8a8e98'}`,
+      isSkills: s==='skills', isSlides: s==='slides', isCron: s==='cron',
+      isFaq: s==='faq', isWiki: s==='wiki', isSites: s==='sites', isAdvanced: advActive,
+      open: {
+        briefing: this.panel('briefing'), monitor: this.panel('monitor'), eventos: this.panel('eventos'),
+        ext: this.panel('ext'), avcb: this.panel('avcb'), save: this.panel('save'),
+      },
+      faqHead: "display:flex;align-items:center;width:100%;padding:15px 18px;border:0;background:transparent;cursor:pointer;font-size:14.5px;font-weight:600;color:#0b1020;font-family:Inter,sans-serif",
+      slides: [
+        { name:'Instrucao_Classificacao_Risco_CBMPE.pptx', size:'6.2 MB' },
+        { name:'Instrucao_Classificacao_Risco_CBMPE.pdf', size:'823 KB' },
+        { name:'Instrucao_Classificacao_Risco_CBMPE_v2.pptx', size:'22.5 MB' },
+        { name:'Instrucao_Classificacao_Risco_CBMPE_v2.pdf', size:'899 KB' },
+        { name:'Instrucao_..._com_fluxo.pptx', size:'6.2 MB' },
+      ].map((r,i,a)=>({ ...r, row:`display:flex;align-items:center;gap:14px;padding:14px 18px;${i<a.length-1?'border-bottom:1px solid #f0eee8':''}` })),
+      crons: [
+        { name:'Instrução Semanal — Escolha de Tema', desc:'Domingo 09:00 · 5 opções de tema + link do Meet no Telegram', sched:'0 12 * * 0', next:'26/07' },
+        { name:'Segunda — Mensagem WhatsApp', desc:'Segunda 08:00 · mensagem formatada (só texto)', sched:'0 11 * * 1', next:'27/07' },
+        { name:'Monitor CBMPE — Normas', desc:'1º dia útil do mês · verifica 57 PDFs + Decreto 52.005', sched:'0 12 1-5 * *', next:'01/08' },
+        { name:'Neoenergia r2d2 — R2 PDF', desc:'A cada 60 min · baixa anexos e envia ao Telegram', sched:'*/60 * * * *', next:'hoje 14:38' },
+      ],
+      wiki: [
+        { n:6, tipo:'Leis', ex:'11.186/94 · 15.232/14', color:'#002060' },
+        { n:5, tipo:'Decretos', ex:'52.005/21 · 19.644/97', color:'#C00000' },
+        { n:25, tipo:'Normas Técnicas', ex:'NT 1.01 · NT 17/2025', color:'#002060' },
+        { n:11, tipo:'Resoluções Téc.', ex:'RT 001/17 · RT 005/17', color:'#b8860b' },
+        { n:8, tipo:'Portarias', ex:'Adm. 1/2025', color:'#002060' },
+        { n:2, tipo:'Notas / Enunc.', ex:'SENASP + compilado', color:'#6b6f7d' },
+      ],
+      sites: [
+        { icon:'🏠', name:'CAT Sertão (portal)', detail:'aquinogr89.github.io/catsertao', url:'https://aquinogr89.github.io/catsertao/' },
+        { icon:'🔺', name:'Triagem de Risco', detail:'Classificação por CNAE + lotação automática', url:'https://aquinogr89.github.io/triagem-catsertao/' },
+        { icon:'🗺', name:'Mapa de SCI', detail:'Backend Apps Script', url:'https://aquinogr89.github.io/sci-catsertao/' },
+        { icon:'🎥', name:'Google Meet fixo', detail:'Instrução semanal', url:'https://meet.google.com/irz-gunn-oqo' },
+      ],
+      scripts: [
+        { file:'gerar_apresentacao_cbmpe.py', desc:'Gera .pptx no template CBMPE + PDF', loc:'/data/workspace/' },
+        { file:'monitor_cbmpe.py', desc:'Verifica normas CBMPE e ALEPE (SHA-256)', loc:'/data/scripts/' },
+        { file:'neoenergia_r2d2.py', desc:'Download de anexos da Neoenergia', loc:'/data/scripts/' },
+        { file:'google_calendar_helper.py', desc:'Helper do Calendar (--meet, --rrule)', loc:'/data/workspace/' },
+      ].map((r,i,a)=>({ ...r, row:`display:flex;align-items:center;gap:14px;padding:13px 18px;${i<a.length-1?'border-bottom:1px solid #f0eee8':''}` })),
+    };
+  }
+}
+</script>
+</body>
+</html>
