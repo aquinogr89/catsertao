@@ -40,11 +40,6 @@
   .access-denied{ background:var(--hz-card); border-color:var(--hz-border); color:var(--hz-muted); }
   .access-denied strong{ color:var(--hz-ink); }
 
-  /* TOC / navegação rápida do painel */
-  .hz-toc{ display:flex; flex-wrap:wrap; gap:8px 18px; padding:14px 18px; margin-bottom:30px; background:var(--hz-bg-alt); border:1px solid var(--hz-border); border-radius:12px; font-family:'Oswald',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
-  .hz-toc a{ color:var(--hz-muted); text-decoration:none; }
-  .hz-toc a:hover{ color:var(--hz-gold); }
-
   /* Stat cards */
   .hz-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:8px; }
   .hz-stat{ background:var(--hz-card); border:1px solid var(--hz-border); border-radius:12px; padding:16px; text-align:center; }
@@ -55,6 +50,7 @@
   .hz-card{ background:var(--hz-card); border:1px solid var(--hz-border); border-radius:12px; margin-bottom:8px; overflow:hidden; }
   .hz-card-header{ padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:14px; user-select:none; }
   .hz-card-header:hover{ background:var(--hz-card-hover); }
+  .hz-card-header:focus-visible{ outline:2px solid var(--hz-gold); outline-offset:-2px; }
   .hz-card-header .hz-title{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; color:var(--hz-ink); }
   .hz-card-header .hz-desc{ font-size:.78em; color:var(--hz-muted-3); margin-top:3px; }
   .hz-card-header .hz-meta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
@@ -67,6 +63,7 @@
   .hz-card-body-inner li{ margin-bottom:4px; }
   .hz-card-body-inner hr{ border:none; border-top:1px solid var(--hz-border); margin:14px 0; }
   .hz-card-body-inner blockquote{ border-left:3px solid var(--hz-gold); padding-left:14px; margin:10px 0; color:var(--hz-muted); }
+  .hz-card.hz-search-hidden{ display:none; }
 
   /* Tags */
   .hz-tag{ display:inline-block; padding:2px 9px; border-radius:10px; font-size:.72em; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
@@ -82,14 +79,15 @@
   .hz-table th{ color:var(--hz-gold); font-weight:600; font-family:'Oswald',sans-serif; font-size:.82em; letter-spacing:.04em; text-transform:uppercase; }
   .hz-table tr:hover td{ background:var(--hz-card-hover); }
 
-  .hz-panel{ background:var(--hz-card); border:1px solid var(--hz-border); border-radius:14px; padding:20px; margin:10px 0; }
-
   .hz-note{ font-size:12.5px; color:#f0c33d; background:#241d00; border:1px solid #3d2e00; padding:9px 12px; border-radius:8px; margin:10px 0; }
   .hz-note.hz-note-info{ color:#7dd3fc; background:#031b2e; border-color:#0c3a52; }
 
+  .hz-subhead{ font-family:'Oswald',sans-serif; font-weight:600; font-size:17px; color:var(--hz-ink); margin:28px 0 10px; letter-spacing:.01em; }
+  .hz-subhead:first-child{ margin-top:4px; }
+
   footer.bottom{ background:var(--hz-bg-alt); border-top:1px solid var(--hz-border); }
 
-  /* Chat flutuante "Fale com o Hermes" */
+  /* ===== Chat flutuante "Fale com o Hermes" ===== */
   .hz-chat-launcher{
     position:fixed; right:24px; bottom:24px; width:56px; height:56px; border-radius:50%;
     background:linear-gradient(135deg,#0033cc,#0044ff); color:#fff; display:flex; align-items:center;
@@ -114,15 +112,86 @@
 
   @media (max-width:480px){
     .hz-chat-panel{ width:100%; height:85vh; right:0; left:0; bottom:0; border-radius:16px 16px 0 0; }
-    .hz-chat-launcher{ right:16px; bottom:16px; }
+    .hz-chat-launcher{ right:16px; }
+  }
+
+  /* ===== Painel navegável: topbar + faixa de status + sidebar/abas ===== */
+  .hz-shell{ display:flex; flex-direction:column; min-height:100vh; }
+
+  .hz-topbar{ display:flex; align-items:center; gap:16px; padding:12px 22px; background:var(--hz-bg); border-bottom:2px solid var(--hz-gold); flex-wrap:wrap; flex:none; }
+  .hz-topbar-brand{ display:flex; align-items:center; gap:12px; }
+  .hz-topbar-logo{ width:38px; height:38px; border-radius:8px; object-fit:contain; background:#fff; padding:3px; flex:none; }
+  .hz-topbar-title{ font-family:'Oswald',sans-serif; font-weight:700; font-size:19px; color:#fff; line-height:1; letter-spacing:.02em; }
+  .hz-topbar-sub{ color:var(--hz-muted-2); font-size:10px; letter-spacing:.1em; font-weight:500; margin-top:3px; text-transform:uppercase; }
+  .hz-topbar-search{ flex:1; display:flex; justify-content:center; min-width:160px; }
+  .hz-topbar-search input{ width:min(420px,100%); padding:9px 15px; border-radius:24px; border:1px solid var(--hz-border); background:var(--hz-card); color:var(--hz-ink); font-size:13.5px; outline:none; font-family:'Public Sans',sans-serif; }
+  .hz-topbar-search input:focus{ border-color:var(--hz-gold); }
+  .hz-topbar-search input::placeholder{ color:var(--hz-muted-3); }
+  .hz-topbar-user{ display:flex; align-items:center; gap:10px; flex:none; }
+  .hz-user-perfil{ color:var(--hz-muted); font-size:11px; text-align:right; line-height:1.3; }
+  .hz-user-login{ color:var(--hz-muted-3); font-size:10.5px; text-align:right; line-height:1.3; }
+  .hz-avatar{ width:32px; height:32px; border-radius:50%; background:var(--hz-card); border:1px solid var(--hz-border); display:flex; align-items:center; justify-content:center; color:var(--hz-ink); font-size:12px; font-weight:600; flex:none; }
+
+  .hz-statusbar{ display:flex; align-items:center; gap:10px; padding:9px 22px; background:var(--hz-bg-alt); border-bottom:1px solid var(--hz-border); flex-wrap:wrap; flex:none; }
+  .hz-chip{ display:flex; align-items:center; gap:7px; padding:6px 13px; background:var(--hz-bg); border:1px solid var(--hz-border); border-radius:20px; color:var(--hz-muted); font-size:12px; font-weight:500; white-space:nowrap; }
+  .hz-chip-dot{ width:8px; height:8px; border-radius:50%; background:var(--hz-green); box-shadow:0 0 0 3px rgba(63,191,106,.15); flex:none; }
+  .hz-statusbar-spacer{ flex:1; }
+  .hz-back-link{ color:var(--hz-muted-2); font-size:12px; white-space:nowrap; }
+  .hz-back-link:hover{ color:var(--hz-gold); }
+
+  .hz-body{ flex:1; display:flex; min-height:0; }
+
+  .hz-sidebar{ width:210px; flex:none; padding:16px 12px; background:var(--hz-bg-alt); border-right:1px solid var(--hz-border); display:flex; flex-direction:column; gap:2px; overflow-y:auto; }
+  .hz-sidebar-label{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--hz-muted-3); letter-spacing:.1em; padding:4px 12px 8px; font-weight:600; text-transform:uppercase; }
+  .hz-nav-item{ display:flex; align-items:center; gap:10px; width:100%; padding:9px 12px; border:0; border-radius:9px; cursor:pointer; font-family:'Oswald',sans-serif; font-size:14.5px; font-weight:500; background:transparent; color:var(--hz-muted); text-align:left; }
+  .hz-nav-item:hover{ background:var(--hz-card-hover); color:var(--hz-ink); }
+  .hz-nav-item.active{ background:#002060; color:#fff; font-weight:600; }
+  .hz-nav-item:focus-visible{ outline:2px solid var(--hz-gold); outline-offset:2px; }
+  .hz-nav-icon{ font-size:15px; width:20px; text-align:center; flex:none; }
+  .hz-nav-label{ flex:1; }
+  .hz-nav-badge{ font-size:11px; font-weight:700; padding:1px 7px; border-radius:20px; background:var(--hz-card); color:var(--hz-muted-2); flex:none; }
+  .hz-nav-item.active .hz-nav-badge{ background:rgba(255,255,255,.2); color:#fff; }
+  .hz-sidebar-sep{ border-top:1px dashed var(--hz-border); margin:6px 4px; }
+
+  .hz-content-area{ flex:1; overflow-y:auto; padding:26px 34px 60px; min-height:0; }
+  .hz-section{ display:none; }
+  .hz-section.active{ display:block; }
+
+  .hz-bottomnav{ display:none; }
+
+  @media (max-width: 720px){
+    .hz-sidebar{ display:none; }
+    .hz-content-area{ padding:18px 16px 88px; }
+    .hz-topbar{ padding:12px 16px 10px; }
+    .hz-topbar-title{ font-size:17px; }
+    .hz-topbar-search{ order:3; flex-basis:100%; margin-top:10px; }
+    .hz-topbar-search input{ width:100%; }
+    .hz-statusbar{ padding:9px 16px; overflow-x:auto; flex-wrap:nowrap; }
+    .hz-back-link{ display:none; }
+    .hz-bottomnav{
+      display:flex; position:fixed; left:0; right:0; bottom:0; z-index:900;
+      background:var(--hz-bg-alt); border-top:1px solid var(--hz-border); padding:8px 4px calc(10px + env(safe-area-inset-bottom));
+    }
+    .hz-tab{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:6px 2px; border:0; background:transparent; cursor:pointer; color:var(--hz-muted-2); min-height:44px; font-family:'Public Sans',sans-serif; }
+    .hz-tab.active{ color:var(--hz-gold); }
+    .hz-tab-icon{ font-size:18px; line-height:1; }
+    .hz-tab-label{ font-size:9.5px; font-weight:600; font-family:'Oswald',sans-serif; }
+    .hz-chat-launcher{ bottom:84px !important; }
+    .hz-mais-list{ display:flex; flex-direction:column; gap:10px; }
+    .hz-mais-item{ display:flex; align-items:center; gap:12px; padding:15px 16px; background:var(--hz-card); border:1px solid var(--hz-border); border-radius:12px; color:var(--hz-ink); text-decoration:none; width:100%; text-align:left; font-size:14px; font-family:'Public Sans',sans-serif; cursor:pointer; min-height:44px; }
+    .hz-mais-item:hover{ background:var(--hz-card-hover); }
+    .hz-mais-item .hz-mais-arrow{ margin-left:auto; color:var(--hz-muted-3); }
+  }
+  @media (min-width: 721px){
+    #mais{ display:none !important; }
   }
 </style>
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
-<a class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<a id="hermes-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
 
-<header class="top pad-x">
+<header id="hermes-outer-header" class="top pad-x">
   <div class="top-inner wrap">
     <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
     <div style="min-width:0;">
@@ -137,7 +206,7 @@
 </header>
 
 <main class="content pad-x wrap">
-  <a class="util-back" href="index.html">← Voltar ao site principal</a>
+  <a id="hermes-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
 
@@ -145,843 +214,883 @@
     <strong>Acesso não disponível</strong>
     <p id="denied-text"></p>
   </div>
-
-  <div id="hermes-content" class="u-hidden">
-
-    <section class="section">
-      <div class="eyebrow"><span>Bastidores</span><span class="rule"></span></div>
-      <h2>O que é este painel</h2>
-      <p class="lead">Registro de como o assistente Hermes está configurado para apoiar o CAT Sertão: skills carregadas, automações agendadas (cron jobs), base de conhecimento das normas do CBMPE e scripts em uso. Visível apenas para o perfil <strong>Admin Master</strong> — inclui caminhos internos e detalhes operacionais que não são de interesse geral da equipe.</p>
-
-      <div class="hz-toc">
-        <a href="#skills">Skills</a>
-        <a href="#cronjobs">Cron Jobs</a>
-        <a href="#wiki-normas">Wiki de Normas</a>
-        <a href="#apresentacoes">Apresentações</a>
-        <a href="#scripts">Scripts</a>
-        <a href="#repositorios">Repositórios</a>
-        <a href="#sites">Sites e Serviços</a>
-        <a href="#config">Configurações</a>
-        <a href="#faq-normas">Consultas Rápidas</a>
-        <a href="#memoria">Memória</a>
-      </div>
-
-      <div class="hz-stats">
-        <div class="hz-stat"><div class="num">5</div><div class="label">Skills ativos</div></div>
-        <div class="hz-stat"><div class="num">4</div><div class="label">Cron jobs</div></div>
-        <div class="hz-stat"><div class="num">57</div><div class="label">Normas monitoradas</div></div>
-        <div class="hz-stat"><div class="num">10</div><div class="label">Apresentações geradas</div></div>
-        <div class="hz-stat"><div class="num">50+</div><div class="label">Arquivos gerenciados</div></div>
-      </div>
-    </section>
-
-    <!-- ============ SKILLS ============ -->
-    <section class="section" id="skills">
-      <div class="eyebrow"><span>Conhecimento</span><span class="rule"></span></div>
-      <h2>Skills</h2>
-      <p class="lead">Conhecimento especializado que o Hermes carrega para executar tarefas no CAT Sertão.</p>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">briefing-semanal-catsertao</div>
-            <div class="hz-desc">Fluxo completo da instrução semanal CBMPE</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">productivity</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>O que faz:</strong> gerencia todo o ciclo da instrução semanal — escolha de temas no domingo, estudo da norma, geração de slides .pptx no template oficial do CBMPE e mensagem de WhatsApp na segunda-feira.
-            <hr>
-            <strong>Detalhes:</strong>
-            <ul>
-              <li>Template: <code>/data/workspace/Modelo_CBMPE_novo.pptx</code></li>
-              <li>Script: <code>/data/workspace/gerar_apresentacao_cbmpe.py</code></li>
-              <li>Meet fixo: <a href="https://meet.google.com/irz-gunn-oqo" target="_blank" rel="noopener">meet.google.com/irz-gunn-oqo</a></li>
-              <li>Cores do template: Azul #002060, Vermelho #C00000, Dourado #FFC000</li>
-              <li>Gera .pptx + .pdf + Google Slides público</li>
-            </ul>
-            <strong>Regras importantes:</strong>
-            <ul>
-              <li>Nunca criar novo evento no Google Calendar para a instrução semanal</li>
-              <li>Nunca gerar novo link do Meet</li>
-              <li>WhatsApp: só texto (sem links de Drive/Slides)</li>
-              <li>Links permanentes vão no Telegram e na Agenda</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">cbmpe-normas-monitoring</div>
-            <div class="hz-desc">Monitor de normas do CBMPE + base de conhecimento</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">productivity</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>O que faz:</strong> monitora atualizações nas normas do CBMPE (site oficial) e na ALEPE (decretos). Verifica o hash SHA-256 dos PDFs e o texto dos decretos todo mês.
-            <hr>
-            <strong>Fontes monitoradas:</strong>
-            <ul>
-              <li><strong>CBMPE:</strong> bombeiros.pe.gov.br — 57 documentos (Leis, Decretos, NTs, RTs, Portarias, Enunciados)</li>
-              <li><strong>ALEPE:</strong> Decreto 52.005/2021 (id=61067) — texto atualizado</li>
-            </ul>
-            <strong>Normas técnicas analisadas em detalhe:</strong> NT 1.01, NT 1.06, NT 3.04, NT 3.05, NT 303, NT 17/2025, COSCIP (Decreto 19.644/97)
-            <hr>
-            <strong>Wiki local:</strong> <code>/data/wiki/normas-cbmpe/</code>
-            <ul>
-              <li><code>index.md</code> — catálogo completo dos 57 documentos</li>
-              <li><code>monitor_state.json</code> — estado do monitoramento</li>
-              <li><code>pdfs/</code> — 8 PDFs + textos extraídos</li>
-              <li><code>DECRETO_52.005_2021.txt</code> — texto completo do decreto</li>
-            </ul>
-            <strong>Script:</strong> <code>/data/scripts/monitor_cbmpe.py</code> (<code>no_agent=True</code>, zero tokens)
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">eventos-temporarios-arts</div>
-            <div class="hz-desc">Triagem de risco e ARTs para eventos temporários</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">cbmpe</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>O que faz:</strong> guia de perguntas para triagem de eventos temporários (palcos, geradores, energia elétrica, controle de acesso) e lista de ARTs exigidas.
-            <div class="hz-note">Este skill (checklist de ARTs para eventos) é diferente do site público <code>triagem-catsertao</code> (classificação de risco por CNAE) listado na seção Repositórios — não é o mesmo sistema, apesar do nome antigo parecido.</div>
-            <strong>ARTs exigidas em eventos:</strong>
-            <ul>
-              <li>ART Estrutural (montagem/desmontagem)</li>
-              <li>ART Baixa Tensão</li>
-              <li>ART Som e Iluminação</li>
-              <li>ART Aterramento</li>
-              <li>ART Grupo Gerador + aterramento</li>
-              <li>ART Equipamentos Mecânicos (se houver)</li>
-            </ul>
-            <strong>Contato:</strong> WhatsApp (87) 9 8835-2828 (2ª SATEC — Petrolina)
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">google-workspace</div>
-            <div class="hz-desc">Gmail, Calendar, Drive, Docs, Sheets</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">productivity</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>O que faz:</strong> integração com Google Workspace — e-mail, calendário, drive, planilhas e documentos.
-            <hr>
-            <strong>Conta:</strong> geraldoreisaquino@gmail.com<br>
-            <strong>Token:</strong> <code>/data/google_token.json</code><br>
-            <strong>Helper:</strong> <code>/data/workspace/google_calendar_helper.py</code> (<code>--meet</code> para Meet, <code>--rrule</code> para recorrência)
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">ocr-and-documents + nano-pdf</div>
-            <div class="hz-desc">Extração e edição de PDFs</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">productivity</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>O que faz:</strong> extração de texto de PDFs (pymupdf para PDFs textuais, marker-pdf para OCR/escaneados) e edição de PDFs via linguagem natural (nano-pdf).
-            <hr>
-            <strong>Uso no CAT Sertão:</strong> extração de textos das normas técnicas (NT 1.01, NT 17, COSCIP etc.) do site do CBMPE para alimentar a base de conhecimento.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ CRON JOBS ============ -->
-    <section class="section" id="cronjobs">
-      <div class="eyebrow"><span>Automação</span><span class="rule"></span></div>
-      <h2>Cron jobs programados</h2>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Instrução Semanal — Escolha de Tema</div>
-            <div class="hz-desc">Job ID: 82c106fc883d</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-green">ativo</span>
-            <span class="hz-tag hz-tag-gray">Domingo</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>Schedule:</strong> <code>0 12 * * 0</code> (domingo 12:00 UTC = 09:00 BRT)<br>
-            <strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
-            <strong>Entrega:</strong> Telegram<br>
-            <strong>O que faz:</strong> envia 5 opções de tema + link do Google Meet fixo para o Geraldo escolher o tema da instrução de segunda-feira.
-            <hr>
-            <strong>Última execução:</strong> 19/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-            <strong>Próxima:</strong> 26/07/2026
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Segunda — Mensagem WhatsApp Instrução</div>
-            <div class="hz-desc">Job ID: 22f814eb5ed8</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-green">ativo</span>
-            <span class="hz-tag hz-tag-gray">Segunda 8h BRT</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>Schedule:</strong> <code>0 11 * * 1</code> (segunda 11:00 UTC = 08:00 BRT)<br>
-            <strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
-            <strong>Entrega:</strong> Telegram<br>
-            <strong>O que faz:</strong> envia a mensagem formatada para WhatsApp (texto limpo: saudação, tema, horário, link do Meet). <em>Sem links de Drive/Slides.</em>
-            <hr>
-            <strong>Última execução:</strong> 20/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-            <strong>Próxima:</strong> 27/07/2026
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Monitor CBMPE — Normas</div>
-            <div class="hz-desc">Job ID: 484ce0bb1ac5</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-green">ativo</span>
-            <span class="hz-tag hz-tag-gray">1º dia útil do mês</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>Schedule:</strong> <code>0 12 1-5 * *</code> (dias 1 a 5, 09:00 BRT)<br>
-            <strong>Modo:</strong> <code>no_agent=True</code> (script puro, zero tokens)<br>
-            <strong>Script:</strong> <code>/data/scripts/monitor_cbmpe.py</code><br>
-            <strong>Entrega:</strong> Telegram (origem)<br>
-            <strong>O que faz:</strong> verifica alterações nas normas do CBMPE (57 PDFs) e no Decreto 52.005/2021 na ALEPE; se detectar mudanças, gera relatório.
-            <hr>
-            <strong>Lógica interna:</strong> só executa no 1º dia útil do mês (ignora sábados/domingos). Compara hash SHA-256.
-            <hr>
-            <strong>Última execução:</strong> 18/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-            <strong>Próxima:</strong> 01/08/2026
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Neoenergia r2d2 — R2 PDF para Telegram</div>
-            <div class="hz-desc">Job ID: f065a97338fd</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-green">ativo</span>
-            <span class="hz-tag hz-tag-gray">A cada 60 min</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>Schedule:</strong> a cada 60 minutos<br>
-            <strong>Script:</strong> <code>/data/scripts/neoenergia_r2d2.py</code><br>
-            <strong>Entrega:</strong> Telegram<br>
-            <strong>O que faz:</strong> monitora e-mails da Neoenergia (r2d2), baixa anexos PDF e encaminha para o Telegram.
-            <hr>
-            <strong>Última execução:</strong> 22/07/2026 13:38 <span style="color:var(--hz-green);">✓ ok</span><br>
-            <strong>Próxima:</strong> 22/07/2026 14:38
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Neoenergia Anexos — Google Drive</div>
-            <div class="hz-desc">Demonstrativos da Neoenergia arquivados automaticamente</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-blue">33 arquivos</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <strong>Pasta no Drive:</strong>
-            <a href="https://drive.google.com/drive/folders/1QE2RPB_q8dKsH2MPFpyLzLlkIX1OXP45" target="_blank" rel="noopener">Neoenergia Anexos</a>
-            <br><br>
-            <strong>Script:</strong> <code>/data/workspace/upload_neoenergia_drive.py</code>
-            <div class="hz-note hz-note-info">
-              <strong>🔒 Acesso controlado pelo próprio Google Drive.</strong> Todos os 33 arquivos abaixo (e a pasta) têm compartilhamento restrito — só a conta <code>geraldoreisaquino@gmail.com</code> tem permissão de leitura (conferido direto na API do Drive, arquivo por arquivo, antes de publicar este link). Clicar sem estar logado nessa conta resulta em "Você precisa de acesso": quem protege os documentos é o login do Google, não esta página.
-            </div>
-            <hr>
-            <strong>33 arquivos (histórico de Ago/2023 a Jun/2026):</strong>
-            <table class="hz-table">
-              <tr><th>Arquivo</th><th>Ver</th><th>Download</th></tr>
-              <tr>
-                <td>Relatório Resumo (PDF)</td>
-                <td><a href="https://drive.google.com/file/d/1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Ago/2023</td>
-                <td><a href="https://drive.google.com/file/d/1EAy8YWfttPlEk1tTvu7LxdtewndTd2fZ/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1EAy8YWfttPlEk1tTvu7LxdtewndTd2fZ&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Set/2023</td>
-                <td><a href="https://drive.google.com/file/d/1uSCubrn0KZoNlmwjgW7C5btmcyfEDIeU/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1uSCubrn0KZoNlmwjgW7C5btmcyfEDIeU&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Out/2023</td>
-                <td><a href="https://drive.google.com/file/d/1Qx_lthqHGmTyU1huLPmHQov2etmcbSpO/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1Qx_lthqHGmTyU1huLPmHQov2etmcbSpO&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Nov/2023</td>
-                <td><a href="https://drive.google.com/file/d/1CPl9VZGId9pZm8EDf4raJX9RsoxSu1Z-/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1CPl9VZGId9pZm8EDf4raJX9RsoxSu1Z-&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Dez/2023</td>
-                <td><a href="https://drive.google.com/file/d/1rdlzV79_MAhhyILG5kC161YRZ7aAvWWG/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1rdlzV79_MAhhyILG5kC161YRZ7aAvWWG&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jan/2024</td>
-                <td><a href="https://drive.google.com/file/d/1pAZVfJSwFNK2AGnp64fMzP3MCi6n_hQy/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1pAZVfJSwFNK2AGnp64fMzP3MCi6n_hQy&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Fev/2024</td>
-                <td><a href="https://drive.google.com/file/d/1DWdRfyvB3KhabZ1i-UVaBvjybbN8NwGF/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1DWdRfyvB3KhabZ1i-UVaBvjybbN8NwGF&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mar/2024</td>
-                <td><a href="https://drive.google.com/file/d/1jLaVLYGZ1-HcPVRDO0y0VeJJNoEz6e5m/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1jLaVLYGZ1-HcPVRDO0y0VeJJNoEz6e5m&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mai/2024</td>
-                <td><a href="https://drive.google.com/file/d/1w0Wobnwvrqoym4hAMG0VD8MWAo57YvUY/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1w0Wobnwvrqoym4hAMG0VD8MWAo57YvUY&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jun/2024</td>
-                <td><a href="https://drive.google.com/file/d/1U0sKXNcSzo0ZUojwt242h9t2ujSrLZlu/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1U0sKXNcSzo0ZUojwt242h9t2ujSrLZlu&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jul/2024</td>
-                <td><a href="https://drive.google.com/file/d/1y00l_Qkeyw9ivLuhgpkEGi9ufzCreUeT/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1y00l_Qkeyw9ivLuhgpkEGi9ufzCreUeT&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Ago/2024</td>
-                <td><a href="https://drive.google.com/file/d/1f78dk5hhJcVz38VEnDWABRKX9soOSImP/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1f78dk5hhJcVz38VEnDWABRKX9soOSImP&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Set/2024</td>
-                <td><a href="https://drive.google.com/file/d/1BWvLoem4qwjRYsejiAqI7KvHBwTTcIN2/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1BWvLoem4qwjRYsejiAqI7KvHBwTTcIN2&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Out/2024</td>
-                <td><a href="https://drive.google.com/file/d/1fsbbAmNvi29zlZbDO7fBL0HWeXvTUYb4/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1fsbbAmNvi29zlZbDO7fBL0HWeXvTUYb4&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Nov/2024</td>
-                <td><a href="https://drive.google.com/file/d/14vjJzu_F60tTohl5wuIJkoFloejFRT0z/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=14vjJzu_F60tTohl5wuIJkoFloejFRT0z&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Dez/2024</td>
-                <td><a href="https://drive.google.com/file/d/1D1ri07I-bjPTNV9GopdSXpAquOI_EQEc/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1D1ri07I-bjPTNV9GopdSXpAquOI_EQEc&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jan/2025</td>
-                <td><a href="https://drive.google.com/file/d/1E5YwVVpRqp94_JKT8IQMuPPciISgJjku/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1E5YwVVpRqp94_JKT8IQMuPPciISgJjku&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Fev/2025</td>
-                <td><a href="https://drive.google.com/file/d/1qnUpyzxu3MatJm1-payHdN-6sbI6C_ZC/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1qnUpyzxu3MatJm1-payHdN-6sbI6C_ZC&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mar/2025</td>
-                <td><a href="https://drive.google.com/file/d/1A2iGHv-ug3Hp1kpu0JtcP-a9AWtKoSVR/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1A2iGHv-ug3Hp1kpu0JtcP-a9AWtKoSVR&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Abr/2025</td>
-                <td><a href="https://drive.google.com/file/d/17_k8WLmPSHSFd-jIUD3iAWtXuVjCjlwG/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=17_k8WLmPSHSFd-jIUD3iAWtXuVjCjlwG&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mai/2025</td>
-                <td><a href="https://drive.google.com/file/d/1fPicT3QfUOT4bCwWxWT731DQhn9ACqUb/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1fPicT3QfUOT4bCwWxWT731DQhn9ACqUb&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jun/2025</td>
-                <td><a href="https://drive.google.com/file/d/1iGUmSSxZZI1qNWMQ8FuxluT7H5P43w51/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1iGUmSSxZZI1qNWMQ8FuxluT7H5P43w51&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jul/2025</td>
-                <td><a href="https://drive.google.com/file/d/1Re_QnPdgAbcUDfFgyTEIIZ48RwXr4G-n/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1Re_QnPdgAbcUDfFgyTEIIZ48RwXr4G-n&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Ago/2025</td>
-                <td><a href="https://drive.google.com/file/d/1CexmBcvrMreMWMlzi0__uqZ1iitZq6fM/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1CexmBcvrMreMWMlzi0__uqZ1iitZq6fM&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Out/2025</td>
-                <td><a href="https://drive.google.com/file/d/1rLJs77YL82h3eRViimMGQMq3q-Mw0EFr/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1rLJs77YL82h3eRViimMGQMq3q-Mw0EFr&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Nov/2025</td>
-                <td><a href="https://drive.google.com/file/d/14SxJu7bfa7qoeAR1qvL2zx_JYAq5yDZf/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=14SxJu7bfa7qoeAR1qvL2zx_JYAq5yDZf&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Dez/2025</td>
-                <td><a href="https://drive.google.com/file/d/1-b3N_NEQGpdxhmvS-oHjlyab3K_cG-id/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1-b3N_NEQGpdxhmvS-oHjlyab3K_cG-id&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Fev/2026</td>
-                <td><a href="https://drive.google.com/file/d/1XMi1Ybs8tCAVm3e-ILpHq18NvZ-luYFO/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1XMi1Ybs8tCAVm3e-ILpHq18NvZ-luYFO&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mar/2026</td>
-                <td><a href="https://drive.google.com/file/d/1Tr7MuvRAeCZU0WlVGkrPo9Es8_u04OR6/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1Tr7MuvRAeCZU0WlVGkrPo9Es8_u04OR6&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Abr/2026</td>
-                <td><a href="https://drive.google.com/file/d/1y83wpC-2zFUDZJxqTWs2J_N64nfDJqtl/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1y83wpC-2zFUDZJxqTWs2J_N64nfDJqtl&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Mai/2026</td>
-                <td><a href="https://drive.google.com/file/d/1N4GLaJ0szOSlJwfvivgb-vBeyFA7DXbw/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1N4GLaJ0szOSlJwfvivgb-vBeyFA7DXbw&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-              <tr>
-                <td>Relatório Resumo — Jun/2026</td>
-                <td><a href="https://drive.google.com/file/d/1qZ_Zr5wc9_qqo_f2Z9iSVw_u2-TLoMv1/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
-                <td><a href="https://drive.google.com/uc?id=1qZ_Zr5wc9_qqo_f2Z9iSVw_u2-TLoMv1&export=download" target="_blank" rel="noopener">⬇</a></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ WIKI DE NORMAS ============ -->
-    <section class="section" id="wiki-normas">
-      <div class="eyebrow"><span>Base de conhecimento</span><span class="rule"></span></div>
-      <h2>Wiki de normas CBMPE</h2>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Estrutura da wiki</div>
-            <div class="hz-desc"><code>/data/wiki/normas-cbmpe/</code></div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-gray">57 documentos</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <table class="hz-table">
-              <tr><th>Tipo</th><th>Qtd.</th><th>Exemplos</th></tr>
-              <tr><td>Leis</td><td>6</td><td>Lei 11.186/1994, Lei 15.232/2014</td></tr>
-              <tr><td>Decretos</td><td>5</td><td><strong>52.005/2021</strong> (classificação de risco), <strong>19.644/1997</strong> (COSCIP), 58.545/2025</td></tr>
-              <tr><td>Normas Técnicas</td><td>25</td><td><strong>NT 1.01</strong> (regularização), <strong>NT 17/2025</strong> (SAVE), NT 303, NT 3.04, NT 3.05</td></tr>
-              <tr><td>Resoluções Técnicas</td><td>11</td><td>RT 001/17 (distância a percorrer), RT 005/17 (quiosques)</td></tr>
-              <tr><td>Portarias</td><td>8</td><td>Portaria Adm. nº 1/2025, Portaria CG nº 154/2020</td></tr>
-              <tr><td>Notas Técnicas</td><td>1</td><td>Nota Técnica SENASP</td></tr>
-              <tr><td>Enunciados</td><td>1</td><td>Compilado de enunciados (atualizado 20/10/2025)</td></tr>
-            </table>
-
-            <hr>
-            <strong>PDFs extraídos e analisados (8):</strong>
-            <ul>
-              <li>NT 1.01 — Processo de Regularização de Edificações</li>
-              <li>NT 1.06 — Dimensionamento Tipo Q (Especiais)</li>
-              <li>NT 3.04 — Trios Elétricos</li>
-              <li>NT 3.05 — Heliponto e Heliporto</li>
-              <li>NT 303 — Estruturas Itinerantes</li>
-              <li>NT 17/2025 — SAVE / Eletropostos</li>
-              <li>NT 17/2025 — Atualização 01</li>
-              <li>Decreto 19.644/1997 — COSCIP (134 páginas)</li>
-            </ul>
-
-            <hr>
-            <strong>Decretos ALEPE monitorados:</strong>
-            <ul>
-              <li><strong>Decreto 52.005/2021</strong> (id=61067) — classificação de risco I/II/III</li>
-            </ul>
-            <p>🔗 <a href="https://legis.alepe.pe.gov.br/texto.aspx?id=61067&tipo=TEXTOATUALIZADO" target="_blank" rel="noopener">Texto atualizado no ALEPE Legis</a></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Classificação de risco — resumo</div>
-            <div class="hz-desc">Decreto 52.005/2021 (alterado por 58.545/2025 e 60.351/2026)</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-red">Risco III</span>
-            <span class="hz-tag hz-tag-blue">Risco II</span>
-            <span class="hz-tag hz-tag-green">Risco I</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <p><strong>Risco I (menor)</strong> — atividades de baixo risco no Anexo I, dispensadas de regularização (Art. 5º).</p>
-            <p><strong>Risco II (médio)</strong> — atividades que exigem Atestado de Regularidade (AR), sem projeto técnico (Art. 7º).</p>
-            <p><strong>Risco III (maior)</strong> — exigem Projeto Técnico + AVCB. Critérios no Art. 6º:</p>
-            <ul>
-              <li>Área &gt; 930 m²</li>
-              <li>Mais de 3 pavimentos</li>
-              <li>Lotação &gt; 100 pessoas</li>
-              <li>GLP central &gt; 190 kg</li>
-              <li>Produtos perigosos / inflamáveis</li>
-              <li>Evento temporário com controle de acesso</li>
-              <li>CNAE de alto risco (Anexo II)</li>
-            </ul>
-            <p><strong>Art. 7º, §3º</strong> — atividade no térreo, ≤930 m², saída direta, sem compartilhar SCI → Risco II.</p>
-            <p>⚠️ <strong>Regra de prevalência:</strong> Art. 6º, I (área &gt;930 m²) prevalece sobre o §3º.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ APRESENTAÇÕES ============ -->
-    <section class="section" id="apresentacoes">
-      <div class="eyebrow"><span>Material gerado</span><span class="rule"></span></div>
-      <h2>Apresentações geradas</h2>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Arquivos em /data/workspace/apresentacoes/</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-gold">10 arquivos</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <table class="hz-table">
-              <tr><th>Arquivo</th><th>Tamanho</th></tr>
-              <tr><td>Instrucao_Classificacao_Risco_CBMPE.pptx</td><td>6.2 MB</td></tr>
-              <tr><td>Instrucao_Classificacao_Risco_CBMPE.pdf</td><td>823 KB</td></tr>
-              <tr><td>Instrucao_Classificacao_Risco_CBMPE_v2.pptx</td><td>22.5 MB</td></tr>
-              <tr><td>Instrucao_Classificacao_Risco_CBMPE_v2.pdf</td><td>899 KB</td></tr>
-              <tr><td>Instrucao_..._com_fluxo.pptx</td><td>6.2 MB</td></tr>
-            </table>
-            <p>Template oficial: <code>/data/wiki/normas-cbmpe/apresentacoes-modelo/Modelo_CBMPE.pptx</code> (1.8 MB)</p>
-            <p>Script de geração: <code>/data/workspace/gerar_apresentacao_cbmpe.py</code></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Estrutura do template CBMPE</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-tag hz-tag-gold">3 slides-base</span>
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <table class="hz-table">
-              <tr><th>Slide</th><th>Conteúdo</th><th>Shapes</th></tr>
-              <tr><td>1 — Capa</td><td>SDS, CBMPE, OME, TEMA, RESUMO</td><td>CaixaDeTexto 1 (tema), CaixaDeTexto 3 (resumo)</td></tr>
-              <tr><td>2 — Conteúdo</td><td>Título, Subtítulo, Tópicos</td><td>Retângulo 7 (título), CaixaDeTexto 6 (extra), Grupo Agrupar 23 (subtítulo + tópicos)</td></tr>
-              <tr><td>3 — Encerramento</td><td>"VIDAS ALHEIAS, RIQUEZAS SALVAR!"</td><td>Fixo, sem preenchimento</td></tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ SCRIPTS ============ -->
-    <section class="section" id="scripts">
-      <div class="eyebrow"><span>Automação</span><span class="rule"></span></div>
-      <h2>Scripts e automações</h2>
-      <table class="hz-table">
-        <tr><th>Script</th><th>Descrição</th><th>Localização</th></tr>
-        <tr>
-          <td><code>gerar_apresentacao_cbmpe.py</code></td>
-          <td>Gera .pptx no template CBMPE a partir de JSON + exporta .pdf via Google Drive</td>
-          <td><code>/data/workspace/</code></td>
-        </tr>
-        <tr>
-          <td><code>monitor_cbmpe.py</code></td>
-          <td>Verifica atualizações nas normas CBMPE e ALEPE (hash SHA-256)</td>
-          <td><code>/data/scripts/</code></td>
-        </tr>
-        <tr>
-          <td><code>neoenergia_r2d2.py</code></td>
-          <td>Download de anexos de e-mails da Neoenergia</td>
-          <td><code>/data/scripts/</code></td>
-        </tr>
-        <tr>
-          <td><code>upload_neoenergia_drive.py</code></td>
-          <td>Sobe PDFs/PNGs da Neoenergia para o Google Drive</td>
-          <td><code>/data/workspace/</code></td>
-        </tr>
-        <tr>
-          <td><code>google_calendar_helper.py</code></td>
-          <td>Helper para Google Calendar (<code>--meet</code>, <code>--rrule</code>)</td>
-          <td><code>/data/workspace/</code></td>
-        </tr>
-        <tr>
-          <td><code>gerar_instrucao_v5.py</code></td>
-          <td>Versão anterior — descontinuada, usar <code>gerar_apresentacao_cbmpe.py</code></td>
-          <td><code>/data/</code></td>
-        </tr>
-      </table>
-    </section>
-
-    <!-- ============ REPOSITÓRIOS ============ -->
-    <section class="section" id="repositorios">
-      <div class="eyebrow"><span>Código</span><span class="rule"></span></div>
-      <h2>GitHub — repositórios CAT Sertão</h2>
-
-      <div class="hz-stats" style="margin-bottom:14px;">
-        <div class="hz-stat"><div class="num" style="font-size:1.15em;">catsertao</div><div class="label">Portal principal</div></div>
-        <div class="hz-stat"><div class="num" style="font-size:1.15em;">triagem-catsertao</div><div class="label">Classificação de risco por CNAE</div></div>
-        <div class="hz-stat"><div class="num" style="font-size:1.15em;">oci-catsertao</div><div class="label">Mapa de OCI + backend Apps Script</div></div>
-      </div>
-
-      <div class="hz-note">
-        <strong>Nomes parecidos, coisas diferentes:</strong> o skill <code>eventos-temporarios-arts</code> (checklist de ARTs para eventos temporários) não tem relação com o repositório público <code>triagem-catsertao</code> (calculadora de classificação de risco por CNAE/lotação).
-      </div>
-
-      <p style="color:var(--hz-muted); font-size:.9em;">
-        Conta GitHub: <strong>aquinogr89</strong> · GitHub Pages ativo nos três repositórios.
-      </p>
-    </section>
-
-    <!-- ============ SITES E SERVIÇOS ============ -->
-    <section class="section" id="sites">
-      <div class="eyebrow"><span>Publicado</span><span class="rule"></span></div>
-      <h2>Sites e serviços</h2>
-      <table class="hz-table">
-        <tr><th>Serviço</th><th>URL / detalhe</th></tr>
-        <tr><td>CAT Sertão (portal)</td><td><a href="https://aquinogr89.github.io/catsertao/" target="_blank" rel="noopener">catsertao</a></td></tr>
-        <tr><td>Triagem de Risco</td><td><a href="https://aquinogr89.github.io/triagem-catsertao/" target="_blank" rel="noopener">triagem-catsertao</a> — CNAE 8230-0/02 (casas de festas) = Risco III, cálculo de lotação automático</td></tr>
-        <tr><td>Mapa de OCI</td><td><a href="https://aquinogr89.github.io/oci-catsertao/" target="_blank" rel="noopener">oci-catsertao</a></td></tr>
-        <tr><td>Agente n8n + Gemini</td><td>sternplatypus-n8n.cloudfy.live — perguntas sobre normas SCI de PE</td></tr>
-        <tr><td>Google Meet fixo</td><td><a href="https://meet.google.com/irz-gunn-oqo" target="_blank" rel="noopener">Instrução semanal</a></td></tr>
-      </table>
-    </section>
-
-    <!-- ============ CONFIGURAÇÕES ============ -->
-    <section class="section" id="config">
-      <div class="eyebrow"><span>Ambiente</span><span class="rule"></span></div>
-      <h2>Configurações do ambiente</h2>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div><div class="hz-title">Diretórios e credenciais de sistema</div></div>
-          <div class="hz-meta"><span class="hz-toggle">▼</span></div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <table class="hz-table">
-              <tr><th>Item</th><th>Caminho / detalhe</th></tr>
-              <tr><td>Home</td><td><code>/data</code></td></tr>
-              <tr><td>Skills</td><td><code>/data/skills/</code></td></tr>
-              <tr><td>Wiki normas</td><td><code>/data/wiki/normas-cbmpe/</code></td></tr>
-              <tr><td>Workspace</td><td><code>/data/workspace/</code></td></tr>
-              <tr><td>Scripts cron</td><td><code>/data/scripts/</code></td></tr>
-              <tr><td>Google token</td><td><code>/data/google_token.json</code></td></tr>
-              <tr><td>Google client secret</td><td><code>/data/google_client_secret.json</code></td></tr>
-              <tr><td>Template PPTX</td><td><code>/data/workspace/Modelo_CBMPE_novo.pptx</code></td></tr>
-              <tr><td>Fuso horário</td><td>UTC-3 (Brasília / Petrolina-PE) — sempre</td></tr>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div><div class="hz-title">Acesso ao CAT Sertão (site)</div></div>
-          <div class="hz-meta"><span class="hz-toggle">▼</span></div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <div class="hz-note">
-              A senha de login do site foi <strong>removida deste painel</strong>: este arquivo é servido estaticamente pelo GitHub Pages, então qualquer pessoa com a URL direta pode ver o código-fonte (Ctrl+U) mesmo sem passar pelo login — o gate de sessão só controla o que aparece na tela, não o que está no HTML baixado. Senhas ficam só no gerenciador de senhas do Geraldo e podem ser trocadas em <a href="conta.html" target="_blank" rel="noopener">Minha Conta</a>.
-            </div>
-            <table class="hz-table">
-              <tr><th>Serviço</th><th>Detalhe</th></tr>
-              <tr><td>Site CAT Sertão</td><td>login: geraldo.reis · senha: ver gerenciador de senhas</td></tr>
-              <tr><td>Apps Script URL</td><td><code>ver common.js → APPS_SCRIPT_URL</code></td></tr>
-              <tr><td>Login retorna</td><td>token + perfil (<code>admin_master</code>)</td></tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ CONSULTAS RÁPIDAS ============ -->
-    <section class="section" id="faq-normas">
-      <div class="eyebrow"><span>Referência</span><span class="rule"></span></div>
-      <h2>Consultas rápidas — normas técnicas</h2>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div><div class="hz-title">Extintores (COSCIP Arts. 31–42 + NBR 12693)</div></div>
-          <div class="hz-meta"><span class="hz-toggle">▼</span></div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <ul>
-              <li><strong>Classe C (elétrico):</strong> CO₂ 6 kg (círculo amarelo) ou PQS 4–6 kg (círculo azul)</li>
-              <li><strong>Distância máxima:</strong> 15 m de qualquer ponto (Art. 32, II)</li>
-              <li><strong>Altura de instalação:</strong> ≤ 1,60 m (Art. 34, I)</li>
-              <li><strong>Capacidade extintora:</strong> 6 kg ABC = 4-A:40B:C; 4 kg ABC = 2-A:20B:C (NBR 12693, Tabela 2)</li>
-              <li><strong>Eletroposto (NT 17/2025):</strong> extintor PQS ABC 6 kg (4-A:40B:C), sinalização círculo azul</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div><div class="hz-title">NT 17/2025 — SAVE / eletropostos</div></div>
-          <div class="hz-meta"><span class="hz-toggle">▼</span></div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <ul>
-              <li>Sinalização da chave de desligamento: 1,80 m do piso à base da placa (item 5.1.5 "a")</li>
-              <li>Sinalização: círculo azul</li>
-              <li>Termo correto: <strong>eletroposto</strong> (VE), não "eletropóstico"</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="hz-card">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div><div class="hz-title">Validade do AVCB/AR</div></div>
-          <div class="hz-meta"><span class="hz-toggle">▼</span></div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <p><strong>Art. 258</strong> do COSCIP (Decreto 19.644/97):</p>
-            <blockquote>"O Atestado de Regularidade terá a validade de 1 (um) ano, a contar da data de sua emissão, perdendo seus efeitos legais após vencido o prazo estabelecido."</blockquote>
-            <p>Regra geral: <strong>1 ano</strong> para todo AVCB/AR (Risco II e III). Exceções em NT própria.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ MEMÓRIA ============ -->
-    <section class="section" id="memoria">
-      <div class="eyebrow"><span>Persistência</span><span class="rule"></span></div>
-      <h2>Memória persistente do Hermes</h2>
-      <p class="lead">Fatos que o Hermes lembra entre sessões para não precisar perguntar de novo.</p>
-
-      <div class="hz-card open">
-        <div class="hz-card-header" onclick="toggleCard(this)">
-          <div>
-            <div class="hz-title">Perfil do usuário (Geraldo)</div>
-          </div>
-          <div class="hz-meta">
-            <span class="hz-toggle">▼</span>
-          </div>
-        </div>
-        <div class="hz-card-body">
-          <div class="hz-card-body-inner">
-            <ul>
-              <li><strong>Nome:</strong> Geraldo</li>
-              <li><strong>Cargo:</strong> Chefe do CAT Sertão / CBMPE</li>
-              <li><strong>Idioma:</strong> português brasileiro</li>
-              <li><strong>Fuso:</strong> UTC-3 (Petrolina-PE) — nunca perguntar</li>
-              <li><strong>Perfil técnico:</strong> corrige terminologia (ex.: eletropóstico → eletroposto); espera respostas com citações exatas</li>
-              <li><strong>GitHub:</strong> aquinogr89 — catsertao, triagem-catsertao, oci-catsertao</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <button type="button" id="hz-chat-launcher" class="hz-chat-launcher" onclick="hzChatToggle()" title="Assistente CAT Sertão" aria-label="Assistente CAT Sertão">💬</button>
-
-    <div id="hz-chat-panel" class="hz-chat-panel">
-      <div class="hz-chat-header">
-        <span>🤖 Assistente CAT Sertão</span>
-        <button type="button" class="hz-chat-close" onclick="hzChatToggle()" aria-label="Fechar">×</button>
-      </div>
-      <iframe id="hz-chat-frame" class="hz-chat-iframe" title="Assistente Virtual CAT Sertão"></iframe>
-    </div>
-
-  </div>
 </main>
+
+<div id="hermes-content" class="u-hidden hz-shell">
+
+  <div class="hz-topbar">
+    <div class="hz-topbar-brand">
+      <img class="hz-topbar-logo" src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão">
+      <div>
+        <div class="hz-topbar-title">Hermes Agent</div>
+        <div class="hz-topbar-sub">CAT Sertão · CBMPE</div>
+      </div>
+    </div>
+    <div class="hz-topbar-search">
+      <input type="search" id="hz-search" placeholder="Buscar skill, norma, arquivo…" aria-label="Buscar nesta seção">
+    </div>
+    <div class="hz-topbar-user">
+      <div>
+        <div class="hz-user-perfil" id="session-perfil-2">—</div>
+        <div class="hz-user-login" id="session-login-2">—</div>
+      </div>
+      <div class="hz-avatar" id="session-avatar" aria-hidden="true">—</div>
+    </div>
+  </div>
+
+  <div class="hz-statusbar">
+    <span class="hz-chip"><span class="hz-chip-dot"></span>4 cron jobs · todos ok</span>
+    <span class="hz-chip">⏱ próximo: hoje 14:38</span>
+    <span class="hz-chip">57 normas monitoradas</span>
+    <span class="hz-statusbar-spacer"></span>
+    <a class="hz-back-link" href="index.html">← Voltar ao portal</a>
+  </div>
+
+  <div class="hz-body">
+    <nav class="hz-sidebar" aria-label="Seções do painel">
+      <div class="hz-sidebar-label">Seções</div>
+      <button type="button" class="hz-nav-item" data-section="skills"><span class="hz-nav-icon">🧩</span><span class="hz-nav-label">Skills</span><span class="hz-nav-badge">5</span></button>
+      <button type="button" class="hz-nav-item" data-section="apresentacoes"><span class="hz-nav-icon">📊</span><span class="hz-nav-label">Apresentações</span><span class="hz-nav-badge">10</span></button>
+      <button type="button" class="hz-nav-item" data-section="cronjobs"><span class="hz-nav-icon">⏱</span><span class="hz-nav-label">Cron Jobs</span><span class="hz-nav-badge">4</span></button>
+      <button type="button" class="hz-nav-item" data-section="faq-normas"><span class="hz-nav-icon">💬</span><span class="hz-nav-label">Consultas Rápidas</span></button>
+      <button type="button" class="hz-nav-item" data-section="wiki-normas"><span class="hz-nav-icon">📚</span><span class="hz-nav-label">Wiki de Normas</span><span class="hz-nav-badge">57</span></button>
+      <button type="button" class="hz-nav-item" data-section="sites"><span class="hz-nav-icon">🌐</span><span class="hz-nav-label">Sites e Serviços</span></button>
+      <div class="hz-sidebar-sep"></div>
+      <button type="button" class="hz-nav-item" data-section="avancado"><span class="hz-nav-icon">⚙</span><span class="hz-nav-label">Avançado</span></button>
+      <button type="button" class="hz-nav-item" data-section="memoria"><span class="hz-nav-icon">🧠</span><span class="hz-nav-label">Memória</span></button>
+    </nav>
+
+    <div class="hz-content-area" id="hz-content-area">
+
+      <!-- ============ SKILLS ============ -->
+      <section class="hz-section" id="skills">
+        <div class="eyebrow"><span>Conhecimento</span><span class="rule"></span></div>
+        <h2>Skills</h2>
+        <p class="lead">Registro de como o assistente Hermes está configurado para apoiar o CAT Sertão: skills carregadas, automações agendadas (cron jobs), base de conhecimento das normas do CBMPE e scripts em uso. Visível apenas para o perfil <strong>Admin Master</strong> — inclui caminhos internos e detalhes operacionais que não são de interesse geral da equipe.</p>
+        <p class="lead">Conhecimento especializado que o Hermes carrega para executar tarefas no CAT Sertão.</p>
+
+        <div class="hz-stats" style="margin-bottom:22px;">
+          <div class="hz-stat"><div class="num">5</div><div class="label">Skills ativos</div></div>
+          <div class="hz-stat"><div class="num">4</div><div class="label">Cron jobs</div></div>
+          <div class="hz-stat"><div class="num">57</div><div class="label">Normas monitoradas</div></div>
+          <div class="hz-stat"><div class="num">10</div><div class="label">Apresentações geradas</div></div>
+          <div class="hz-stat"><div class="num">50+</div><div class="label">Arquivos gerenciados</div></div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">briefing-semanal-catsertao</div>
+              <div class="hz-desc">Fluxo completo da instrução semanal CBMPE</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">productivity</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>O que faz:</strong> gerencia todo o ciclo da instrução semanal — escolha de temas no domingo, estudo da norma, geração de slides .pptx no template oficial do CBMPE e mensagem de WhatsApp na segunda-feira.
+              <hr>
+              <strong>Detalhes:</strong>
+              <ul>
+                <li>Template: <code>/data/workspace/Modelo_CBMPE_novo.pptx</code></li>
+                <li>Script: <code>/data/workspace/gerar_apresentacao_cbmpe.py</code></li>
+                <li>Meet fixo: <a href="https://meet.google.com/irz-gunn-oqo" target="_blank" rel="noopener">meet.google.com/irz-gunn-oqo</a></li>
+                <li>Cores do template: Azul #002060, Vermelho #C00000, Dourado #FFC000</li>
+                <li>Gera .pptx + .pdf + Google Slides público</li>
+              </ul>
+              <strong>Regras importantes:</strong>
+              <ul>
+                <li>Nunca criar novo evento no Google Calendar para a instrução semanal</li>
+                <li>Nunca gerar novo link do Meet</li>
+                <li>WhatsApp: só texto (sem links de Drive/Slides)</li>
+                <li>Links permanentes vão no Telegram e na Agenda</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">cbmpe-normas-monitoring</div>
+              <div class="hz-desc">Monitor de normas do CBMPE + base de conhecimento</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">productivity</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>O que faz:</strong> monitora atualizações nas normas do CBMPE (site oficial) e na ALEPE (decretos). Verifica o hash SHA-256 dos PDFs e o texto dos decretos todo mês.
+              <hr>
+              <strong>Fontes monitoradas:</strong>
+              <ul>
+                <li><strong>CBMPE:</strong> bombeiros.pe.gov.br — 57 documentos (Leis, Decretos, NTs, RTs, Portarias, Enunciados)</li>
+                <li><strong>ALEPE:</strong> Decreto 52.005/2021 (id=61067) — texto atualizado</li>
+              </ul>
+              <strong>Normas técnicas analisadas em detalhe:</strong> NT 1.01, NT 1.06, NT 3.04, NT 3.05, NT 303, NT 17/2025, COSCIP (Decreto 19.644/97)
+              <hr>
+              <strong>Wiki local:</strong> <code>/data/wiki/normas-cbmpe/</code>
+              <ul>
+                <li><code>index.md</code> — catálogo completo dos 57 documentos</li>
+                <li><code>monitor_state.json</code> — estado do monitoramento</li>
+                <li><code>pdfs/</code> — 8 PDFs + textos extraídos</li>
+                <li><code>DECRETO_52.005_2021.txt</code> — texto completo do decreto</li>
+              </ul>
+              <strong>Script:</strong> <code>/data/scripts/monitor_cbmpe.py</code> (<code>no_agent=True</code>, zero tokens)
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">eventos-temporarios-arts</div>
+              <div class="hz-desc">Triagem de risco e ARTs para eventos temporários</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">cbmpe</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>O que faz:</strong> guia de perguntas para triagem de eventos temporários (palcos, geradores, energia elétrica, controle de acesso) e lista de ARTs exigidas.
+              <div class="hz-note">Este skill (checklist de ARTs para eventos) é diferente do site público <code>triagem-catsertao</code> (classificação de risco por CNAE) listado na seção Repositórios — não é o mesmo sistema, apesar do nome antigo parecido.</div>
+              <strong>ARTs exigidas em eventos:</strong>
+              <ul>
+                <li>ART Estrutural (montagem/desmontagem)</li>
+                <li>ART Baixa Tensão</li>
+                <li>ART Som e Iluminação</li>
+                <li>ART Aterramento</li>
+                <li>ART Grupo Gerador + aterramento</li>
+                <li>ART Equipamentos Mecânicos (se houver)</li>
+              </ul>
+              <strong>Contato:</strong> WhatsApp (87) 9 8835-2828 (2ª SATEC — Petrolina)
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">google-workspace</div>
+              <div class="hz-desc">Gmail, Calendar, Drive, Docs, Sheets</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">productivity</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>O que faz:</strong> integração com Google Workspace — e-mail, calendário, drive, planilhas e documentos.
+              <hr>
+              <strong>Conta:</strong> geraldoreisaquino@gmail.com<br>
+              <strong>Token:</strong> <code>/data/google_token.json</code><br>
+              <strong>Helper:</strong> <code>/data/workspace/google_calendar_helper.py</code> (<code>--meet</code> para Meet, <code>--rrule</code> para recorrência)
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">ocr-and-documents + nano-pdf</div>
+              <div class="hz-desc">Extração e edição de PDFs</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">productivity</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>O que faz:</strong> extração de texto de PDFs (pymupdf para PDFs textuais, marker-pdf para OCR/escaneados) e edição de PDFs via linguagem natural (nano-pdf).
+              <hr>
+              <strong>Uso no CAT Sertão:</strong> extração de textos das normas técnicas (NT 1.01, NT 17, COSCIP etc.) do site do CBMPE para alimentar a base de conhecimento.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CRON JOBS ============ -->
+      <section class="hz-section" id="cronjobs">
+        <div class="eyebrow"><span>Automação</span><span class="rule"></span></div>
+        <h2>Cron jobs programados</h2>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Instrução Semanal — Escolha de Tema</div>
+              <div class="hz-desc">Job ID: 82c106fc883d</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-green">ativo</span>
+              <span class="hz-tag hz-tag-gray">Domingo</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>Schedule:</strong> <code>0 12 * * 0</code> (domingo 12:00 UTC = 09:00 BRT)<br>
+              <strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
+              <strong>Entrega:</strong> Telegram<br>
+              <strong>O que faz:</strong> envia 5 opções de tema + link do Google Meet fixo para o Geraldo escolher o tema da instrução de segunda-feira.
+              <hr>
+              <strong>Última execução:</strong> 19/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
+              <strong>Próxima:</strong> 26/07/2026
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Segunda — Mensagem WhatsApp Instrução</div>
+              <div class="hz-desc">Job ID: 22f814eb5ed8</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-green">ativo</span>
+              <span class="hz-tag hz-tag-gray">Segunda 8h BRT</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>Schedule:</strong> <code>0 11 * * 1</code> (segunda 11:00 UTC = 08:00 BRT)<br>
+              <strong>Skills:</strong> briefing-semanal-catsertao, google-workspace<br>
+              <strong>Entrega:</strong> Telegram<br>
+              <strong>O que faz:</strong> envia a mensagem formatada para WhatsApp (texto limpo: saudação, tema, horário, link do Meet). <em>Sem links de Drive/Slides.</em>
+              <hr>
+              <strong>Última execução:</strong> 20/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
+              <strong>Próxima:</strong> 27/07/2026
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Monitor CBMPE — Normas</div>
+              <div class="hz-desc">Job ID: 484ce0bb1ac5</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-green">ativo</span>
+              <span class="hz-tag hz-tag-gray">1º dia útil do mês</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>Schedule:</strong> <code>0 12 1-5 * *</code> (dias 1 a 5, 09:00 BRT)<br>
+              <strong>Modo:</strong> <code>no_agent=True</code> (script puro, zero tokens)<br>
+              <strong>Script:</strong> <code>/data/scripts/monitor_cbmpe.py</code><br>
+              <strong>Entrega:</strong> Telegram (origem)<br>
+              <strong>O que faz:</strong> verifica alterações nas normas do CBMPE (57 PDFs) e no Decreto 52.005/2021 na ALEPE; se detectar mudanças, gera relatório.
+              <hr>
+              <strong>Lógica interna:</strong> só executa no 1º dia útil do mês (ignora sábados/domingos). Compara hash SHA-256.
+              <hr>
+              <strong>Última execução:</strong> 18/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
+              <strong>Próxima:</strong> 01/08/2026
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Neoenergia r2d2 — R2 PDF para Telegram</div>
+              <div class="hz-desc">Job ID: f065a97338fd</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-green">ativo</span>
+              <span class="hz-tag hz-tag-gray">A cada 60 min</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>Schedule:</strong> a cada 60 minutos<br>
+              <strong>Script:</strong> <code>/data/scripts/neoenergia_r2d2.py</code><br>
+              <strong>Entrega:</strong> Telegram<br>
+              <strong>O que faz:</strong> monitora e-mails da Neoenergia (r2d2), baixa anexos PDF e encaminha para o Telegram.
+              <hr>
+              <strong>Última execução:</strong> 22/07/2026 13:38 <span style="color:var(--hz-green);">✓ ok</span><br>
+              <strong>Próxima:</strong> 22/07/2026 14:38
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Neoenergia Anexos — Google Drive</div>
+              <div class="hz-desc">Demonstrativos da Neoenergia arquivados automaticamente</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-blue">33 arquivos</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <strong>Pasta no Drive:</strong>
+              <a href="https://drive.google.com/drive/folders/1QE2RPB_q8dKsH2MPFpyLzLlkIX1OXP45" target="_blank" rel="noopener">Neoenergia Anexos</a>
+              <br><br>
+              <strong>Script:</strong> <code>/data/workspace/upload_neoenergia_drive.py</code>
+              <div class="hz-note hz-note-info">
+                <strong>🔒 Acesso controlado pelo próprio Google Drive.</strong> Todos os 33 arquivos abaixo (e a pasta) têm compartilhamento restrito — só a conta <code>geraldoreisaquino@gmail.com</code> tem permissão de leitura (conferido direto na API do Drive, arquivo por arquivo, antes de publicar este link). Clicar sem estar logado nessa conta resulta em "Você precisa de acesso": quem protege os documentos é o login do Google, não esta página.
+              </div>
+              <hr>
+              <strong>33 arquivos (histórico de Ago/2023 a Jun/2026):</strong>
+              <table class="hz-table">
+                <tr><th>Arquivo</th><th>Ver</th><th>Download</th></tr>
+                <tr>
+                  <td>Relatório Resumo (PDF)</td>
+                  <td><a href="https://drive.google.com/file/d/1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1t6LJ6aZQDcUUgO3CCEre68n6G0T-0R7Z&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Ago/2023</td>
+                  <td><a href="https://drive.google.com/file/d/1EAy8YWfttPlEk1tTvu7LxdtewndTd2fZ/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1EAy8YWfttPlEk1tTvu7LxdtewndTd2fZ&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Set/2023</td>
+                  <td><a href="https://drive.google.com/file/d/1uSCubrn0KZoNlmwjgW7C5btmcyfEDIeU/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1uSCubrn0KZoNlmwjgW7C5btmcyfEDIeU&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Out/2023</td>
+                  <td><a href="https://drive.google.com/file/d/1Qx_lthqHGmTyU1huLPmHQov2etmcbSpO/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1Qx_lthqHGmTyU1huLPmHQov2etmcbSpO&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Nov/2023</td>
+                  <td><a href="https://drive.google.com/file/d/1CPl9VZGId9pZm8EDf4raJX9RsoxSu1Z-/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1CPl9VZGId9pZm8EDf4raJX9RsoxSu1Z-&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Dez/2023</td>
+                  <td><a href="https://drive.google.com/file/d/1rdlzV79_MAhhyILG5kC161YRZ7aAvWWG/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1rdlzV79_MAhhyILG5kC161YRZ7aAvWWG&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jan/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1pAZVfJSwFNK2AGnp64fMzP3MCi6n_hQy/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1pAZVfJSwFNK2AGnp64fMzP3MCi6n_hQy&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Fev/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1DWdRfyvB3KhabZ1i-UVaBvjybbN8NwGF/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1DWdRfyvB3KhabZ1i-UVaBvjybbN8NwGF&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mar/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1jLaVLYGZ1-HcPVRDO0y0VeJJNoEz6e5m/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1jLaVLYGZ1-HcPVRDO0y0VeJJNoEz6e5m&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mai/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1w0Wobnwvrqoym4hAMG0VD8MWAo57YvUY/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1w0Wobnwvrqoym4hAMG0VD8MWAo57YvUY&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jun/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1U0sKXNcSzo0ZUojwt242h9t2ujSrLZlu/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1U0sKXNcSzo0ZUojwt242h9t2ujSrLZlu&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jul/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1y00l_Qkeyw9ivLuhgpkEGi9ufzCreUeT/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1y00l_Qkeyw9ivLuhgpkEGi9ufzCreUeT&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Ago/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1f78dk5hhJcVz38VEnDWABRKX9soOSImP/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1f78dk5hhJcVz38VEnDWABRKX9soOSImP&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Set/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1BWvLoem4qwjRYsejiAqI7KvHBwTTcIN2/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1BWvLoem4qwjRYsejiAqI7KvHBwTTcIN2&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Out/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1fsbbAmNvi29zlZbDO7fBL0HWeXvTUYb4/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1fsbbAmNvi29zlZbDO7fBL0HWeXvTUYb4&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Nov/2024</td>
+                  <td><a href="https://drive.google.com/file/d/14vjJzu_F60tTohl5wuIJkoFloejFRT0z/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=14vjJzu_F60tTohl5wuIJkoFloejFRT0z&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Dez/2024</td>
+                  <td><a href="https://drive.google.com/file/d/1D1ri07I-bjPTNV9GopdSXpAquOI_EQEc/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1D1ri07I-bjPTNV9GopdSXpAquOI_EQEc&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jan/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1E5YwVVpRqp94_JKT8IQMuPPciISgJjku/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1E5YwVVpRqp94_JKT8IQMuPPciISgJjku&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Fev/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1qnUpyzxu3MatJm1-payHdN-6sbI6C_ZC/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1qnUpyzxu3MatJm1-payHdN-6sbI6C_ZC&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mar/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1A2iGHv-ug3Hp1kpu0JtcP-a9AWtKoSVR/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1A2iGHv-ug3Hp1kpu0JtcP-a9AWtKoSVR&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Abr/2025</td>
+                  <td><a href="https://drive.google.com/file/d/17_k8WLmPSHSFd-jIUD3iAWtXuVjCjlwG/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=17_k8WLmPSHSFd-jIUD3iAWtXuVjCjlwG&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mai/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1fPicT3QfUOT4bCwWxWT731DQhn9ACqUb/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1fPicT3QfUOT4bCwWxWT731DQhn9ACqUb&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jun/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1iGUmSSxZZI1qNWMQ8FuxluT7H5P43w51/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1iGUmSSxZZI1qNWMQ8FuxluT7H5P43w51&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jul/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1Re_QnPdgAbcUDfFgyTEIIZ48RwXr4G-n/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1Re_QnPdgAbcUDfFgyTEIIZ48RwXr4G-n&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Ago/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1CexmBcvrMreMWMlzi0__uqZ1iitZq6fM/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1CexmBcvrMreMWMlzi0__uqZ1iitZq6fM&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Out/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1rLJs77YL82h3eRViimMGQMq3q-Mw0EFr/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1rLJs77YL82h3eRViimMGQMq3q-Mw0EFr&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Nov/2025</td>
+                  <td><a href="https://drive.google.com/file/d/14SxJu7bfa7qoeAR1qvL2zx_JYAq5yDZf/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=14SxJu7bfa7qoeAR1qvL2zx_JYAq5yDZf&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Dez/2025</td>
+                  <td><a href="https://drive.google.com/file/d/1-b3N_NEQGpdxhmvS-oHjlyab3K_cG-id/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1-b3N_NEQGpdxhmvS-oHjlyab3K_cG-id&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Fev/2026</td>
+                  <td><a href="https://drive.google.com/file/d/1XMi1Ybs8tCAVm3e-ILpHq18NvZ-luYFO/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1XMi1Ybs8tCAVm3e-ILpHq18NvZ-luYFO&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mar/2026</td>
+                  <td><a href="https://drive.google.com/file/d/1Tr7MuvRAeCZU0WlVGkrPo9Es8_u04OR6/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1Tr7MuvRAeCZU0WlVGkrPo9Es8_u04OR6&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Abr/2026</td>
+                  <td><a href="https://drive.google.com/file/d/1y83wpC-2zFUDZJxqTWs2J_N64nfDJqtl/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1y83wpC-2zFUDZJxqTWs2J_N64nfDJqtl&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Mai/2026</td>
+                  <td><a href="https://drive.google.com/file/d/1N4GLaJ0szOSlJwfvivgb-vBeyFA7DXbw/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1N4GLaJ0szOSlJwfvivgb-vBeyFA7DXbw&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+                <tr>
+                  <td>Relatório Resumo — Jun/2026</td>
+                  <td><a href="https://drive.google.com/file/d/1qZ_Zr5wc9_qqo_f2Z9iSVw_u2-TLoMv1/view?usp=drivesdk" target="_blank" rel="noopener">👁</a></td>
+                  <td><a href="https://drive.google.com/uc?id=1qZ_Zr5wc9_qqo_f2Z9iSVw_u2-TLoMv1&export=download" target="_blank" rel="noopener">⬇</a></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ WIKI DE NORMAS ============ -->
+      <section class="hz-section" id="wiki-normas">
+        <div class="eyebrow"><span>Base de conhecimento</span><span class="rule"></span></div>
+        <h2>Wiki de normas CBMPE</h2>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Estrutura da wiki</div>
+              <div class="hz-desc"><code>/data/wiki/normas-cbmpe/</code></div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-gray">57 documentos</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <table class="hz-table">
+                <tr><th>Tipo</th><th>Qtd.</th><th>Exemplos</th></tr>
+                <tr><td>Leis</td><td>6</td><td>Lei 11.186/1994, Lei 15.232/2014</td></tr>
+                <tr><td>Decretos</td><td>5</td><td><strong>52.005/2021</strong> (classificação de risco), <strong>19.644/1997</strong> (COSCIP), 58.545/2025</td></tr>
+                <tr><td>Normas Técnicas</td><td>25</td><td><strong>NT 1.01</strong> (regularização), <strong>NT 17/2025</strong> (SAVE), NT 303, NT 3.04, NT 3.05</td></tr>
+                <tr><td>Resoluções Técnicas</td><td>11</td><td>RT 001/17 (distância a percorrer), RT 005/17 (quiosques)</td></tr>
+                <tr><td>Portarias</td><td>8</td><td>Portaria Adm. nº 1/2025, Portaria CG nº 154/2020</td></tr>
+                <tr><td>Notas Técnicas</td><td>1</td><td>Nota Técnica SENASP</td></tr>
+                <tr><td>Enunciados</td><td>1</td><td>Compilado de enunciados (atualizado 20/10/2025)</td></tr>
+              </table>
+
+              <hr>
+              <strong>PDFs extraídos e analisados (8):</strong>
+              <ul>
+                <li>NT 1.01 — Processo de Regularização de Edificações</li>
+                <li>NT 1.06 — Dimensionamento Tipo Q (Especiais)</li>
+                <li>NT 3.04 — Trios Elétricos</li>
+                <li>NT 3.05 — Heliponto e Heliporto</li>
+                <li>NT 303 — Estruturas Itinerantes</li>
+                <li>NT 17/2025 — SAVE / Eletropostos</li>
+                <li>NT 17/2025 — Atualização 01</li>
+                <li>Decreto 19.644/1997 — COSCIP (134 páginas)</li>
+              </ul>
+
+              <hr>
+              <strong>Decretos ALEPE monitorados:</strong>
+              <ul>
+                <li><strong>Decreto 52.005/2021</strong> (id=61067) — classificação de risco I/II/III</li>
+              </ul>
+              <p>🔗 <a href="https://legis.alepe.pe.gov.br/texto.aspx?id=61067&tipo=TEXTOATUALIZADO" target="_blank" rel="noopener">Texto atualizado no ALEPE Legis</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Classificação de risco — resumo</div>
+              <div class="hz-desc">Decreto 52.005/2021 (alterado por 58.545/2025 e 60.351/2026)</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-red">Risco III</span>
+              <span class="hz-tag hz-tag-blue">Risco II</span>
+              <span class="hz-tag hz-tag-green">Risco I</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <p><strong>Risco I (menor)</strong> — atividades de baixo risco no Anexo I, dispensadas de regularização (Art. 5º).</p>
+              <p><strong>Risco II (médio)</strong> — atividades que exigem Atestado de Regularidade (AR), sem projeto técnico (Art. 7º).</p>
+              <p><strong>Risco III (maior)</strong> — exigem Projeto Técnico + AVCB. Critérios no Art. 6º:</p>
+              <ul>
+                <li>Área &gt; 930 m²</li>
+                <li>Mais de 3 pavimentos</li>
+                <li>Lotação &gt; 100 pessoas</li>
+                <li>GLP central &gt; 190 kg</li>
+                <li>Produtos perigosos / inflamáveis</li>
+                <li>Evento temporário com controle de acesso</li>
+                <li>CNAE de alto risco (Anexo II)</li>
+              </ul>
+              <p><strong>Art. 7º, §3º</strong> — atividade no térreo, ≤930 m², saída direta, sem compartilhar SCI → Risco II.</p>
+              <p>⚠️ <strong>Regra de prevalência:</strong> Art. 6º, I (área &gt;930 m²) prevalece sobre o §3º.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ APRESENTAÇÕES ============ -->
+      <section class="hz-section" id="apresentacoes">
+        <div class="eyebrow"><span>Material gerado</span><span class="rule"></span></div>
+        <h2>Apresentações geradas</h2>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Arquivos em /data/workspace/apresentacoes/</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-gold">10 arquivos</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <table class="hz-table">
+                <tr><th>Arquivo</th><th>Tamanho</th></tr>
+                <tr><td>Instrucao_Classificacao_Risco_CBMPE.pptx</td><td>6.2 MB</td></tr>
+                <tr><td>Instrucao_Classificacao_Risco_CBMPE.pdf</td><td>823 KB</td></tr>
+                <tr><td>Instrucao_Classificacao_Risco_CBMPE_v2.pptx</td><td>22.5 MB</td></tr>
+                <tr><td>Instrucao_Classificacao_Risco_CBMPE_v2.pdf</td><td>899 KB</td></tr>
+                <tr><td>Instrucao_..._com_fluxo.pptx</td><td>6.2 MB</td></tr>
+              </table>
+              <p>Template oficial: <code>/data/wiki/normas-cbmpe/apresentacoes-modelo/Modelo_CBMPE.pptx</code> (1.8 MB)</p>
+              <p>Script de geração: <code>/data/workspace/gerar_apresentacao_cbmpe.py</code></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Estrutura do template CBMPE</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-tag hz-tag-gold">3 slides-base</span>
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <table class="hz-table">
+                <tr><th>Slide</th><th>Conteúdo</th><th>Shapes</th></tr>
+                <tr><td>1 — Capa</td><td>SDS, CBMPE, OME, TEMA, RESUMO</td><td>CaixaDeTexto 1 (tema), CaixaDeTexto 3 (resumo)</td></tr>
+                <tr><td>2 — Conteúdo</td><td>Título, Subtítulo, Tópicos</td><td>Retângulo 7 (título), CaixaDeTexto 6 (extra), Grupo Agrupar 23 (subtítulo + tópicos)</td></tr>
+                <tr><td>3 — Encerramento</td><td>"VIDAS ALHEIAS, RIQUEZAS SALVAR!"</td><td>Fixo, sem preenchimento</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CONSULTAS RÁPIDAS ============ -->
+      <section class="hz-section" id="faq-normas">
+        <div class="eyebrow"><span>Referência</span><span class="rule"></span></div>
+        <h2>Consultas rápidas — normas técnicas</h2>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div><div class="hz-title">Extintores (COSCIP Arts. 31–42 + NBR 12693)</div></div>
+            <div class="hz-meta"><span class="hz-toggle">▼</span></div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <ul>
+                <li><strong>Classe C (elétrico):</strong> CO₂ 6 kg (círculo amarelo) ou PQS 4–6 kg (círculo azul)</li>
+                <li><strong>Distância máxima:</strong> 15 m de qualquer ponto (Art. 32, II)</li>
+                <li><strong>Altura de instalação:</strong> ≤ 1,60 m (Art. 34, I)</li>
+                <li><strong>Capacidade extintora:</strong> 6 kg ABC = 4-A:40B:C; 4 kg ABC = 2-A:20B:C (NBR 12693, Tabela 2)</li>
+                <li><strong>Eletroposto (NT 17/2025):</strong> extintor PQS ABC 6 kg (4-A:40B:C), sinalização círculo azul</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div><div class="hz-title">NT 17/2025 — SAVE / eletropostos</div></div>
+            <div class="hz-meta"><span class="hz-toggle">▼</span></div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <ul>
+                <li>Sinalização da chave de desligamento: 1,80 m do piso à base da placa (item 5.1.5 "a")</li>
+                <li>Sinalização: círculo azul</li>
+                <li>Termo correto: <strong>eletroposto</strong> (VE), não "eletropóstico"</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div><div class="hz-title">Validade do AVCB/AR</div></div>
+            <div class="hz-meta"><span class="hz-toggle">▼</span></div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <p><strong>Art. 258</strong> do COSCIP (Decreto 19.644/97):</p>
+              <blockquote>"O Atestado de Regularidade terá a validade de 1 (um) ano, a contar da data de sua emissão, perdendo seus efeitos legais após vencido o prazo estabelecido."</blockquote>
+              <p>Regra geral: <strong>1 ano</strong> para todo AVCB/AR (Risco II e III). Exceções em NT própria.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SITES E SERVIÇOS ============ -->
+      <section class="hz-section" id="sites">
+        <div class="eyebrow"><span>Publicado</span><span class="rule"></span></div>
+        <h2>Sites e serviços</h2>
+        <table class="hz-table">
+          <tr><th>Serviço</th><th>URL / detalhe</th></tr>
+          <tr><td>CAT Sertão (portal)</td><td><a href="https://aquinogr89.github.io/catsertao/" target="_blank" rel="noopener">catsertao</a></td></tr>
+          <tr><td>Triagem de Risco</td><td><a href="https://aquinogr89.github.io/triagem-catsertao/" target="_blank" rel="noopener">triagem-catsertao</a> — CNAE 8230-0/02 (casas de festas) = Risco III, cálculo de lotação automático</td></tr>
+          <tr><td>Mapa de OCI</td><td><a href="https://aquinogr89.github.io/oci-catsertao/" target="_blank" rel="noopener">oci-catsertao</a></td></tr>
+          <tr><td>Agente n8n + Gemini</td><td>sternplatypus-n8n.cloudfy.live — perguntas sobre normas SCI de PE</td></tr>
+          <tr><td>Google Meet fixo</td><td><a href="https://meet.google.com/irz-gunn-oqo" target="_blank" rel="noopener">Instrução semanal</a></td></tr>
+        </table>
+      </section>
+
+      <!-- ============ AVANÇADO ============ -->
+      <section class="hz-section" id="avancado">
+        <div class="eyebrow"><span>Bastidores</span><span class="rule"></span></div>
+        <h2>Avançado</h2>
+        <p class="lead">Detalhes operacionais internos — scripts, repositórios e configurações. Visível apenas para o perfil Admin Master.</p>
+
+        <div class="hz-subhead">Scripts e automações</div>
+        <table class="hz-table">
+          <tr><th>Script</th><th>Descrição</th><th>Localização</th></tr>
+          <tr>
+            <td><code>gerar_apresentacao_cbmpe.py</code></td>
+            <td>Gera .pptx no template CBMPE a partir de JSON + exporta .pdf via Google Drive</td>
+            <td><code>/data/workspace/</code></td>
+          </tr>
+          <tr>
+            <td><code>monitor_cbmpe.py</code></td>
+            <td>Verifica atualizações nas normas CBMPE e ALEPE (hash SHA-256)</td>
+            <td><code>/data/scripts/</code></td>
+          </tr>
+          <tr>
+            <td><code>neoenergia_r2d2.py</code></td>
+            <td>Download de anexos de e-mails da Neoenergia</td>
+            <td><code>/data/scripts/</code></td>
+          </tr>
+          <tr>
+            <td><code>upload_neoenergia_drive.py</code></td>
+            <td>Sobe PDFs/PNGs da Neoenergia para o Google Drive</td>
+            <td><code>/data/workspace/</code></td>
+          </tr>
+          <tr>
+            <td><code>google_calendar_helper.py</code></td>
+            <td>Helper para Google Calendar (<code>--meet</code>, <code>--rrule</code>)</td>
+            <td><code>/data/workspace/</code></td>
+          </tr>
+          <tr>
+            <td><code>gerar_instrucao_v5.py</code></td>
+            <td>Versão anterior — descontinuada, usar <code>gerar_apresentacao_cbmpe.py</code></td>
+            <td><code>/data/</code></td>
+          </tr>
+        </table>
+
+        <div class="hz-subhead">GitHub — repositórios CAT Sertão</div>
+        <div class="hz-stats" style="margin-bottom:14px;">
+          <div class="hz-stat"><div class="num" style="font-size:1.15em;">catsertao</div><div class="label">Portal principal</div></div>
+          <div class="hz-stat"><div class="num" style="font-size:1.15em;">triagem-catsertao</div><div class="label">Classificação de risco por CNAE</div></div>
+          <div class="hz-stat"><div class="num" style="font-size:1.15em;">oci-catsertao</div><div class="label">Mapa de OCI + backend Apps Script</div></div>
+        </div>
+        <div class="hz-note">
+          <strong>Nomes parecidos, coisas diferentes:</strong> o skill <code>eventos-temporarios-arts</code> (checklist de ARTs para eventos temporários) não tem relação com o repositório público <code>triagem-catsertao</code> (calculadora de classificação de risco por CNAE/lotação).
+        </div>
+        <p style="color:var(--hz-muted); font-size:.9em;">
+          Conta GitHub: <strong>aquinogr89</strong> · GitHub Pages ativo nos três repositórios.
+        </p>
+
+        <div class="hz-subhead">Configurações do ambiente</div>
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div><div class="hz-title">Diretórios e credenciais de sistema</div></div>
+            <div class="hz-meta"><span class="hz-toggle">▼</span></div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <table class="hz-table">
+                <tr><th>Item</th><th>Caminho / detalhe</th></tr>
+                <tr><td>Home</td><td><code>/data</code></td></tr>
+                <tr><td>Skills</td><td><code>/data/skills/</code></td></tr>
+                <tr><td>Wiki normas</td><td><code>/data/wiki/normas-cbmpe/</code></td></tr>
+                <tr><td>Workspace</td><td><code>/data/workspace/</code></td></tr>
+                <tr><td>Scripts cron</td><td><code>/data/scripts/</code></td></tr>
+                <tr><td>Google token</td><td><code>/data/google_token.json</code></td></tr>
+                <tr><td>Google client secret</td><td><code>/data/google_client_secret.json</code></td></tr>
+                <tr><td>Template PPTX</td><td><code>/data/workspace/Modelo_CBMPE_novo.pptx</code></td></tr>
+                <tr><td>Fuso horário</td><td>UTC-3 (Brasília / Petrolina-PE) — sempre</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div><div class="hz-title">Acesso ao CAT Sertão (site)</div></div>
+            <div class="hz-meta"><span class="hz-toggle">▼</span></div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <div class="hz-note">
+                A senha de login do site foi <strong>removida deste painel</strong>: este arquivo é servido estaticamente pelo GitHub Pages, então qualquer pessoa com a URL direta pode ver o código-fonte (Ctrl+U) mesmo sem passar pelo login — o gate de sessão só controla o que aparece na tela, não o que está no HTML baixado. Senhas ficam só no gerenciador de senhas do Geraldo e podem ser trocadas em <a href="conta.html" target="_blank" rel="noopener">Minha Conta</a>.
+              </div>
+              <table class="hz-table">
+                <tr><th>Serviço</th><th>Detalhe</th></tr>
+                <tr><td>Site CAT Sertão</td><td>login: geraldo.reis · senha: ver gerenciador de senhas</td></tr>
+                <tr><td>Apps Script URL</td><td><code>ver common.js → APPS_SCRIPT_URL</code></td></tr>
+                <tr><td>Login retorna</td><td>token + perfil (<code>admin_master</code>)</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MEMÓRIA ============ -->
+      <section class="hz-section" id="memoria">
+        <div class="eyebrow"><span>Persistência</span><span class="rule"></span></div>
+        <h2>Memória persistente do Hermes</h2>
+        <p class="lead">Fatos que o Hermes lembra entre sessões para não precisar perguntar de novo.</p>
+
+        <div class="hz-card">
+          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="hz-title">Perfil do usuário (Geraldo)</div>
+            </div>
+            <div class="hz-meta">
+              <span class="hz-toggle">▼</span>
+            </div>
+          </div>
+          <div class="hz-card-body">
+            <div class="hz-card-body-inner">
+              <ul>
+                <li><strong>Nome:</strong> Geraldo</li>
+                <li><strong>Cargo:</strong> Chefe do CAT Sertão / CBMPE</li>
+                <li><strong>Idioma:</strong> português brasileiro</li>
+                <li><strong>Fuso:</strong> UTC-3 (Petrolina-PE) — nunca perguntar</li>
+                <li><strong>Perfil técnico:</strong> corrige terminologia (ex.: eletropóstico → eletroposto); espera respostas com citações exatas</li>
+                <li><strong>GitHub:</strong> aquinogr89 — catsertao, triagem-catsertao, oci-catsertao</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MAIS (mobile) ============ -->
+      <section class="hz-section" id="mais">
+        <div class="eyebrow"><span>Mais</span><span class="rule"></span></div>
+        <h2>Outras seções</h2>
+        <div class="hz-mais-list">
+          <button type="button" class="hz-mais-item" data-goto="wiki-normas">📚 Wiki de Normas<span class="hz-mais-arrow">57 →</span></button>
+          <button type="button" class="hz-mais-item" data-goto="sites">🌐 Sites e Serviços<span class="hz-mais-arrow">→</span></button>
+          <button type="button" class="hz-mais-item" data-goto="avancado">⚙ Avançado / Bastidores<span class="hz-mais-arrow">→</span></button>
+          <button type="button" class="hz-mais-item" data-goto="memoria">🧠 Memória<span class="hz-mais-arrow">→</span></button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="hz-bottomnav" aria-label="Navegação">
+    <button type="button" class="hz-tab" data-section="skills"><span class="hz-tab-icon">🧩</span><span class="hz-tab-label">Skills</span></button>
+    <button type="button" class="hz-tab" data-section="apresentacoes"><span class="hz-tab-icon">📊</span><span class="hz-tab-label">Slides</span></button>
+    <button type="button" class="hz-tab" data-section="cronjobs"><span class="hz-tab-icon">⏱</span><span class="hz-tab-label">Jobs</span></button>
+    <button type="button" class="hz-tab" data-section="faq-normas"><span class="hz-tab-icon">💬</span><span class="hz-tab-label">Normas</span></button>
+    <button type="button" class="hz-tab" data-section="mais"><span class="hz-tab-icon">⋯</span><span class="hz-tab-label">Mais</span></button>
+  </nav>
+
+  <button type="button" id="hz-chat-launcher" class="hz-chat-launcher" onclick="hzChatToggle()" title="Assistente CAT Sertão" aria-label="Assistente CAT Sertão">💬</button>
+
+  <div id="hz-chat-panel" class="hz-chat-panel">
+    <div class="hz-chat-header">
+      <span>🤖 Assistente CAT Sertão</span>
+      <button type="button" class="hz-chat-close" onclick="hzChatToggle()" aria-label="Fechar">×</button>
+    </div>
+    <iframe id="hz-chat-frame" class="hz-chat-iframe" title="Assistente Virtual CAT Sertão"></iframe>
+  </div>
+
+</div>
 
 <footer class="bottom pad-x">
   <div class="bottom-inner wrap">
@@ -996,8 +1105,17 @@
 <script src="common.js"></script>
 <script>
 function toggleCard(el) {
-  el.closest('.hz-card').classList.toggle('open');
+  var card = el.closest('.hz-card');
+  card.classList.toggle('open');
+  el.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
 }
+
+document.addEventListener('keydown', function (e) {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hz-card-header')) {
+    e.preventDefault();
+    toggleCard(e.target);
+  }
+});
 
 (function () {
   'use strict';
@@ -1008,6 +1126,22 @@ function toggleCard(el) {
     hide(document.getElementById('loading-msg'));
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
+
+    var perfilLabel = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
+    document.getElementById('session-perfil-2').textContent = perfilLabel;
+    document.getElementById('session-login-2').textContent = session.login;
+    document.getElementById('session-avatar').textContent = (session.login || '?').charAt(0).toUpperCase();
+
+    // A casca antiga (header claro + botão flutuante de voltar) só existe pra
+    // dar suporte às telas de carregamento/acesso negado, no mesmo padrão das
+    // outras páginas utilitárias (log.html, usuarios.html) — uma vez que o
+    // painel navegável (hz-shell) assume a tela, ela vira só duplicação (e,
+    // no mobile, o botão flutuante de voltar ficaria embaixo da nova barra
+    // de abas fixa no rodapé).
+    hide(document.getElementById('hermes-outer-header'));
+    hide(document.getElementById('hermes-outer-back'));
+    hide(document.getElementById('hermes-outer-utilback'));
+
     show(document.getElementById('hermes-content'));
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
   }, function (err) {
@@ -1023,6 +1157,87 @@ function toggleCard(el) {
     }
     show(denied);
   });
+})();
+</script>
+<script>
+/*
+  Navegação do painel: sidebar fixa (desktop) / abas fixas no rodapé
+  (mobile, <=720px). Mostra uma seção por vez, sincronizada com
+  location.hash para permitir links diretos. "Mais" (só existe <=720px)
+  é um menu de atalhos que leva a Wiki/Sites/Avançado/Memória, que não
+  têm aba própria no rodapé.
+*/
+(function () {
+  'use strict';
+
+  var SECTIONS = ['skills', 'apresentacoes', 'cronjobs', 'faq-normas', 'wiki-normas', 'sites', 'avancado', 'memoria'];
+
+  function isMobile() {
+    return window.innerWidth <= 720;
+  }
+
+  function setActiveNav(id) {
+    document.querySelectorAll('.hz-nav-item').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.section === id);
+    });
+    document.querySelectorAll('.hz-tab').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.section === id);
+    });
+  }
+
+  function applySearch(query) {
+    var q = query.trim().toLowerCase();
+    var activeSection = document.querySelector('.hz-section.active');
+    if (!activeSection) return;
+    activeSection.querySelectorAll('.hz-card').forEach(function (card) {
+      if (!q) { card.classList.remove('hz-search-hidden'); return; }
+      var title = card.querySelector('.hz-title');
+      var desc = card.querySelector('.hz-desc');
+      var text = ((title ? title.textContent : '') + ' ' + (desc ? desc.textContent : '')).toLowerCase();
+      card.classList.toggle('hz-search-hidden', text.indexOf(q) === -1);
+    });
+  }
+
+  function goTo(id) {
+    if (id === 'mais' && !isMobile()) id = 'skills';
+    if (SECTIONS.indexOf(id) === -1 && id !== 'mais') id = 'skills';
+
+    document.querySelectorAll('.hz-section').forEach(function (sec) {
+      sec.classList.toggle('active', sec.id === id);
+    });
+    setActiveNav(id);
+
+    var searchInput = document.getElementById('hz-search');
+    if (searchInput) {
+      searchInput.value = '';
+      applySearch('');
+    }
+
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
+    var contentArea = document.getElementById('hz-content-area');
+    if (contentArea) contentArea.scrollTop = 0;
+  }
+  window.hzGoTo = goTo;
+
+  document.querySelectorAll('.hz-nav-item, .hz-tab').forEach(function (el) {
+    el.addEventListener('click', function () { goTo(el.dataset.section); });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function (el) {
+    el.addEventListener('click', function () { goTo(el.dataset.goto); });
+  });
+
+  var searchEl = document.getElementById('hz-search');
+  if (searchEl) {
+    searchEl.addEventListener('input', function () { applySearch(searchEl.value); });
+  }
+
+  window.addEventListener('hashchange', function () {
+    var id = (location.hash || '').replace('#', '');
+    if (SECTIONS.indexOf(id) !== -1 || id === 'mais') goTo(id);
+  });
+
+  var initialId = (location.hash || '').replace('#', '');
+  goTo(SECTIONS.indexOf(initialId) !== -1 ? initialId : 'skills');
 })();
 </script>
 <script>
