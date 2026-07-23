@@ -40,7 +40,7 @@
     </form>
     <div class="gate-public">
       <p class="gate-public-hint">Acesso público, sem necessidade de login:</p>
-      <a id="gate-nav-rti" href="#" target="_blank" class="btn-outline-navy gate-public-link">Ver Mapa de SCI ↗</a>
+      <a id="gate-nav-rti" href="#" target="_blank" class="btn-outline-navy gate-public-link">Ver Mapa de OCI ↗</a>
       <a id="gate-nav-triagem" href="#" target="_blank" class="btn-outline-navy gate-public-link">Fazer Triagem de Riscos ↗</a>
     </div>
   </div>
@@ -71,7 +71,7 @@
       <a href="#documentos">Documentos</a>
       <a id="nav-termo" href="#termo-section" class="u-hidden">Termo de Compromisso</a>
       <a href="#satecs">SATECs</a>
-      <a id="nav-rti" href="#" target="_blank">Mapa de SCI ↗</a>
+      <a id="nav-rti" href="#" target="_blank">Mapa de OCI ↗</a>
       <a id="nav-triagem" href="#" target="_blank">Triagem de Riscos ↗</a>
       <a id="nav-usuarios" href="usuarios.html" target="_blank" class="u-hidden">Usuários ↗</a>
       <a id="nav-log" href="log.html" target="_blank" class="u-hidden">LOG ↗</a>
@@ -189,7 +189,7 @@
 
   document.getElementById('nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
-  // Mapa de SCI (visualização) e Triagem de Riscos são públicos: qualquer
+  // Mapa de OCI (visualização) e Triagem de Riscos são públicos: qualquer
   // pessoa pode acessá-los sem login, direto da tela de login.
   document.getElementById('gate-nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('gate-nav-triagem').href = CatAuth.TRIAGEM_URL;
@@ -206,7 +206,7 @@
     var canLog = perfil === 'admin_master';
     var canHermes = perfil === 'admin_master';
 
-    // Mapa de SCI e Triagem de Riscos: visíveis para qualquer usuário logado
+    // Mapa de OCI e Triagem de Riscos: visíveis para qualquer usuário logado
     // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
     // de cada site, revalidado no servidor).
     toggle(document.getElementById('nav-termo'), canTermo);
