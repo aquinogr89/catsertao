@@ -145,6 +145,23 @@
           <table id="termo-table" class="termo-table u-hidden"></table>
         </div>
       </div>
+
+      <div id="termo-modal-overlay" class="modal-overlay u-hidden">
+        <div class="modal-card">
+          <div class="modal-head">
+            <h3>Editar Termo de Compromisso</h3>
+            <button type="button" class="modal-close" id="termo-modal-close" aria-label="Fechar">&times;</button>
+          </div>
+          <form id="termo-modal-form">
+            <div id="termo-modal-fields" class="modal-fields"></div>
+            <p id="termo-modal-error" class="field-error u-hidden"></p>
+            <div class="modal-actions">
+              <button type="button" class="btn-ghost" id="termo-modal-cancel">Cancelar</button>
+              <button type="submit" class="btn-red">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="satecs">
@@ -429,7 +446,7 @@
   var termoTableEl = document.getElementById('termo-table');
   var termoRows = [];
 
-  function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery) {
+  function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery, actionsBuilder) {
     var filtered = !filterQuery ? rows : rows.filter(function (row) {
       return Object.keys(row).some(function (k) {
         return String(row[k]).toLowerCase().indexOf(filterQuery) !== -1;
@@ -451,19 +468,123 @@
 
     hide(statusEl);
     var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
-    var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead>';
+    var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + (actionsBuilder ? '<th></th>' : '') + '</tr></thead>';
     var tbody = '<tbody>' + filtered.map(function (row) {
-      return '<tr>' + headers.map(function (h) { return '<td>' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + '</tr>';
+      return '<tr>' + headers.map(function (h) { return '<td>' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + (actionsBuilder ? '<td class="termo-actions-cell"></td>' : '') + '</tr>';
     }).join('') + '</tbody>';
     tableEl.innerHTML = thead + tbody;
     show(tableEl);
+
+    if (actionsBuilder) {
+      var cells = tableEl.querySelectorAll('tbody .termo-actions-cell');
+      filtered.forEach(function (row, i) { actionsBuilder(cells[i], row); });
+    }
     return filtered.length;
+  }
+
+  // Situação vem pronta do workflow do n8n (fórmula na planilha) — nunca é
+  // editável por aqui, só concluída via botão próprio (ver handleEditarTermo_
+  // e handleConcluirTermo_ em oci-catsertao/apps-script/Auth.gs).
+  function colunaSituacaoTermo(headers) {
+    return headers.filter(function (h) { return h !== '_row'; }).find(function (h) {
+      return h.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().indexOf('situa') !== -1;
+    });
+  }
+
+  function buildTermoActions(cell, row) {
+    var btnEditar = document.createElement('button');
+    btnEditar.type = 'button';
+    btnEditar.className = 'btn-ghost';
+    btnEditar.textContent = 'Editar';
+    btnEditar.addEventListener('click', function () { abrirEdicaoTermo(row); });
+
+    var btnConcluir = document.createElement('button');
+    btnConcluir.type = 'button';
+    btnConcluir.className = 'btn-ghost';
+    btnConcluir.textContent = 'Concluir';
+    btnConcluir.addEventListener('click', function () { concluirTermoRow(row); });
+
+    cell.appendChild(btnEditar);
+    cell.appendChild(btnConcluir);
   }
 
   function renderTermoTable() {
     var q = document.getElementById('termo-search').value.trim().toLowerCase();
-    var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q);
+    var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q, buildTermoActions);
     document.getElementById('termo-count').textContent = (n == null ? termoRows.length : n) + ' registro(s)';
+  }
+
+  /* ----- Modal de edição do Termo ----- */
+  var termoModalOverlay = document.getElementById('termo-modal-overlay');
+  var termoModalForm = document.getElementById('termo-modal-form');
+  var termoModalFields = document.getElementById('termo-modal-fields');
+  var termoModalError = document.getElementById('termo-modal-error');
+  var termoModalRow = null;
+
+  function abrirEdicaoTermo(row) {
+    termoModalRow = row;
+    var headers = Object.keys(row).filter(function (h) { return h !== '_row'; });
+    var colSituacao = colunaSituacaoTermo(headers);
+    termoModalFields.innerHTML = '';
+    headers.forEach(function (h) {
+      if (h === colSituacao) return;
+      var label = document.createElement('label');
+      label.className = 'field';
+      label.textContent = h;
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.name = h;
+      input.value = row[h] == null ? '' : row[h];
+      label.appendChild(input);
+      termoModalFields.appendChild(label);
+    });
+    hide(termoModalError);
+    show(termoModalOverlay);
+  }
+
+  function fecharModalTermo() {
+    hide(termoModalOverlay);
+    termoModalRow = null;
+  }
+
+  document.getElementById('termo-modal-close').addEventListener('click', fecharModalTermo);
+  document.getElementById('termo-modal-cancel').addEventListener('click', fecharModalTermo);
+  termoModalOverlay.addEventListener('click', function (e) { if (e.target === termoModalOverlay) fecharModalTermo(); });
+
+  termoModalForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!termoModalRow) return;
+    hide(termoModalError);
+    var dados = {};
+    termoModalFields.querySelectorAll('input').forEach(function (input) { dados[input.name] = input.value; });
+
+    var btnSalvar = termoModalForm.querySelector('button[type=submit]');
+    btnSalvar.disabled = true;
+    api({ action: 'editarTermo', token: session.token, linha: termoModalRow._row, dados: dados }).then(function (res) {
+      if (!res.ok) {
+        termoModalError.textContent = res.error || 'Não foi possível salvar agora.';
+        show(termoModalError);
+        return;
+      }
+      fecharModalTermo();
+      carregarTermo();
+    }).catch(function () {
+      termoModalError.textContent = 'Não foi possível conectar ao servidor agora.';
+      show(termoModalError);
+    }).finally(function () { btnSalvar.disabled = false; });
+  });
+
+  function concluirTermoRow(row) {
+    if (!window.confirm('Marcar este termo como CONCLUÍDO? A situação será substituída pelo valor fixo "CONCLUÍDO".')) return;
+    api({ action: 'concluirTermo', token: session.token, linha: row._row }).then(function (res) {
+      if (!res.ok) {
+        window.alert(res.error || 'Não foi possível concluir agora.');
+        return;
+      }
+      carregarTermo();
+    }).catch(function () {
+      window.alert('Não foi possível conectar ao servidor agora.');
+    });
   }
 
   function carregarTermo() {

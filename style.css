@@ -112,6 +112,18 @@ table.termo-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
 table.termo-table th, table.termo-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
 table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); background:#FAF8F3; position:sticky; top:0; }
 table.termo-table tr:hover td{ background:#FAF8F3; }
+.termo-actions-cell{ display:flex; gap:8px; }
+
+/* Modal (usado pela edição do Termo de Compromisso) */
+.modal-overlay{ position:fixed; inset:0; background:rgba(20,32,74,.55); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000; }
+.modal-card{ background:#fff; border-radius:14px; padding:24px; width:100%; max-width:520px; max-height:85vh; overflow-y:auto; }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
+.modal-head h3{ font-family:'Oswald',sans-serif; font-size:19px; font-weight:700; color:var(--ink); text-transform:uppercase; margin:0; }
+.modal-close{ background:none; border:none; font-size:22px; line-height:1; cursor:pointer; color:var(--muted); padding:0 4px; flex:none; }
+.modal-close:hover{ color:var(--red); }
+.modal-fields{ display:flex; flex-direction:column; gap:14px; margin-bottom:18px; }
+.modal-actions{ display:flex; justify-content:flex-end; gap:10px; }
+.modal-actions .btn-red{ width:auto; padding:12px 22px; }
 
 /* SATEC cards */
 .region-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:10px 0 18px; }
