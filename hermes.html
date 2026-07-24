@@ -249,7 +249,7 @@
   <div class="hz-body">
     <nav class="hz-sidebar" aria-label="Seções do painel">
       <div class="hz-sidebar-label">Seções</div>
-      <button type="button" class="hz-nav-item" data-section="skills"><span class="hz-nav-icon">🧩</span><span class="hz-nav-label">Skills</span><span class="hz-nav-badge">10</span></button>
+      <button type="button" class="hz-nav-item" data-section="skills"><span class="hz-nav-icon">🧩</span><span class="hz-nav-label">Skills</span><span class="hz-nav-badge">5</span></button>
       <button type="button" class="hz-nav-item" data-section="apresentacoes"><span class="hz-nav-icon">📊</span><span class="hz-nav-label">Apresentações</span><span class="hz-nav-badge">10</span></button>
       <button type="button" class="hz-nav-item" data-section="cronjobs"><span class="hz-nav-icon">⏱</span><span class="hz-nav-label">Cron Jobs</span><span class="hz-nav-badge">4</span></button>
       <button type="button" class="hz-nav-item" data-section="faq-normas"><span class="hz-nav-icon">💬</span><span class="hz-nav-label">Consultas Rápidas</span></button>
@@ -270,7 +270,7 @@
         <p class="lead">Conhecimento especializado que o Hermes carrega para executar tarefas no CAT Sertão.</p>
 
         <div class="hz-stats" style="margin-bottom:22px;">
-          <div class="hz-stat"><div class="num">10</div><div class="label">Skills ativos</div></div>
+          <div class="hz-stat"><div class="num">5</div><div class="label">Skills ativos</div></div>
           <div class="hz-stat"><div class="num">4</div><div class="label">Cron jobs</div></div>
           <div class="hz-stat"><div class="num">57</div><div class="label">Normas monitoradas</div></div>
           <div class="hz-stat"><div class="num">10</div><div class="label">Apresentações geradas</div></div>
@@ -399,8 +399,8 @@
         <div class="hz-card">
           <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
             <div>
-              <div class="hz-title">ocr-and-documents</div>
-              <div class="hz-desc">Extração de texto de PDFs e OCR</div>
+              <div class="hz-title">ocr-and-documents + nano-pdf</div>
+              <div class="hz-desc">Extração e edição de PDFs</div>
             </div>
             <div class="hz-meta">
               <span class="hz-tag hz-tag-blue">productivity</span>
@@ -409,129 +409,9 @@
           </div>
           <div class="hz-card-body">
             <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> extração de texto de PDFs (pymupdf para PDFs textuais, marker-pdf para OCR/escaneados).
+              <strong>O que faz:</strong> extração de texto de PDFs (pymupdf para PDFs textuais, marker-pdf para OCR/escaneados) e edição de PDFs via linguagem natural (nano-pdf).
               <hr>
               <strong>Uso no CAT Sertão:</strong> extração de textos das normas técnicas (NT 1.01, NT 17, COSCIP etc.) do site do CBMPE para alimentar a base de conhecimento.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">nano-pdf</div>
-              <div class="hz-desc">Edição de PDFs via linguagem natural</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">productivity</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> edição de PDFs via linguagem natural — corrigir textos, títulos, erros de digitação em documentos PDF usando comandos em português.
-              <hr>
-              <strong>Ferramenta:</strong> <code>nano-pdf</code> CLI, comandos em linguagem natural.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">himalaya</div>
-              <div class="hz-desc">Gerenciamento de e-mail via terminal</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">email</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> Himalaya CLI — envio, recebimento e gerenciamento de e-mails IMAP/SMTP direto do terminal.
-              <hr>
-              <strong>Uso no CAT Sertão:</strong> integração com e-mail para monitoramento de relatórios automáticos e comunicação com fornecedores.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">monitor-email-report</div>
-              <div class="hz-desc">Monitoramento de relatórios automáticos por e-mail</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">email</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> monitora a caixa de entrada do Gmail em busca de relatórios automáticos (PDF), baixa anexos e encaminha para o Telegram via cron job.
-              <hr>
-              <strong>Uso no CAT Sertão:</strong> recebimento automático de relatórios da Neoenergia e outros fornecedores, com envio para o Telegram do Chefe do CAT Sertão.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">obsidian</div>
-              <div class="hz-desc">Leitura e edição de notas no Obsidian vault</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">note-taking</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> leitura, busca, criação e edição de notas no vault do Obsidian.
-              <hr>
-              <strong>Uso no CAT Sertão:</strong> acesso à base de conhecimento em markdown — normas, procedimentos e anotações técnicas do CBMPE.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">powerpoint</div>
-              <div class="hz-desc">Criação e edição de apresentações .pptx</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">productivity</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> criação, leitura e edição de decks .pptx — slides, notas, templates via python-pptx.
-              <hr>
-              <strong>Uso no CAT Sertão:</strong> geração automática das apresentações da instrução semanal no template oficial do CBMPE.
-            </div>
-          </div>
-        </div>
-
-        <div class="hz-card">
-          <div class="hz-card-header" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
-            <div>
-              <div class="hz-title">user-interaction</div>
-              <div class="hz-desc">Preferências e regras de interação com o usuário</div>
-            </div>
-            <div class="hz-meta">
-              <span class="hz-tag hz-tag-blue">productivity</span>
-              <span class="hz-toggle">▼</span>
-            </div>
-          </div>
-          <div class="hz-card-body">
-            <div class="hz-card-body-inner">
-              <strong>O que faz:</strong> define preferências de comunicação, formato de respostas e regras de interação para o usuário Geraldo no Telegram — respostas únicas diretas, português brasileiro, fuso UTC-3, envio de arquivos via MEDIA inline.
-              <hr>
-              <strong>Uso no CAT Sertão:</strong> personaliza o comportamento do Hermes para atender às necessidades específicas do Chefe do CAT Sertão.
             </div>
           </div>
         </div>
@@ -1086,21 +966,6 @@
             <td><code>gerar_instrucao_v5.py</code></td>
             <td>Versão anterior — descontinuada, usar <code>gerar_apresentacao_cbmpe.py</code></td>
             <td><code>/data/</code></td>
-          </tr>
-          <tr>
-            <td><code>atualizar_neoenergia_html.py</code></td>
-            <td>Script diário: verifica novos RelatórioResumo no Drive e gera prompt</td>
-            <td><code>/data/scripts/</code></td>
-          </tr>
-          <tr>
-            <td><code>auditar_hermes_html.py</code></td>
-            <td>Weekly auditor: compara o estado atual do Hermes Agent com o que está documentado no hermes.html</td>
-            <td><code>/data/scripts/</code></td>
-          </tr>
-          <tr>
-            <td><code>cron_neoenergia_diario.py</code></td>
-            <td>Cron diário 6:30 BRT: verifica novos relatórios Neoenergia no e-mail</td>
-            <td><code>/data/scripts/</code></td>
           </tr>
         </table>
 
