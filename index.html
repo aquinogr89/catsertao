@@ -83,19 +83,24 @@
 
   <div class="site-shell wrap pad-x">
     <nav class="site-sidebar" aria-label="Navegação do site">
-      <div class="site-nav-label">Página</div>
-      <a href="#atendimento" class="site-nav-item">📋 Atendimento</a>
-      <a href="#documentos" class="site-nav-item">📄 Documentos</a>
-      <a id="nav-termo" href="#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
-      <a href="#satecs" class="site-nav-item">📍 SATECs</a>
-      <div class="site-nav-label">Ferramentas</div>
-      <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
-      <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
-      <div class="site-nav-label">Admin</div>
-      <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
-      <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">📜 LOG ↗</a>
-      <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
-      <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+      <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
+        <span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span>
+      </button>
+      <div class="site-sidebar-list" id="site-sidebar-list">
+        <div class="site-nav-label">Página</div>
+        <a href="#atendimento" class="site-nav-item">📋 Atendimento</a>
+        <a href="#documentos" class="site-nav-item">📄 Documentos</a>
+        <a id="nav-termo" href="#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
+        <a href="#satecs" class="site-nav-item">📍 SATECs</a>
+        <div class="site-nav-label">Ferramentas</div>
+        <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
+        <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
+        <div class="site-nav-label">Admin</div>
+        <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
+        <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">📜 LOG ↗</a>
+        <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
+        <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+      </div>
     </nav>
 
     <div class="site-content">
@@ -350,6 +355,23 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // Menu lateral recolhível (só aparece no mobile, ver style.css). No desktop
+  // o botão fica escondido e a lista sempre visível — este JS não interfere.
+  (function () {
+    var toggleEl = document.getElementById('site-nav-toggle');
+    var listEl = document.getElementById('site-sidebar-list');
+    toggleEl.addEventListener('click', function () {
+      var aberto = listEl.classList.toggle('open');
+      toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+    });
+    listEl.addEventListener('click', function (e) {
+      if (e.target.closest('.site-nav-item')) {
+        listEl.classList.remove('open');
+        toggleEl.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+
   /* ===================== Assistente virtual (n8n chat) ===================== */
   function initChat() {
     if (chatInitialized) return;
@@ -498,7 +520,7 @@
     var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
     var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + (actionsBuilder ? '<th></th>' : '') + '</tr></thead>';
     var tbody = '<tbody>' + filtered.map(function (row) {
-      return '<tr>' + headers.map(function (h) { return '<td>' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + (actionsBuilder ? '<td class="termo-actions-cell"></td>' : '') + '</tr>';
+      return '<tr>' + headers.map(function (h) { return '<td data-label="' + escapeHtml(h) + '">' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + (actionsBuilder ? '<td class="termo-actions-cell" data-label="Ações"></td>' : '') + '</tr>';
     }).join('') + '</tbody>';
     tableEl.innerHTML = thead + tbody;
     show(tableEl);
