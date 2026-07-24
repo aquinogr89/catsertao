@@ -43,19 +43,24 @@
 
 <div class="site-shell wrap pad-x u-hidden" id="site-shell">
   <nav class="site-sidebar" aria-label="Navegação do site">
-    <div class="site-nav-label">Página</div>
-    <a href="index.html#atendimento" class="site-nav-item">📋 Atendimento</a>
-    <a href="index.html#documentos" class="site-nav-item">📄 Documentos</a>
-    <a id="nav-termo" href="index.html#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
-    <a href="index.html#satecs" class="site-nav-item">📍 SATECs</a>
-    <div class="site-nav-label">Ferramentas</div>
-    <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
-    <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
-    <div class="site-nav-label">Admin</div>
-    <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
-    <a id="nav-log" href="log.html" class="site-nav-item active u-hidden">📜 LOG</a>
-    <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
-    <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+    <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
+      <span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span>
+    </button>
+    <div class="site-sidebar-list" id="site-sidebar-list">
+      <div class="site-nav-label">Página</div>
+      <a href="index.html#atendimento" class="site-nav-item">📋 Atendimento</a>
+      <a href="index.html#documentos" class="site-nav-item">📄 Documentos</a>
+      <a id="nav-termo" href="index.html#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
+      <a href="index.html#satecs" class="site-nav-item">📍 SATECs</a>
+      <div class="site-nav-label">Ferramentas</div>
+      <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
+      <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
+      <div class="site-nav-label">Admin</div>
+      <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
+      <a id="nav-log" href="log.html" class="site-nav-item active u-hidden">📜 LOG</a>
+      <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
+      <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+    </div>
   </nav>
 
   <div class="site-content">
@@ -127,6 +132,24 @@
     toggle(document.getElementById('nav-log'), perfil === 'admin_master');
     toggle(document.getElementById('nav-hermes'), perfil === 'admin_master');
   }
+
+  // Menu lateral recolhível no mobile (ver style.css) — mesmo comportamento
+  // em index.html/usuarios.html/conta.html.
+  (function () {
+    var toggleEl = document.getElementById('site-nav-toggle');
+    var listEl = document.getElementById('site-sidebar-list');
+    toggleEl.addEventListener('click', function () {
+      var aberto = listEl.classList.toggle('open');
+      toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+    });
+    listEl.addEventListener('click', function (e) {
+      if (e.target.closest('.site-nav-item')) {
+        listEl.classList.remove('open');
+        toggleEl.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+
   var logStatusEl = document.getElementById('log-status');
   var logTableEl = document.getElementById('log-table');
 
@@ -148,7 +171,7 @@
 
     var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
     var tbody = '<tbody>' + rows.map(function (r) {
-      return '<tr><td>' + escapeHtml(r.timestamp) + '</td><td>' + escapeHtml(r.login) + '</td><td>' + escapeHtml(r.perfil) + '</td><td>' + escapeHtml(r.acao) + '</td><td>' + escapeHtml(r.detalhe) + '</td></tr>';
+      return '<tr><td data-label="Data/hora">' + escapeHtml(r.timestamp) + '</td><td data-label="Login">' + escapeHtml(r.login) + '</td><td data-label="Perfil">' + escapeHtml(r.perfil) + '</td><td data-label="Ação">' + escapeHtml(r.acao) + '</td><td data-label="Detalhe">' + escapeHtml(r.detalhe) + '</td></tr>';
     }).join('') + '</tbody>';
     logTableEl.innerHTML = thead + tbody;
     show(logTableEl);
