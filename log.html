@@ -14,9 +14,9 @@
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
-<a class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<a id="log-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
 
-<header class="top pad-x">
+<header id="log-outer-header" class="top pad-x">
   <div class="top-inner wrap">
     <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
     <div style="min-width:0;">
@@ -31,7 +31,7 @@
 </header>
 
 <main class="content pad-x wrap">
-  <a class="util-back" href="index.html">← Voltar ao site principal</a>
+  <a id="log-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
 
@@ -39,44 +39,66 @@
     <strong>Acesso não disponível</strong>
     <p id="denied-text"></p>
   </div>
-
-  <section id="log-content" class="section u-hidden">
-    <div class="eyebrow"><span>Auditoria</span><span class="rule"></span></div>
-    <h2>Histórico de acesso</h2>
-    <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
-
-    <div class="cat-filter-row">
-      <input id="log-filtro-busca" type="search" placeholder="Buscar por login, ação, detalhe…">
-      <select id="log-filtro-acao">
-        <option value="">Todas as ações</option>
-        <option value="login">login</option>
-        <option value="login_falho">login_falho</option>
-        <option value="logout">logout</option>
-        <option value="cadastro_rti">cadastro_rti</option>
-        <option value="acesso_termo">acesso_termo</option>
-        <option value="criacao_usuario">criacao_usuario</option>
-        <option value="desativacao_usuario">desativacao_usuario</option>
-        <option value="reativacao_usuario">reativacao_usuario</option>
-        <option value="exclusao_usuario">exclusao_usuario</option>
-        <option value="alteracao_senha">alteracao_senha</option>
-      </select>
-      <input id="log-filtro-inicio" type="date" title="Data inicial">
-      <input id="log-filtro-fim" type="date" title="Data final">
-      <select id="log-filtro-limite" title="Quantidade de registros">
-        <option value="10">10 mais recentes</option>
-        <option value="50">50 mais recentes</option>
-        <option value="100">100 mais recentes (máximo)</option>
-      </select>
-      <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
-      <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
-    </div>
-    <p id="log-resumo" class="table-status u-hidden"></p>
-    <div class="table-wrap">
-      <p id="log-status" class="table-status"></p>
-      <table id="log-table" class="termo-table u-hidden"></table>
-    </div>
-  </section>
 </main>
+
+<div class="site-shell wrap pad-x u-hidden" id="site-shell">
+  <nav class="site-sidebar" aria-label="Navegação do site">
+    <div class="site-nav-label">Página</div>
+    <a href="index.html#atendimento" class="site-nav-item">📋 Atendimento</a>
+    <a href="index.html#documentos" class="site-nav-item">📄 Documentos</a>
+    <a id="nav-termo" href="index.html#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
+    <a href="index.html#satecs" class="site-nav-item">📍 SATECs</a>
+    <div class="site-nav-label">Ferramentas</div>
+    <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
+    <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
+    <div class="site-nav-label">Admin</div>
+    <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
+    <a id="nav-log" href="log.html" class="site-nav-item active u-hidden">📜 LOG</a>
+    <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
+    <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+  </nav>
+
+  <div class="site-content">
+    <main class="content">
+      <section id="log-content" class="section">
+        <div class="eyebrow"><span>Auditoria</span><span class="rule"></span></div>
+        <h2>Histórico de acesso</h2>
+        <p class="lead">Visível apenas para Admin Master. Registra logins, acessos ao Termo de Compromisso, cadastros de RTI e gestão de usuários.</p>
+
+        <div class="cat-filter-row">
+          <input id="log-filtro-busca" type="search" placeholder="Buscar por login, ação, detalhe…">
+          <select id="log-filtro-acao">
+            <option value="">Todas as ações</option>
+            <option value="login">login</option>
+            <option value="login_falho">login_falho</option>
+            <option value="logout">logout</option>
+            <option value="cadastro_rti">cadastro_rti</option>
+            <option value="acesso_termo">acesso_termo</option>
+            <option value="criacao_usuario">criacao_usuario</option>
+            <option value="desativacao_usuario">desativacao_usuario</option>
+            <option value="reativacao_usuario">reativacao_usuario</option>
+            <option value="exclusao_usuario">exclusao_usuario</option>
+            <option value="alteracao_senha">alteracao_senha</option>
+          </select>
+          <input id="log-filtro-inicio" type="date" title="Data inicial">
+          <input id="log-filtro-fim" type="date" title="Data final">
+          <select id="log-filtro-limite" title="Quantidade de registros">
+            <option value="10">10 mais recentes</option>
+            <option value="50">50 mais recentes</option>
+            <option value="100">100 mais recentes (máximo)</option>
+          </select>
+          <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
+          <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
+        </div>
+        <p id="log-resumo" class="table-status u-hidden"></p>
+        <div class="table-wrap">
+          <p id="log-status" class="table-status"></p>
+          <table id="log-table" class="termo-table u-hidden"></table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
 
 <footer class="bottom pad-x">
   <div class="bottom-inner wrap">
@@ -93,8 +115,18 @@
 (function () {
   'use strict';
 
-  var show = CatAuth.show, hide = CatAuth.hide, api = CatAuth.api, escapeHtml = CatAuth.escapeHtml;
+  var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api, escapeHtml = CatAuth.escapeHtml;
   var session = null;
+
+  // Mesma sidebar de navegação das outras páginas (index.html/usuarios.html/conta.html).
+  function montarSidebar(perfil) {
+    document.getElementById('nav-rti').href = CatAuth.RTI_URL;
+    document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
+    toggle(document.getElementById('nav-termo'), perfil === 'admin_master' || perfil === 'admin');
+    toggle(document.getElementById('nav-usuarios'), perfil === 'admin_master' || perfil === 'admin');
+    toggle(document.getElementById('nav-log'), perfil === 'admin_master');
+    toggle(document.getElementById('nav-hermes'), perfil === 'admin_master');
+  }
   var logStatusEl = document.getElementById('log-status');
   var logTableEl = document.getElementById('log-table');
 
@@ -146,9 +178,15 @@
   CatAuth.requireSession(['admin_master']).then(function (s) {
     session = s;
     hide(document.getElementById('loading-msg'));
+
+    montarSidebar(session.perfil);
+    hide(document.getElementById('log-outer-header'));
+    hide(document.getElementById('log-outer-back'));
+    hide(document.getElementById('log-outer-utilback'));
+    show(document.getElementById('site-shell'));
+
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
-    show(document.getElementById('log-content'));
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     carregarLog();
