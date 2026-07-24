@@ -20,7 +20,18 @@
 <body>
 
 <div id="gate" class="gate">
-  <div class="gate-card">
+  <div class="gate-card u-hidden" id="gate-loading-card">
+    <div class="gate-card-head">
+      <div class="gate-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
+      <div class="gate-org">Corpo de Bombeiros Militar de PE</div>
+      <div class="gate-title">CAT Sertão</div>
+    </div>
+    <div class="gate-loading-body">
+      <span class="gate-spinner" aria-hidden="true"></span>
+      <p>Verificando credenciais…</p>
+    </div>
+  </div>
+  <div class="gate-card" id="gate-form-card">
     <div class="gate-card-head">
       <div class="gate-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
       <div class="gate-org">Corpo de Bombeiros Militar de PE</div>
@@ -257,13 +268,25 @@
     session = null;
     hide(appEl);
     show(gateEl);
+    hide(document.getElementById('gate-loading-card'));
+    show(document.getElementById('gate-form-card'));
     var errEl = document.getElementById('gate-error');
     if (message) { errEl.textContent = message; show(errEl); }
     else { hide(errEl); }
   }
 
+  // Mostrado enquanto revalida uma sessão salva (ex.: voltando de outra
+  // aba/página, como o Mapa de OCI) — sem isso, o formulário de login pisca
+  // na tela por um instante antes do token ser confirmado e o app aparecer.
+  function showGateLoading() {
+    show(gateEl);
+    hide(document.getElementById('gate-form-card'));
+    show(document.getElementById('gate-loading-card'));
+  }
+
   var saved = CatAuth.loadSession();
   if (saved && saved.token) {
+    showGateLoading();
     api({ action: 'validarToken', token: saved.token }).then(function (res) {
       if (res.ok) {
         session = { token: saved.token, login: res.login, perfil: res.perfil };

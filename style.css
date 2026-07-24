@@ -60,6 +60,9 @@ img{ display:block; max-width:100%; }
 .gate-public{ padding:0 26px 26px; display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--border); margin-top:2px; padding-top:20px; }
 .gate-public-hint{ text-align:center; font-size:12px; color:var(--muted-3); margin:0 0 2px; }
 .gate-public-link{ margin-bottom:0; justify-content:center; }
+.gate-loading-body{ padding:46px 26px; display:flex; flex-direction:column; align-items:center; gap:16px; }
+.gate-loading-body p{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+.gate-spinner{ width:34px; height:34px; border-radius:50%; border:3px solid var(--border-2); border-top-color:var(--red); animation:btn-spin .7s linear infinite; }
 
 /* App shell */
 header.top{ background:var(--navy); color:#fff; padding:22px 28px; }
