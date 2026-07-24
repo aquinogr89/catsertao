@@ -36,6 +36,9 @@ img{ display:block; max-width:100%; }
 .btn-ghost{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12.5px; color:var(--muted); background:#fff; border:1px solid var(--border-2); padding:9px 14px; border-radius:8px; cursor:pointer; }
 .btn-ghost:hover{ border-color:var(--red); color:var(--red); }
 .field{ display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--muted); text-transform:uppercase; }
+.user-form-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+.user-form-row .field{ flex:1; min-width:160px; }
+.user-form-row .field-perfil{ min-width:180px; flex:none; }
 .field input, .field select{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
 .field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
 .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
@@ -47,7 +50,16 @@ img{ display:block; max-width:100%; }
 .field-error{ font-size:12.5px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:9px 11px; border-radius:9px; text-align:center; }
 
 /* Login gate (acesso geral) */
-.gate{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:radial-gradient(120% 120% at 50% 0%, #1c2c62 0%, #14204A 55%, #0e1636 100%); }
+/* min-height:100vh conta a altura da barra de endereco/teclado do celular
+   como parte da tela; 100svh (viewport pequena) exclui isso, entao o
+   formulario nao fica cortado com o teclado virtual aberto -- navegadores
+   sem suporte a svh simplesmente ignoram essa linha e ficam com a de cima.
+   overflow-y:auto deixa rolar quando nao cabe tudo -- mas align-items:center
+   sozinho, com overflow, corta o topo do conteudo em vez de deixar rolar ate
+   ele (bug classico de flexbox); "safe center" resolve isso mantendo o
+   comportamento de centralizar quando cabe. Navegador sem suporte a "safe"
+   ignora essa segunda linha e fica só com o center normal. */
+.gate{ min-height:100vh; min-height:100svh; overflow-y:auto; display:flex; align-items:center; align-items:safe center; justify-content:center; padding:24px; background:radial-gradient(120% 120% at 50% 0%, #1c2c62 0%, #14204A 55%, #0e1636 100%); }
 .gate-card{ width:100%; max-width:400px; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(0,0,0,.6); }
 .gate-card-head{ background:var(--navy); padding:28px 26px 24px; text-align:center; }
 .gate-logo{ width:82px; height:82px; margin:0 auto 14px; background:#fff; border-radius:14px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
@@ -86,8 +98,14 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 /* Sidebar de navegação do site (index/usuarios/log/conta — hermes.html tem a sua
    própria, tema escuro, para as seções internas do painel; esta é a de página a
    página, tema claro, igual ao resto do site). */
-.site-shell{ display:flex; align-items:flex-start; }
-.site-sidebar{ width:210px; flex:none; background:#fff; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; display:flex; flex-direction:column; gap:2px; }
+/* min-width:0 -- .site-shell é item do flex column de #app; sem isso, o
+   navegador deixa ele crescer pra caber conteúdo que não quebra linha (ex.:
+   a tabela do Termo de Compromisso, com white-space:nowrap) em vez de
+   encolher e deixar o scroll interno (.table-wrap) cuidar disso. */
+.site-shell{ display:flex; align-items:flex-start; width:100%; min-width:0; }
+.site-sidebar{ width:210px; flex:none; background:#fff; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; }
+.site-sidebar-list{ display:flex; flex-direction:column; gap:2px; }
+.site-nav-toggle{ display:none; }
 .site-nav-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; color:var(--muted-3); text-transform:uppercase; padding:14px 10px 6px; }
 .site-nav-label:first-child{ padding-top:0; }
 .site-nav-item{ display:flex; align-items:center; gap:9px; padding:10px 12px; border-radius:9px; color:var(--muted); text-decoration:none; font-family:'Oswald',sans-serif; font-size:14px; font-weight:500; }
@@ -97,11 +115,25 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .site-content .content{ padding-left:0; padding-right:0; }
 
 @media (max-width: 860px){
-  .site-shell{ flex-direction:column; }
-  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); flex-direction:row; flex-wrap:wrap; gap:6px; padding:12px 20px; }
+  /* align-items:flex-start (desktop) faz sentido pra alinhar sidebar/conteúdo
+     pelo topo lado a lado; virando coluna, o mesmo valor faz os filhos
+     encolherem pra caber no conteúdo mais largo (a tabela) em vez de ocupar
+     a largura toda -- troca pra stretch só aqui. */
+  .site-shell{ flex-direction:column; align-items:stretch; }
+  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); padding:10px 16px; }
+  .site-content{ padding-left:0; min-width:0; }
+  .site-nav-toggle{
+    display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 12px;
+    border:1px solid var(--border-2); border-radius:9px; background:#fff; color:var(--navy);
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em;
+    text-transform:uppercase; cursor:pointer;
+  }
+  .site-nav-toggle .site-nav-toggle-caret{ margin-left:auto; transition:transform .15s ease; }
+  .site-nav-toggle[aria-expanded="true"] .site-nav-toggle-caret{ transform:rotate(180deg); }
+  .site-sidebar-list{ max-height:0; overflow:hidden; padding-top:0; }
+  .site-sidebar-list.open{ max-height:600px; padding-top:10px; }
   .site-nav-label{ display:none; }
-  .site-nav-item{ padding:8px 11px; font-size:12.5px; }
-  .site-content{ padding-left:0; }
+  .site-nav-item{ padding:11px 12px; font-size:14px; min-height:44px; }
 }
 
 .banner-warn{ background:var(--warn-bg); border-bottom:1px solid var(--warn-border); color:var(--warn-text); }
@@ -219,8 +251,39 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
   .cards-grid, .satec-grid{ grid-template-columns:1fr; }
   .cat-filter-row{ flex-direction:column; align-items:stretch; }
-  .cat-filter-row input{ max-width:none; min-width:0; }
+  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date]{ max-width:none; min-width:0; width:100%; }
   #chat-frame{ height:min(520px, 62vh); min-height:340px; }
   .bottom-inner{ flex-direction:column; align-items:flex-start; }
   .bottom-copy{ margin-left:0; }
+
+  /* Alvos de toque >=44px (botões pequenos que no desktop ficam ok só com
+     padding, mas no dedo precisam de mais área). */
+  .btn-ghost{ min-height:44px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-danger{ min-height:44px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-logout{ min-height:44px; padding:0 16px; }
+  .modal-close{ min-width:44px; min-height:44px; }
+
+  /* Modal do Termo de Compromisso: botões empilhados, o de Salvar em cima
+     (column-reverse porque o Salvar vem depois do Cancelar no HTML). */
+  .modal-card{ padding:20px 18px; }
+  .modal-actions{ flex-direction:column-reverse; }
+  .modal-actions .btn-red, .modal-actions .btn-ghost{ width:100%; }
+
+  /* Formulário de criar usuário: cada campo em coluna, largura total. */
+  .user-form-row{ flex-direction:column; align-items:stretch; }
+  .user-form-row .field{ min-width:0; }
+  .user-form-row button{ width:100%; }
+
+  /* Tabelas (Termo de Compromisso, Usuários, LOG) viram cards empilhados --
+     cada <td> ganha um rótulo (data-label, preenchido no JS de renderização)
+     em vez de depender das colunas do <thead>, que fica escondido. */
+  table.termo-table thead{ display:none; }
+  table.termo-table, table.termo-table tbody{ display:block; width:100%; }
+  table.termo-table tr{ display:block; margin-bottom:12px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
+  table.termo-table tr:hover td{ background:transparent; }
+  table.termo-table td{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 14px; border-bottom:1px solid var(--border); white-space:normal; word-break:break-word; }
+  table.termo-table tr td:last-child{ border-bottom:0; }
+  table.termo-table td:empty{ display:none; }
+  table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
+  table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
 }
