@@ -547,14 +547,19 @@
     btnEditar.className = 'btn-ghost';
     btnEditar.textContent = 'Editar';
     btnEditar.addEventListener('click', function () { abrirEdicaoTermo(row); });
+    cell.appendChild(btnEditar);
+
+    // Já concluído: some com o botão em vez de deixar concluir de novo à toa.
+    var headers = Object.keys(row).filter(function (h) { return h !== '_row'; });
+    var colSituacao = colunaSituacaoTermo(headers);
+    var situacaoAtual = colSituacao ? String(row[colSituacao] || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() : '';
+    if (situacaoAtual === 'concluido') return;
 
     var btnConcluir = document.createElement('button');
     btnConcluir.type = 'button';
     btnConcluir.className = 'btn-ghost';
     btnConcluir.textContent = 'Concluir';
     btnConcluir.addEventListener('click', function () { concluirTermoRow(row); });
-
-    cell.appendChild(btnEditar);
     cell.appendChild(btnConcluir);
   }
 
