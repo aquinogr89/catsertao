@@ -79,31 +79,34 @@
     </div>
   </header>
 
-  <nav class="quicknav pad-x">
-    <div class="quicknav-inner wrap">
-      <a href="#atendimento">Atendimento</a>
-      <a href="#documentos">Documentos</a>
-      <a id="nav-termo" href="#termo-section" class="u-hidden">Termo de Compromisso</a>
-      <a href="#satecs">SATECs</a>
-      <a id="nav-rti" href="#" target="cat-secundaria">Mapa de OCI ↗</a>
-      <a id="nav-triagem" href="#" target="cat-secundaria">Triagem de Riscos ↗</a>
-      <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="u-hidden">Usuários ↗</a>
-      <a id="nav-log" href="log.html" target="cat-secundaria" class="u-hidden">LOG ↗</a>
-      <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="u-hidden">Hermes Agent ↗</a>
-      <a href="conta.html" target="cat-secundaria">Minha Conta ↗</a>
-    </div>
-  </nav>
-
-  <div class="banner-warn">
-    <div class="banner-warn-inner wrap pad-x">
-      <span class="sq"></span>
-      <span><strong>Acesso restrito.</strong> Site autorizado exclusivamente para uso interno do efetivo do CAT Sertão — CBMPE. É vedada a divulgação a pessoas externas à corporação.</span>
-    </div>
-  </div>
-
   <button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao menu" aria-label="Voltar ao menu">↑</button>
 
-  <main class="content pad-x wrap">
+  <div class="site-shell wrap pad-x">
+    <nav class="site-sidebar" aria-label="Navegação do site">
+      <div class="site-nav-label">Página</div>
+      <a href="#atendimento" class="site-nav-item">📋 Atendimento</a>
+      <a href="#documentos" class="site-nav-item">📄 Documentos</a>
+      <a id="nav-termo" href="#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
+      <a href="#satecs" class="site-nav-item">📍 SATECs</a>
+      <div class="site-nav-label">Ferramentas</div>
+      <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
+      <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
+      <div class="site-nav-label">Admin</div>
+      <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
+      <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">📜 LOG ↗</a>
+      <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
+      <a href="conta.html" target="cat-secundaria" class="site-nav-item">⚙️ Minha Conta ↗</a>
+    </nav>
+
+    <div class="site-content">
+      <div class="banner-warn">
+        <div class="banner-warn-inner">
+          <span class="sq"></span>
+          <span><strong>Acesso restrito.</strong> Site autorizado exclusivamente para uso interno do efetivo do CAT Sertão — CBMPE. É vedada a divulgação a pessoas externas à corporação.</span>
+        </div>
+      </div>
+
+      <main class="content">
 
     <section class="section" id="atendimento">
       <div class="eyebrow"><span>Atendimento</span><span class="rule"></span></div>
@@ -195,7 +198,9 @@
       <div id="satec-empty" class="empty-state u-hidden"></div>
     </section>
 
-  </main>
+      </main>
+    </div>
+  </div>
 
   <footer class="bottom pad-x">
     <div class="bottom-inner wrap">
