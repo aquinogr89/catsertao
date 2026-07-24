@@ -14,9 +14,9 @@
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
-<a class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<a id="conta-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
 
-<header class="top pad-x">
+<header id="conta-outer-header" class="top pad-x">
   <div class="top-inner wrap">
     <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
     <div style="min-width:0;">
@@ -31,7 +31,7 @@
 </header>
 
 <main class="content pad-x wrap">
-  <a class="util-back" href="index.html">← Voltar ao site principal</a>
+  <a id="conta-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
 
@@ -39,25 +39,47 @@
     <strong>Acesso não disponível</strong>
     <p id="denied-text"></p>
   </div>
-
-  <section id="conta-content" class="section u-hidden">
-    <div class="eyebrow"><span>Conta</span><span class="rule"></span></div>
-    <h2>Alterar senha</h2>
-    <p class="lead">Troque sua senha a qualquer momento. Se este é o seu primeiro acesso como admin_master, troque a senha inicial agora.</p>
-    <div class="termo-panel" style="max-width:420px;">
-      <form id="senha-form" style="display:flex; flex-direction:column; gap:14px;">
-        <label class="field">Senha atual
-          <input id="senha-atual" type="password" autocomplete="current-password" required>
-        </label>
-        <label class="field">Nova senha
-          <input id="senha-nova" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
-        </label>
-        <button type="submit" class="btn-red">Alterar senha</button>
-        <p id="senha-form-msg" class="field-error u-hidden"></p>
-      </form>
-    </div>
-  </section>
 </main>
+
+<div class="site-shell wrap pad-x u-hidden" id="site-shell">
+  <nav class="site-sidebar" aria-label="Navegação do site">
+    <div class="site-nav-label">Página</div>
+    <a href="index.html#atendimento" class="site-nav-item">📋 Atendimento</a>
+    <a href="index.html#documentos" class="site-nav-item">📄 Documentos</a>
+    <a id="nav-termo" href="index.html#termo-section" class="site-nav-item u-hidden">✅ Termo de Compromisso</a>
+    <a href="index.html#satecs" class="site-nav-item">📍 SATECs</a>
+    <div class="site-nav-label">Ferramentas</div>
+    <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">🗺️ Mapa de OCI ↗</a>
+    <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">⚠️ Triagem de Riscos ↗</a>
+    <div class="site-nav-label">Admin</div>
+    <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">👥 Usuários ↗</a>
+    <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">📜 LOG ↗</a>
+    <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">🤖 Hermes Agent ↗</a>
+    <a href="conta.html" class="site-nav-item active">⚙️ Minha Conta</a>
+  </nav>
+
+  <div class="site-content">
+    <main class="content">
+      <section id="conta-content" class="section">
+        <div class="eyebrow"><span>Conta</span><span class="rule"></span></div>
+        <h2>Alterar senha</h2>
+        <p class="lead">Troque sua senha a qualquer momento. Se este é o seu primeiro acesso como admin_master, troque a senha inicial agora.</p>
+        <div class="termo-panel" style="max-width:420px;">
+          <form id="senha-form" style="display:flex; flex-direction:column; gap:14px;">
+            <label class="field">Senha atual
+              <input id="senha-atual" type="password" autocomplete="current-password" required>
+            </label>
+            <label class="field">Nova senha
+              <input id="senha-nova" type="password" autocomplete="new-password" placeholder="mínimo 6 caracteres" required>
+            </label>
+            <button type="submit" class="btn-red">Alterar senha</button>
+            <p id="senha-form-msg" class="field-error u-hidden"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
 
 <footer class="bottom pad-x">
   <div class="bottom-inner wrap">
@@ -74,13 +96,29 @@
 (function () {
   'use strict';
 
-  var show = CatAuth.show, hide = CatAuth.hide, api = CatAuth.api;
+  var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api;
+
+  // Mesma sidebar de navegação das outras páginas (index.html/usuarios.html/log.html).
+  function montarSidebar(perfil) {
+    document.getElementById('nav-rti').href = CatAuth.RTI_URL;
+    document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
+    toggle(document.getElementById('nav-termo'), perfil === 'admin_master' || perfil === 'admin');
+    toggle(document.getElementById('nav-usuarios'), perfil === 'admin_master' || perfil === 'admin');
+    toggle(document.getElementById('nav-log'), perfil === 'admin_master');
+    toggle(document.getElementById('nav-hermes'), perfil === 'admin_master');
+  }
 
   CatAuth.requireSession(null).then(function (session) {
     hide(document.getElementById('loading-msg'));
+
+    montarSidebar(session.perfil);
+    hide(document.getElementById('conta-outer-header'));
+    hide(document.getElementById('conta-outer-back'));
+    hide(document.getElementById('conta-outer-utilback'));
+    show(document.getElementById('site-shell'));
+
     document.getElementById('session-login').textContent = session.login;
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
-    show(document.getElementById('conta-content'));
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     document.getElementById('senha-form').addEventListener('submit', function (e) {
