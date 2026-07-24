@@ -35,7 +35,10 @@
         <input id="gate-pass" type="password" autocomplete="current-password" placeholder="Digite a senha">
       </label>
       <p id="gate-error" class="field-error u-hidden"></p>
-      <button type="submit" class="btn-red">Entrar</button>
+      <button type="submit" class="btn-red" id="gate-submit">
+        <span class="btn-spinner u-hidden" id="gate-spinner" aria-hidden="true"></span>
+        <span id="gate-submit-label">Entrar</span>
+      </button>
       <p class="gate-footnote">Uso interno · CBMPE</p>
     </form>
     <div class="gate-public">
@@ -266,8 +269,12 @@
       return;
     }
 
-    var btn = e.target.querySelector('button[type=submit]');
+    var btn = document.getElementById('gate-submit');
+    var spinnerEl = document.getElementById('gate-spinner');
+    var labelEl = document.getElementById('gate-submit-label');
     btn.disabled = true;
+    show(spinnerEl);
+    labelEl.textContent = 'Verificando credenciais…';
     api({ action: 'login', login: login, senha: senha }).then(function (res) {
       if (res.ok) {
         session = { token: res.token, login: res.login, perfil: res.perfil };
@@ -281,7 +288,11 @@
     }).catch(function () {
       errEl.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente.';
       show(errEl);
-    }).finally(function () { btn.disabled = false; });
+    }).finally(function () {
+      btn.disabled = false;
+      hide(spinnerEl);
+      labelEl.textContent = 'Entrar';
+    });
   });
 
   document.getElementById('logout-btn').addEventListener('click', function () {

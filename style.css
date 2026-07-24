@@ -24,8 +24,11 @@ img{ display:block; max-width:100%; }
 .section{ margin-bottom:44px; }
 .section h2{ font-weight:700; font-size:clamp(22px,2.6vw,30px); margin:0 0 6px; text-transform:uppercase; letter-spacing:.01em; }
 .lead{ margin:0 0 18px; max-width:640px; color:var(--muted); font-size:15px; line-height:1.55; }
-.btn-red{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--red); border:none; padding:13px; border-radius:10px; cursor:pointer; }
+.btn-red{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--red); border:none; padding:13px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; }
 .btn-red:hover{ background:var(--red-hover); }
+.btn-red:disabled{ opacity:.75; cursor:default; }
+.btn-spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; animation:btn-spin .7s linear infinite; flex:none; }
+@keyframes btn-spin{ to{ transform:rotate(360deg); } }
 .btn-outline-navy{ display:inline-flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--navy); background:#fff; border:1.5px solid var(--navy); padding:12px 18px; border-radius:10px; text-decoration:none; margin-bottom:22px; }
 .btn-outline-navy:hover{ background:var(--navy); color:#fff; }
 .btn-navy{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:var(--navy); border:none; padding:12px 18px; border-radius:10px; cursor:pointer; white-space:nowrap; }
