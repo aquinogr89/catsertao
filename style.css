@@ -83,6 +83,27 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .quicknav-inner a{ text-decoration:none; color:var(--muted); }
 .quicknav-inner a:hover{ color:var(--red); }
 
+/* Sidebar de navegação do site (index/usuarios/log/conta — hermes.html tem a sua
+   própria, tema escuro, para as seções internas do painel; esta é a de página a
+   página, tema claro, igual ao resto do site). */
+.site-shell{ display:flex; align-items:flex-start; }
+.site-sidebar{ width:210px; flex:none; background:#fff; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; display:flex; flex-direction:column; gap:2px; }
+.site-nav-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; color:var(--muted-3); text-transform:uppercase; padding:14px 10px 6px; }
+.site-nav-label:first-child{ padding-top:0; }
+.site-nav-item{ display:flex; align-items:center; gap:9px; padding:10px 12px; border-radius:9px; color:var(--muted); text-decoration:none; font-family:'Oswald',sans-serif; font-size:14px; font-weight:500; }
+.site-nav-item:hover{ background:var(--chip-bg); color:var(--ink); }
+.site-nav-item.active{ background:var(--navy); color:#fff; font-weight:600; }
+.site-content{ flex:1; min-width:0; padding-left:28px; }
+.site-content .content{ padding-left:0; padding-right:0; }
+
+@media (max-width: 860px){
+  .site-shell{ flex-direction:column; }
+  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); flex-direction:row; flex-wrap:wrap; gap:6px; padding:12px 20px; }
+  .site-nav-label{ display:none; }
+  .site-nav-item{ padding:8px 11px; font-size:12.5px; }
+  .site-content{ padding-left:0; }
+}
+
 .banner-warn{ background:var(--warn-bg); border-bottom:1px solid var(--warn-border); color:var(--warn-text); }
 .banner-warn-inner{ padding:9px 28px; font-size:12.5px; line-height:1.45; display:flex; gap:9px; align-items:center; }
 .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
