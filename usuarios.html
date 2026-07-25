@@ -30,7 +30,7 @@
   </div>
 </header>
 
-<main class="content pad-x wrap">
+<main id="usuarios-outer-main" class="content pad-x wrap">
   <a id="usuarios-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
@@ -209,7 +209,7 @@
 
     montarSidebar(session.perfil);
     hide(document.getElementById('usuarios-outer-back'));
-    hide(document.getElementById('usuarios-outer-utilback'));
+    hide(document.getElementById('usuarios-outer-main'));
     show(document.getElementById('site-shell'));
 
     document.getElementById('session-login').textContent = session.login;
