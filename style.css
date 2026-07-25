@@ -103,14 +103,18 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
    a tabela do Termo de Compromisso, com white-space:nowrap) em vez de
    encolher e deixar o scroll interno (.table-wrap) cuidar disso. */
 .site-shell{ display:flex; align-items:flex-start; width:100%; min-width:0; }
-.site-sidebar{ width:210px; flex:none; background:#fff; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; }
+.site-sidebar{ width:210px; flex:none; background:#FCFBF8; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; }
 .site-sidebar-list{ display:flex; flex-direction:column; gap:2px; }
 .site-nav-toggle{ display:none; }
-.site-nav-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; color:var(--muted-3); text-transform:uppercase; padding:14px 10px 6px; }
-.site-nav-label:first-child{ padding-top:0; }
-.site-nav-item{ display:flex; align-items:center; gap:9px; padding:10px 12px; border-radius:9px; color:var(--muted); text-decoration:none; font-family:'Oswald',sans-serif; font-size:14px; font-weight:500; }
-.site-nav-item:hover{ background:var(--chip-bg); color:var(--ink); }
-.site-nav-item.active{ background:var(--navy); color:#fff; font-weight:600; }
+.site-nav-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; color:var(--muted-3); text-transform:uppercase; padding:16px 10px 8px; display:flex; align-items:center; gap:9px; }
+.site-nav-label:first-child{ padding-top:4px; }
+.site-nav-label::before{ content:""; width:8px; height:2px; border-radius:2px; background:var(--gold); flex:none; }
+.site-nav-label::after{ content:""; flex:1; height:1px; background:#E8E2D6; }
+.site-nav-item{ display:flex; align-items:center; gap:9px; padding:11px 13px; border-radius:10px; color:var(--muted); text-decoration:none; font-family:'Oswald',sans-serif; font-size:14px; font-weight:500; letter-spacing:.02em; border-left:3px solid transparent; transition:background .18s ease, color .18s ease, border-left-width .18s ease, padding-left .18s ease, transform .18s ease; }
+.site-nav-item:hover{ background:var(--chip-bg); color:var(--navy); border-left-width:6px; padding-left:16px; border-left-color:var(--gold); }
+.site-nav-item:active{ transform:scale(.98); }
+.site-nav-item.active{ background:var(--navy); color:#fff; font-weight:600; border-left-color:var(--gold); }
+@media (prefers-reduced-motion: reduce){ .site-nav-item{ transition:none; } }
 .site-content{ flex:1; min-width:0; padding-left:28px; }
 .site-content .content{ padding-left:0; padding-right:0; }
 
