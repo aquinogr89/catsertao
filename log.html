@@ -146,8 +146,13 @@
     });
     listEl.addEventListener('click', function (e) {
       if (e.target.closest('.site-nav-item')) {
-        listEl.classList.remove('open');
-        toggleEl.setAttribute('aria-expanded', 'false');
+        // ver comentario equivalente em index.html: adiar o recolhimento
+        // evita que o navegador cancele o toque no link por causa do
+        // realinhamento instantaneo do layout.
+        setTimeout(function () {
+          listEl.classList.remove('open');
+          toggleEl.setAttribute('aria-expanded', 'false');
+        }, 0);
       }
     });
   })();
