@@ -135,14 +135,22 @@
       toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
     });
     listEl.addEventListener('click', function (e) {
-      if (e.target.closest('.site-nav-item')) {
-        // ver comentario equivalente em index.html: adiar o recolhimento
-        // evita que o navegador cancele o toque no link por causa do
-        // realinhamento instantaneo do layout.
-        setTimeout(function () {
+      var item = e.target.closest('.site-nav-item');
+      if (item) {
+        // ver comentario equivalente em index.html: ancoras internas (#...)
+        // recolhem na hora (senao a rolagem calcula com o menu ainda
+        // aberto); links externos recolhem no proximo tick (senao o
+        // navegador cancela o clique por causa do realinhamento do layout).
+        var href = item.getAttribute('href') || '';
+        if (href.charAt(0) === '#') {
           listEl.classList.remove('open');
           toggleEl.setAttribute('aria-expanded', 'false');
-        }, 0);
+        } else {
+          setTimeout(function () {
+            listEl.classList.remove('open');
+            toggleEl.setAttribute('aria-expanded', 'false');
+          }, 0);
+        }
       }
     });
   })();

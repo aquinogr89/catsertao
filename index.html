@@ -365,20 +365,35 @@
       toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
     });
     listEl.addEventListener('click', function (e) {
-      if (e.target.closest('.site-nav-item')) {
-        // setTimeout (nao fechar direto): recolher o menu na mesma tacada do
-        // toque faz o conteudo da pagina se realinhar embaixo do dedo entre o
-        // touchstart e o touchend -- no celular isso e frequentemente
-        // interpretado como um gesto de rolagem, e o navegador CANCELA o
-        // clique do link (bug real: "Mapa de OCI"/"Hermes Agent" no menu do
-        // celular so pulavam pra secao Atendimento, sem abrir nada, porque o
-        // clique nunca chegava a se completar). Adiar o recolhimento pro
-        // proximo tick deixa o navegador processar a navegacao do link
-        // primeiro, com o layout ainda estavel.
-        setTimeout(function () {
+      var item = e.target.closest('.site-nav-item');
+      if (item) {
+        var href = item.getAttribute('href') || '';
+        if (href.charAt(0) === '#') {
+          // Ancora interna (#atendimento etc.): recolher JA, antes do
+          // navegador calcular a posicao de rolagem. Se recolher depois
+          // (setTimeout), o navegador rola com o menu ainda aberto e so
+          // depois o menu encolhe -- a pagina fica "deslocada" da secao
+          // (bug real: clicar em Atendimento/Documentos/Termo no celular
+          // abria fora do topo, desconfigurado). Como nao ha transicao
+          // de altura nesse menu, o recolhimento e instantaneo, entao a
+          // rolagem ja calcula certo.
           listEl.classList.remove('open');
           toggleEl.setAttribute('aria-expanded', 'false');
-        }, 0);
+        } else {
+          // Link externo/outra pagina (target=cat-secundaria, .html):
+          // recolher na mesma tacada do toque faz o conteudo da pagina se
+          // realinhar embaixo do dedo entre o touchstart e o touchend -- no
+          // celular isso e frequentemente interpretado como um gesto de
+          // rolagem, e o navegador CANCELA o clique do link (bug real:
+          // "Mapa de OCI"/"Hermes Agent" no menu do celular so pulavam pra
+          // secao Atendimento, sem abrir nada). Adiar o recolhimento pro
+          // proximo tick deixa o navegador processar a navegacao primeiro,
+          // com o layout ainda estavel.
+          setTimeout(function () {
+            listEl.classList.remove('open');
+            toggleEl.setAttribute('aria-expanded', 'false');
+          }, 0);
+        }
       }
     });
   })();

@@ -79,6 +79,16 @@
   .hz-table th{ color:var(--hz-gold); font-weight:600; font-family:'Oswald',sans-serif; font-size:.82em; letter-spacing:.04em; text-transform:uppercase; }
   .hz-table tr:hover td{ background:var(--hz-card-hover); }
 
+  /* Tabelas de arquivo (Neoenergia, Apresentações PPTX): nome longo +
+     colunas Ver/Download com só um emoji. No celular, sem isso, o nome
+     comprido empurra os botões de Ver/Download pra fora da tela -- aqui o
+     nome quebra linha e as colunas de ação ficam com largura fixa pequena,
+     sempre visíveis. */
+  .hz-table-files{ table-layout:fixed; }
+  .hz-table-files th:first-child, .hz-table-files td:first-child{ width:auto; word-break:break-word; overflow-wrap:anywhere; white-space:normal; }
+  .hz-table-files th:nth-child(2), .hz-table-files td:nth-child(2),
+  .hz-table-files th:nth-child(3), .hz-table-files td:nth-child(3){ width:48px; min-width:48px; padding-left:4px; padding-right:4px; text-align:center; white-space:nowrap; }
+
   .hz-note{ font-size:12.5px; color:#f0c33d; background:#241d00; border:1px solid #3d2e00; padding:9px 12px; border-radius:8px; margin:10px 0; }
   .hz-note.hz-note-info{ color:#7dd3fc; background:#031b2e; border-color:#0c3a52; }
 
@@ -547,7 +557,7 @@
               </div>
               <hr>
               <strong>33 arquivos (histórico de Ago/2023 a Jun/2026):</strong>
-              <table class="hz-table">
+              <table class="hz-table hz-table-files">
                 <tr><th>Arquivo</th><th>Ver</th><th>Download</th></tr>
                 <tr>
                   <td>Relatório Resumo (PDF)</td>
@@ -739,7 +749,7 @@
               </div>
               <hr>
               <strong>5 arquivos (mantida só a versão mais recente de cada título; duplicatas antigas permanecem na raiz do Drive, sem alteração):</strong>
-              <table class="hz-table">
+              <table class="hz-table hz-table-files">
                 <tr><th>Arquivo</th><th>Ver</th><th>Download</th></tr>
                 <tr>
                   <td>Instrução - TRIAGENS conforme NT 1.01 V141827JUN26.pptx</td>
