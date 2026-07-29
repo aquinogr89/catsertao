@@ -78,7 +78,12 @@
     target: '#n8n-chat',
     mode: 'fullscreen',
     showWelcomeScreen: false,
-    loadPreviousSession: true,
+    // false de proposito: com true, o widget reaproveita o mesmo sessionId salvo no
+    // localStorage a cada carregamento da pagina, e esse sessionId e a chave que o n8n usa
+    // pra puxar a memoria do agente (nome, municipio etc. ja mencionados). Com false, cada
+    // vez que a pagina e recarregada nasce um sessionId novo — a memoria dura so a sessao
+    // atual (enquanto a aba fica aberta), sem persistir entre recarregamentos.
+    loadPreviousSession: false,
     allowFileUploads: true,
     allowedFilesMimeTypes: 'application/pdf',
     initialMessages: [
