@@ -294,6 +294,28 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 .bottom-org{ font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.06em; color:#fff; text-transform:uppercase; font-size:13px; }
 .bottom-copy{ margin-left:auto; color:#8f96b3; }
 
+@media (max-width: 860px){
+  .cards-grid, .satec-grid{ grid-template-columns:1fr; }
+  .cat-filter-row{ flex-direction:column; align-items:stretch; }
+  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date]{ max-width:none; min-width:0; width:100%; }
+
+  /* Tabelas (Termo de Compromisso, Usuários, LOG) viram cards empilhados. */
+  table.termo-table thead{ display:none; }
+  table.termo-table, table.termo-table tbody{ display:block; width:100%; }
+  table.termo-table tr{ display:block; margin-bottom:12px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
+  table.termo-table tr:hover td{ background:transparent; }
+  table.termo-table td{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 14px; border-bottom:1px solid var(--border); white-space:normal; word-break:break-word; }
+  table.termo-table tr td:last-child{ border-bottom:0; }
+  table.termo-table td:empty{ display:none; }
+  table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
+  table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
+  /* Mostrar apenas 3 primeiras colunas (dados-chave) — colunas 4+ ficam ocultas. */
+  table.termo-table td:nth-child(n+4):not(.termo-actions-cell){ display:none; }
+
+  /* SATEC: ações (WhatsApp, Mapa, Email) antes dos municípios no mobile. */
+  .satec-body{ flex-direction:column-reverse; }
+}
+
 @media (max-width: 640px){
   .pad-x{ padding-left:16px; padding-right:16px; }
   .top{ padding:14px 16px; }
@@ -307,9 +329,6 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .badge-live{ padding:5px 10px; font-size:11.5px; }
   .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
   .banner-warn-inner{ padding:7px 16px; font-size:11.5px; }
-  .cards-grid, .satec-grid{ grid-template-columns:1fr; }
-  .cat-filter-row{ flex-direction:column; align-items:stretch; }
-  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date]{ max-width:none; min-width:0; width:100%; }
   #chat-frame{ height:min(520px, 62vh); height:min(520px, 62dvh); min-height:340px; }
   .bottom-inner{ flex-direction:column; align-items:flex-start; }
   .bottom-copy{ margin-left:0; }
@@ -324,19 +343,6 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .user-form-row{ flex-direction:column; align-items:stretch; }
   .user-form-row .field{ min-width:0; }
   .user-form-row button{ width:100%; }
-
-  /* Tabelas (Termo de Compromisso, Usuários, LOG) viram cards empilhados --
-     cada <td> ganha um rótulo (data-label, preenchido no JS de renderização)
-     em vez de depender das colunas do <thead>, que fica escondido. */
-  table.termo-table thead{ display:none; }
-  table.termo-table, table.termo-table tbody{ display:block; width:100%; }
-  table.termo-table tr{ display:block; margin-bottom:12px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
-  table.termo-table tr:hover td{ background:transparent; }
-  table.termo-table td{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 14px; border-bottom:1px solid var(--border); white-space:normal; word-break:break-word; }
-  table.termo-table tr td:last-child{ border-bottom:0; }
-  table.termo-table td:empty{ display:none; }
-  table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
-  table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
 }
 
 /* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
