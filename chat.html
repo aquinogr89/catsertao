@@ -8,7 +8,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
+<!-- Versao do @n8n/chat fixada em 1.30.2 (tag "stable" do pacote) propositalmente: sem essa
+     trava o CDN sempre serve a versao "latest", e uma atualizacao upstream ja quebrou o
+     tamanho/padding do campo de digitar mensagem (var --chat--input--font-size ficando
+     "inherit" de um contexto minusculo). Ao atualizar, teste visualmente antes de trocar o
+     numero da versao aqui E no import do <script> abaixo (os dois precisam bater). -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat@1.30.2/dist/style.css">
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; }
   html,body{ height:100%; }
@@ -28,6 +33,8 @@
     --chat--heading--font-size: 18px;
     --chat--subtitle--line-height: 1.4;
     --chat--message--font-size: 14.5px;
+    --chat--input--font-size: 14.5px;
+    --chat--input--placeholder--font-size: 14.5px;
     --chat--message--border-radius: 12px;
     --chat--message--bot--background: #fff;
     --chat--message--bot--color: #1C1B19;
@@ -46,7 +53,7 @@
 <body>
 <div id="n8n-chat"></div>
 <script type="module">
-  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat@1.30.2/dist/chat.bundle.es.js';
 
   // O widget chama scrollIntoView() nas mensagens para rolar ate a mais recente.
   // Por padrao essa API atravessa a fronteira do iframe e rola a pagina pai
@@ -75,8 +82,9 @@
     allowFileUploads: true,
     allowedFilesMimeTypes: 'application/pdf',
     initialMessages: [
-      'Olá! 👋',
-      'Sou o assistente do CAT Sertão. Em que posso ajudar você hoje?'
+      'Olá! 👋 Sou o assistente do CAT Sertão (CBMPE).',
+      'Posso ajudar com:\n- **AVCB / Atestado de Regularidade** — regularização do imóvel\n- **DDLCB** — declaração de dispensa de licenciamento\n- **TPEI/TFUSP** — taxa de bombeiros (valores, isenções, prazos)\n- **Evento Temporário** — shows, feiras e eventos\n- **Venda de fogos de artifício**\n- **SAVE** — eletropostos\n- **COSCIP-PE** — normas técnicas de segurança contra incêndio',
+      'Em que posso ajudar você hoje?'
     ],
     i18n: {
       en: {
