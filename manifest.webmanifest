@@ -1,0 +1,12 @@
+{
+  "name": "CAT Sertão — CBMPE",
+  "short_name": "CAT Sertão",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14204A",
+  "theme_color": "#14204A",
+  "icons": [
+    { "src": "CAT-SERTAO-SEM-FUNDO.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

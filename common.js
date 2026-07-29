@@ -153,3 +153,8 @@ var CatAuth = (function () {
     iniciarMonitorInatividade: iniciarMonitorInatividade
   };
 })();
+
+// Registrar Service Worker para cache offline (PWA)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
+}
