@@ -40,12 +40,12 @@
     <form id="gate-form" class="gate-form" autocomplete="off">
       <p class="gate-hint">Acesso restrito ao efetivo.<br>Informe suas credenciais para continuar.</p>
       <label class="field" for="gate-user">Usuário
-        <input id="gate-user" type="text" autocomplete="username" placeholder="Digite o usuário">
+        <input id="gate-user" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="Digite o usuário">
       </label>
       <label class="field" for="gate-pass">Senha
-        <input id="gate-pass" type="password" autocomplete="current-password" placeholder="Digite a senha">
+        <input id="gate-pass" type="password" autocomplete="current-password" enterkeyhint="go" placeholder="Digite a senha">
       </label>
-      <p id="gate-error" class="field-error u-hidden"></p>
+      <p id="gate-error" class="field-error u-hidden" role="alert"></p>
       <button type="submit" class="btn-red" id="gate-submit">
         <span class="btn-spinner u-hidden" id="gate-spinner" aria-hidden="true"></span>
         <span id="gate-submit-label">Entrar</span>
@@ -155,7 +155,7 @@
 
       <div class="termo-panel">
         <div class="cat-filter-row">
-          <input id="termo-search" type="search" placeholder="Buscar por nome, unidade, status…">
+          <input id="termo-search" type="search" enterkeyhint="search" placeholder="Buscar por nome, unidade, status…">
           <span id="termo-count" class="count-badge"></span>
           <button id="termo-refresh" type="button" class="btn-ghost">Atualizar</button>
         </div>
@@ -193,7 +193,7 @@
 
       <div style="margin-bottom:20px;">
         <div class="cat-filter-row">
-          <input id="satec-search" type="text" placeholder="Digite seu município (ex: Cabrobó, Buíque, Exu)…">
+          <input id="satec-search" type="search" enterkeyhint="search" autocapitalize="words" autocorrect="off" placeholder="Digite seu município (ex: Cabrobó, Buíque, Exu)…">
           <span id="satec-count" class="count-badge"></span>
         </div>
         <div class="filter-hint">Busque pelo nome do município para descobrir qual SATEC o atende. Também é possível buscar por cidade-sede, SATEC ou responsável.</div>
@@ -492,11 +492,16 @@
     );
   }
 
+  function normalizar(s) {
+    return String(s == null ? '' : s)
+      .normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  }
+
   function renderSatecs() {
-    var q = document.getElementById('satec-search').value.trim().toLowerCase();
+    var q = normalizar(document.getElementById('satec-search').value.trim());
     var filtered = q
       ? SATECS.filter(function (s) {
-          return (s.city + ' ' + s.tag + ' ' + s.contact + ' ' + s.municipios.join(' ')).toLowerCase().indexOf(q) !== -1;
+          return normalizar(s.city + ' ' + s.tag + ' ' + s.contact + ' ' + s.municipios.join(' ')).indexOf(q) !== -1;
         })
       : SATECS;
 

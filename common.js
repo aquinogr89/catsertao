@@ -118,7 +118,7 @@ var CatAuth = (function () {
     var limite = limiteMs || INATIVIDADE_LIMITE_MS;
     registrarAtividade(); // carregar a página já conta como atividade
 
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function (evt) {
+    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click', 'focus', 'visibilitychange'].forEach(function (evt) {
       document.addEventListener(evt, registrarAtividade, { passive: true });
     });
 
