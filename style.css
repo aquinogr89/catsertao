@@ -25,16 +25,24 @@ img{ display:block; max-width:100%; }
 .section h2{ font-weight:700; font-size:clamp(22px,2.6vw,30px); margin:0 0 6px; text-transform:uppercase; letter-spacing:.01em; }
 .lead{ margin:0 0 18px; max-width:640px; color:var(--muted); font-size:15px; line-height:1.55; }
 .btn-red{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--red); border:none; padding:13px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; }
-.btn-red:hover{ background:var(--red-hover); }
+@media (hover: hover) and (pointer: fine){
+  .btn-red:hover{ background:var(--red-hover); }
+}
 .btn-red:disabled{ opacity:.75; cursor:default; }
 .btn-spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; animation:btn-spin .7s linear infinite; flex:none; }
 @keyframes btn-spin{ to{ transform:rotate(360deg); } }
 .btn-outline-navy{ display:inline-flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--navy); background:#fff; border:1.5px solid var(--navy); padding:12px 18px; border-radius:10px; text-decoration:none; margin-bottom:22px; }
-.btn-outline-navy:hover{ background:var(--navy); color:#fff; }
+@media (hover: hover) and (pointer: fine){
+  .btn-outline-navy:hover{ background:var(--navy); color:#fff; }
+}
 .btn-navy{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:var(--navy); border:none; padding:12px 18px; border-radius:10px; cursor:pointer; white-space:nowrap; }
-.btn-navy:hover{ background:var(--navy-2); }
+@media (hover: hover) and (pointer: fine){
+  .btn-navy:hover{ background:var(--navy-2); }
+}
 .btn-ghost{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12.5px; color:var(--muted); background:#fff; border:1px solid var(--border-2); padding:9px 14px; border-radius:8px; cursor:pointer; }
-.btn-ghost:hover{ border-color:var(--red); color:var(--red); }
+@media (hover: hover) and (pointer: fine){
+  .btn-ghost:hover{ border-color:var(--red); color:var(--red); }
+}
 .field{ display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--muted); text-transform:uppercase; }
 .user-form-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
 .user-form-row .field{ flex:1; min-width:160px; }
@@ -43,7 +51,9 @@ img{ display:block; max-width:100%; }
 .field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
 .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
 .btn-danger{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:6px 11px; border-radius:7px; cursor:pointer; }
-.btn-danger:hover{ background:#F5D5D5; }
+@media (hover: hover) and (pointer: fine){
+  .btn-danger:hover{ background:#F5D5D5; }
+}
 .status-pill{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
 .status-pill.ativo{ background:#E9F7EF; color:var(--green-hover); }
 .status-pill.inativo{ background:var(--chip-bg); color:var(--muted-3); }
@@ -88,12 +98,16 @@ header.top{ background:var(--navy); color:#fff; padding:22px 28px; }
 .badge-live{ display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); padding:7px 13px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.04em; }
 .badge-live .dot{ width:8px; height:8px; border-radius:50%; background:#3FBF6A; box-shadow:0 0 0 3px rgba(63,191,106,.25); }
 .btn-logout{ display:flex; align-items:center; gap:7px; background:transparent; border:1px solid rgba(255,255,255,.28); color:#fff; font-family:'Public Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:.04em; padding:7px 13px; border-radius:999px; cursor:pointer; }
-.btn-logout:hover{ background:rgba(255,255,255,.14); }
+@media (hover: hover) and (pointer: fine){
+  .btn-logout:hover{ background:rgba(255,255,255,.14); }
+}
 
 nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .quicknav-inner{ display:flex; gap:22px; flex-wrap:wrap; padding:12px 28px; font-family:'Oswald',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
 .quicknav-inner a{ text-decoration:none; color:var(--muted); }
-.quicknav-inner a:hover{ color:var(--red); }
+@media (hover: hover) and (pointer: fine){
+  .quicknav-inner a:hover{ color:var(--red); }
+}
 
 /* Sidebar de navegação do site (index/usuarios/log/conta — hermes.html tem a sua
    própria, tema escuro, para as seções internas do painel; esta é a de página a
@@ -111,7 +125,9 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .site-nav-label::before{ content:""; width:8px; height:2px; border-radius:2px; background:var(--gold); flex:none; }
 .site-nav-label::after{ content:""; flex:1; height:1px; background:#E8E2D6; }
 .site-nav-item{ display:flex; align-items:center; gap:9px; padding:11px 13px; border-radius:10px; color:var(--muted); text-decoration:none; font-family:'Oswald',sans-serif; font-size:14px; font-weight:500; letter-spacing:.02em; border-left:3px solid transparent; transition:background .18s ease, color .18s ease, border-left-width .18s ease, padding-left .18s ease, transform .18s ease; }
-.site-nav-item:hover{ background:var(--chip-bg); color:var(--navy); border-left-width:6px; padding-left:16px; border-left-color:var(--gold); }
+@media (hover: hover) and (pointer: fine){
+  .site-nav-item:hover{ background:var(--chip-bg); color:var(--navy); border-left-width:6px; padding-left:16px; border-left-color:var(--gold); }
+}
 .site-nav-item:active{ transform:scale(.98); }
 .site-nav-item.active{ background:var(--navy); color:#fff; font-weight:600; border-left-color:var(--gold); }
 @media (prefers-reduced-motion: reduce){ .site-nav-item{ transition:none; } }
@@ -124,7 +140,11 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
      encolherem pra caber no conteúdo mais largo (a tabela) em vez de ocupar
      a largura toda -- troca pra stretch só aqui. */
   .site-shell{ flex-direction:column; align-items:stretch; }
-  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); padding:10px 16px; }
+  .site-sidebar{
+    width:100%; position:sticky; top:0; z-index:80;
+    background:#FCFBF8; border-right:0; border-bottom:1px solid var(--border);
+    padding:10px 16px;
+  }
   .site-content{ padding-left:0; min-width:0; }
   .site-nav-toggle{
     display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 12px;
@@ -134,10 +154,19 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
   }
   .site-nav-toggle .site-nav-toggle-caret{ margin-left:auto; transition:transform .15s ease; }
   .site-nav-toggle[aria-expanded="true"] .site-nav-toggle-caret{ transform:rotate(180deg); }
-  .site-sidebar-list{ max-height:0; overflow:hidden; padding-top:0; }
-  .site-sidebar-list.open{ max-height:600px; padding-top:10px; }
-  .site-nav-label{ display:none; }
+  .site-sidebar-list{ display:none; }
+  .site-sidebar-list.open{ display:flex; padding-top:10px; }
+  .site-nav-label{ font-size:10px; padding:12px 10px 4px; }
+  .site-nav-label:first-child{ padding-top:2px; }
   .site-nav-item{ padding:11px 12px; font-size:14px; min-height:44px; }
+  .btn-ghost{ min-height:44px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-danger{ min-height:44px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-logout{ min-height:44px; padding:0 16px; }
+  .modal-close{ min-width:44px; min-height:44px; }
+  .util-back{ min-height:44px; display:inline-flex; align-items:center; }
+  .quicknav-inner a{ min-height:44px; display:inline-flex; align-items:center; }
+  .satec-munis span{ font-size:13px; color:var(--muted-2); padding:5px 9px; }
+  .filter-hint{ font-size:13.5px; color:var(--muted-2); }
 }
 
 .banner-warn{ background:var(--warn-bg); border-bottom:1px solid var(--warn-border); color:var(--warn-text); }
@@ -149,12 +178,14 @@ main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px
 /* Assistente virtual (chat) — altura relativa ao viewport, não fixa, para
    caber na tela inicial mesmo em notebooks/celulares com pouca altura. */
 .chat-box{ background:#fff; border:1px solid #E3DED2; border-radius:16px; padding:12px; box-shadow:0 10px 30px -18px rgba(20,32,74,.45); overflow:hidden; }
-#chat-frame{ width:100%; height:min(620px, 68vh); min-height:380px; border:0; display:block; border-radius:10px; }
+#chat-frame{ width:100%; height:min(620px, 68vh); height:min(620px, 68dvh); min-height:380px; border:0; display:block; border-radius:10px; }
 
 /* Cards grid (docs) */
 .cards-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
 .doc-card{ display:flex; align-items:center; gap:15px; background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px 17px; box-shadow:0 6px 20px -16px rgba(20,32,74,.5); text-decoration:none; }
-.doc-card:hover{ border-color:var(--red); }
+@media (hover: hover) and (pointer: fine){
+  .doc-card:hover{ border-color:var(--red); }
+}
 .doc-kind{ width:46px; height:46px; flex:0 0 auto; border-radius:10px; background:var(--navy-2); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-weight:700; font-size:12px; letter-spacing:.04em; }
 .doc-title{ font-family:'Oswald',sans-serif; font-weight:600; font-size:17px; line-height:1.2; color:var(--ink); text-transform:uppercase; letter-spacing:.01em; }
 .doc-desc{ font-size:13px; line-height:1.45; color:var(--muted-2); }
@@ -171,7 +202,9 @@ main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px
 table.termo-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
 table.termo-table th, table.termo-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
 table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); background:#FAF8F3; position:sticky; top:0; }
-table.termo-table tr:hover td{ background:#FAF8F3; }
+@media (hover: hover) and (pointer: fine){
+  table.termo-table tr:hover td{ background:#FAF8F3; }
+}
 .termo-actions-cell{ display:flex; gap:8px; }
 
 /* Modal (usado pela edição do Termo de Compromisso) */
@@ -180,7 +213,9 @@ table.termo-table tr:hover td{ background:#FAF8F3; }
 .modal-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
 .modal-head h3{ font-family:'Oswald',sans-serif; font-size:19px; font-weight:700; color:var(--ink); text-transform:uppercase; margin:0; }
 .modal-close{ background:none; border:none; font-size:22px; line-height:1; cursor:pointer; color:var(--muted); padding:0 4px; flex:none; }
-.modal-close:hover{ color:var(--red); }
+@media (hover: hover) and (pointer: fine){
+  .modal-close:hover{ color:var(--red); }
+}
 .modal-fields{ display:flex; flex-direction:column; gap:14px; margin-bottom:18px; }
 .modal-actions{ display:flex; justify-content:flex-end; gap:10px; }
 .modal-actions .btn-red{ width:auto; padding:12px 22px; }
@@ -207,18 +242,26 @@ table.termo-table tr:hover td{ background:#FAF8F3; }
 .satec-munis span{ font-size:11.5px; color:#4B4943; background:var(--chip-bg); border:1px solid var(--chip-border); padding:3px 8px; border-radius:5px; line-height:1.3; }
 .satec-btn{ display:flex; align-items:center; justify-content:center; gap:9px; font-weight:700; font-size:14px; padding:11px; border-radius:10px; letter-spacing:.01em; text-decoration:none; }
 .satec-btn.wa{ background:var(--green); color:#fff; }
-.satec-btn.wa:hover{ background:var(--green-hover); }
+@media (hover: hover) and (pointer: fine){
+  .satec-btn.wa:hover{ background:var(--green-hover); }
+}
 .satec-btn.wa .dot{ width:9px; height:9px; border-radius:50%; background:var(--green-dot); }
 .satec-btn.map{ background:#fff; color:var(--red); border:1.5px solid var(--red); padding:9.5px; }
-.satec-btn.map:hover{ background:var(--red); color:#fff; }
+@media (hover: hover) and (pointer: fine){
+  .satec-btn.map:hover{ background:var(--red); color:#fff; }
+}
 .satec-btn.mail{ background:#fff; color:var(--navy); border:1.5px solid var(--navy); padding:9.5px; word-break:break-all; text-align:center; }
-.satec-btn.mail:hover{ background:var(--navy); color:#fff; }
+@media (hover: hover) and (pointer: fine){
+  .satec-btn.mail:hover{ background:var(--navy); color:#fff; }
+}
 .empty-state{ text-align:center; padding:48px 20px; color:var(--muted-3); font-size:15px; background:#fff; border:1px dashed #DDD6CA; border-radius:14px; }
 
 /* Páginas utilitárias (Minha Conta, Usuários, LOG) abertas em nova aba */
 .util-page main.content{ padding-top:30px; }
 .util-back{ display:inline-flex; align-items:center; gap:6px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); text-decoration:none; margin-bottom:18px; }
-.util-back:hover{ color:var(--red); }
+@media (hover: hover) and (pointer: fine){
+  .util-back:hover{ color:var(--red); }
+}
 .access-denied{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:32px; text-align:center; color:var(--muted); box-shadow:0 10px 30px -18px rgba(20,32,74,.45); }
 .access-denied strong{ display:block; color:var(--ink); font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.02em; margin-bottom:8px; font-size:15px; }
 
@@ -231,9 +274,14 @@ table.termo-table tr:hover td{ background:#FAF8F3; }
   display:flex; align-items:center; justify-content:center; font-size:20px;
   line-height:1; box-shadow:0 8px 20px -8px rgba(0,0,0,.5); text-decoration:none;
 }
-.btn-float:hover{ background:var(--navy-2); color:#fff; }
+@media (hover: hover) and (pointer: fine){
+  .btn-float:hover{ background:var(--navy-2); color:#fff; }
+}
 .btn-float.top{ bottom:24px; right:24px; }
 .btn-float.back{ bottom:24px; left:24px; }
+@media (max-width: 860px){
+  .btn-float.top{ display:none; }
+}
 @media (max-width: 640px){
   .btn-float{ width:44px; height:44px; font-size:18px; }
   .btn-float.top{ bottom:16px; right:16px; }
@@ -248,24 +296,23 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 
 @media (max-width: 640px){
   .pad-x{ padding-left:16px; padding-right:16px; }
+  .top{ padding:14px 16px; }
   .top-inner{ flex-wrap:wrap; row-gap:14px; }
-  .top-logo{ width:58px; height:58px; }
-  .top-logo img{ width:46px; height:46px; }
-  .top-actions{ flex-basis:100%; margin-left:0; align-self:auto; }
+  .top-logo{ width:40px; height:40px; border-radius:9px; }
+  .top-logo img{ width:32px; height:32px; }
+  .top-org{ font-size:10px; letter-spacing:.14em; }
+  .top-title{ font-size:19px; }
+  .top-sub{ display:none; }
+  .top-actions{ flex-basis:100%; margin-left:0; align-self:auto; gap:8px; }
+  .badge-live{ padding:5px 10px; font-size:11.5px; }
   .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
+  .banner-warn-inner{ padding:7px 16px; font-size:11.5px; }
   .cards-grid, .satec-grid{ grid-template-columns:1fr; }
   .cat-filter-row{ flex-direction:column; align-items:stretch; }
   .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date]{ max-width:none; min-width:0; width:100%; }
-  #chat-frame{ height:min(520px, 62vh); min-height:340px; }
+  #chat-frame{ height:min(520px, 62vh); height:min(520px, 62dvh); min-height:340px; }
   .bottom-inner{ flex-direction:column; align-items:flex-start; }
   .bottom-copy{ margin-left:0; }
-
-  /* Alvos de toque >=44px (botões pequenos que no desktop ficam ok só com
-     padding, mas no dedo precisam de mais área). */
-  .btn-ghost{ min-height:44px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; }
-  .btn-danger{ min-height:44px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; }
-  .btn-logout{ min-height:44px; padding:0 16px; }
-  .modal-close{ min-width:44px; min-height:44px; }
 
   /* Modal do Termo de Compromisso: botões empilhados, o de Salvar em cima
      (column-reverse porque o Salvar vem depois do Cancelar no HTML). */
@@ -290,4 +337,14 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   table.termo-table td:empty{ display:none; }
   table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
   table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
+}
+
+/* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
+@media (max-width: 860px){
+  .field input, .field select,
+  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date],
+  .modal-fields input,
+  input[type=search], input[type=text], input[type=password], input[type=date], select{
+    font-size:16px;
+  }
 }
