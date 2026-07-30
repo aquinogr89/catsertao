@@ -72,9 +72,12 @@ button:focus-visible{
 @media (hover: hover) and (pointer: fine){
   .btn-danger:hover{ background:#F5D5D5; }
 }
-.status-pill{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
+.status-pill{ font-size:12.5px; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.04em; }
 .status-pill.ativo{ background:#E9F7EF; color:var(--green-hover); }
-.status-pill.inativo{ background:var(--chip-bg); color:var(--muted-3); }
+/* --muted-3 sobre --chip-bg dá ~3,1:1 de contraste -- abaixo dos 4,5:1 que a
+   WCAG AA exige pra texto normal (11-13px não conta como "texto grande").
+   --muted-2 (mesma paleta, só mais escuro) chega a ~4,8:1. */
+.status-pill.inativo{ background:var(--chip-bg); color:var(--muted-2); }
 .field-error{ font-size:12.5px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:9px 11px; border-radius:9px; text-align:center; }
 
 /* Login gate (acesso geral) */
@@ -194,7 +197,10 @@ main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px
 .table-status{ font-size:13.5px; color:var(--muted-3); padding:10px 2px; }
 table.termo-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
 table.termo-table th, table.termo-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
-table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); background:#FAF8F3; position:sticky; top:0; }
+/* --muted-3 sobre #FAF8F3 dá ~3,25:1 de contraste -- abaixo dos 4,5:1 que a
+   WCAG AA exige pra texto normal. --muted-2 (mesma paleta, só mais escuro)
+   chega a ~5,1:1. */
+table.termo-table th{ font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-2); background:#FAF8F3; position:sticky; top:0; }
 @media (hover: hover) and (pointer: fine){
   table.termo-table tr:hover td{ background:#FAF8F3; }
 }
