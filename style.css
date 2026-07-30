@@ -134,42 +134,6 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .site-content{ flex:1; min-width:0; padding-left:28px; }
 .site-content .content{ padding-left:0; padding-right:0; }
 
-@media (max-width: 860px){
-  /* align-items:flex-start (desktop) faz sentido pra alinhar sidebar/conteúdo
-     pelo topo lado a lado; virando coluna, o mesmo valor faz os filhos
-     encolherem pra caber no conteúdo mais largo (a tabela) em vez de ocupar
-     a largura toda -- troca pra stretch só aqui. */
-  .site-shell{ flex-direction:column; align-items:stretch; }
-  /* position:static (não sticky): um menu fixo no topo ficava sobrepondo os
-     títulos das seções (ex.: "Atendimento") conforme a página rolava por
-     baixo dele, e a camada extra fixada pesava um pouco no repaint em
-     aparelhos mais simples. O botão flutuante "voltar ao topo" cobre a
-     necessidade de acesso rápido ao menu sem esse efeito colateral. */
-  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); padding:10px 16px; }
-  .site-content{ padding-left:0; min-width:0; }
-  .site-nav-toggle{
-    display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 12px;
-    border:1px solid var(--border-2); border-radius:9px; background:#fff; color:var(--navy);
-    font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em;
-    text-transform:uppercase; cursor:pointer;
-  }
-  .site-nav-toggle .site-nav-toggle-caret{ margin-left:auto; transition:transform .15s ease; }
-  .site-nav-toggle[aria-expanded="true"] .site-nav-toggle-caret{ transform:rotate(180deg); }
-  .site-sidebar-list{ display:none; }
-  .site-sidebar-list.open{ display:flex; padding-top:10px; }
-  .site-nav-label{ font-size:10px; padding:12px 10px 4px; }
-  .site-nav-label:first-child{ padding-top:2px; }
-  .site-nav-item{ padding:11px 12px; font-size:14px; min-height:44px; }
-  .btn-ghost{ min-height:44px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; }
-  .btn-danger{ min-height:44px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; }
-  .btn-logout{ min-height:44px; padding:0 16px; }
-  .modal-close{ min-width:44px; min-height:44px; }
-  .util-back{ min-height:44px; display:inline-flex; align-items:center; }
-  .quicknav-inner a{ min-height:44px; display:inline-flex; align-items:center; }
-  .satec-munis span{ font-size:13px; color:var(--muted-2); padding:5px 9px; }
-  .filter-hint{ font-size:13.5px; color:var(--muted-2); }
-}
-
 .banner-warn{ background:var(--warn-bg); border-bottom:1px solid var(--warn-border); color:var(--warn-text); }
 .banner-warn-inner{ padding:9px 28px; font-size:12.5px; line-height:1.45; display:flex; gap:9px; align-items:center; }
 .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
@@ -285,11 +249,6 @@ table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-sp
 }
 .btn-float.top{ bottom:24px; right:24px; }
 .btn-float.back{ bottom:24px; left:24px; }
-@media (max-width: 640px){
-  .btn-float{ width:44px; height:44px; font-size:18px; }
-  .btn-float.top{ bottom:16px; right:16px; }
-  .btn-float.back{ bottom:16px; left:16px; }
-}
 
 footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 .bottom-inner{ padding:22px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; }
@@ -297,7 +256,52 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 .bottom-org{ font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.06em; color:#fff; text-transform:uppercase; font-size:13px; }
 .bottom-copy{ margin-left:auto; color:#8f96b3; }
 
+/* ===================== Breakpoints consolidados =====================
+   Antes, @media (max-width: 860px) e @media (max-width: 640px) apareciam
+   espalhados em vários pontos do arquivo (860px em três lugares, 640px em
+   dois) -- estar dentro de uma @media não aumenta especificidade, então
+   regras corretas em blocos que apareciam ANTES de uma regra base
+   equivalente perdiam para ela silenciosamente (ex.: .satec-munis span e
+   .filter-hint aqui embaixo já existiam antes, num bloco lá em cima, e
+   nunca faziam efeito). Consolidado num único bloco por breakpoint, no fim
+   do arquivo, para que a ordem de cascata sempre jogue a favor do mobile.
+   Os blocos @media (hover: hover) continuam junto de cada regra base --
+   não competem com nada, não precisam estar aqui. */
 @media (max-width: 860px){
+  /* align-items:flex-start (desktop) faz sentido pra alinhar sidebar/conteúdo
+     pelo topo lado a lado; virando coluna, o mesmo valor faz os filhos
+     encolherem pra caber no conteúdo mais largo (a tabela) em vez de ocupar
+     a largura toda -- troca pra stretch só aqui. */
+  .site-shell{ flex-direction:column; align-items:stretch; }
+  /* position:static (não sticky): um menu fixo no topo ficava sobrepondo os
+     títulos das seções (ex.: "Atendimento") conforme a página rolava por
+     baixo dele, e a camada extra fixada pesava um pouco no repaint em
+     aparelhos mais simples. O botão flutuante "voltar ao topo" cobre a
+     necessidade de acesso rápido ao menu sem esse efeito colateral. */
+  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); padding:10px 16px; }
+  .site-content{ padding-left:0; min-width:0; }
+  .site-nav-toggle{
+    display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 12px;
+    border:1px solid var(--border-2); border-radius:9px; background:#fff; color:var(--navy);
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em;
+    text-transform:uppercase; cursor:pointer;
+  }
+  .site-nav-toggle .site-nav-toggle-caret{ margin-left:auto; transition:transform .15s ease; }
+  .site-nav-toggle[aria-expanded="true"] .site-nav-toggle-caret{ transform:rotate(180deg); }
+  .site-sidebar-list{ display:none; }
+  .site-sidebar-list.open{ display:flex; padding-top:10px; }
+  .site-nav-label{ font-size:10px; padding:12px 10px 4px; }
+  .site-nav-label:first-child{ padding-top:2px; }
+  .site-nav-item{ padding:11px 12px; font-size:14px; min-height:44px; }
+  .btn-ghost{ min-height:44px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-danger{ min-height:44px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; }
+  .btn-logout{ min-height:44px; padding:0 16px; }
+  .modal-close{ min-width:44px; min-height:44px; }
+  .util-back{ min-height:44px; display:inline-flex; align-items:center; }
+  .quicknav-inner a{ min-height:44px; display:inline-flex; align-items:center; }
+  .satec-munis span{ font-size:13px; color:var(--muted-2); padding:5px 9px; }
+  .filter-hint{ font-size:13.5px; color:var(--muted-2); }
+
   .cards-grid, .satec-grid{ grid-template-columns:1fr; }
   .cat-filter-row{ flex-direction:column; align-items:stretch; }
   .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date]{ max-width:none; min-width:0; width:100%; }
@@ -330,11 +334,23 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
      invertia o efeito do margin-top:auto do .satec-meta. */
   .satec-munis-block{ order:1; }
   .satec-meta{ margin-top:0; }
+
+  /* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
+  .field input, .field select,
+  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date],
+  .modal-fields input,
+  input[type=search], input[type=text], input[type=password], input[type=date], select{
+    font-size:16px;
+  }
 }
 
 @media (max-width: 640px){
+  .btn-float{ width:44px; height:44px; font-size:18px; }
+  .btn-float.top{ bottom:16px; right:16px; }
+  .btn-float.back{ bottom:16px; left:16px; }
+
   .pad-x{ padding-left:16px; padding-right:16px; }
-  .top{ padding:14px 16px; }
+  header.top{ padding:14px 16px; }
   .top-inner{ flex-wrap:wrap; row-gap:14px; }
   .top-logo{ width:40px; height:40px; border-radius:9px; }
   .top-logo img{ width:32px; height:32px; }
@@ -359,14 +375,4 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .user-form-row{ flex-direction:column; align-items:stretch; }
   .user-form-row .field{ min-width:0; }
   .user-form-row button{ width:100%; }
-}
-
-/* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
-@media (max-width: 860px){
-  .field input, .field select,
-  .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date],
-  .modal-fields input,
-  input[type=search], input[type=text], input[type=password], input[type=date], select{
-    font-size:16px;
-  }
 }
