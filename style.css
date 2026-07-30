@@ -176,10 +176,43 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 
 main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
 
-/* Assistente virtual (chat) — altura relativa ao viewport, não fixa, para
-   caber na tela inicial mesmo em notebooks/celulares com pouca altura. */
-.chat-box{ background:#fff; border:1px solid #E3DED2; border-radius:16px; padding:12px; box-shadow:0 10px 30px -18px rgba(20,32,74,.45); overflow:hidden; }
-#chat-frame{ width:100%; height:min(620px, 68vh); height:min(620px, 68dvh); min-height:380px; border:0; display:block; border-radius:10px; }
+/* Assistente virtual — balão de chat flutuante (mesmo padrão do Hermes
+   Agent, adaptado ao tema claro do site). O iframe só carrega no primeiro
+   clique (ver index.html) -- rodar o widget o tempo todo em segundo plano,
+   mesmo fora da tela, era uma causa provável de travamento ao rolar. */
+.chat-launcher{
+  position:fixed; right:24px; bottom:88px; width:56px; height:56px; border-radius:50%;
+  background:var(--navy); color:#fff; border:none; display:flex; align-items:center;
+  justify-content:center; font-size:24px; cursor:pointer; box-shadow:0 10px 24px -8px rgba(20,32,74,.55);
+  z-index:1000; transition:transform .15s ease;
+}
+@media (hover: hover) and (pointer: fine){
+  .chat-launcher:hover{ background:var(--navy-2); transform:scale(1.05); }
+}
+.chat-panel{
+  position:fixed; right:24px; bottom:152px; width:380px; height:min(560px, 64dvh);
+  background:#fff; border:1px solid var(--border); border-radius:16px;
+  box-shadow:0 24px 60px -20px rgba(20,32,74,.5);
+  display:flex; flex-direction:column; overflow:hidden; z-index:1000;
+  opacity:0; transform:translateY(16px) scale(.98); pointer-events:none;
+  transition:opacity .22s ease, transform .22s ease;
+}
+.chat-panel.open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.chat-panel-header{ padding:14px 16px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; }
+.chat-panel-close{ background:none; border:none; color:#fff; opacity:.8; font-size:20px; cursor:pointer; line-height:1; padding:0 4px; }
+@media (hover: hover) and (pointer: fine){
+  .chat-panel-close:hover{ opacity:1; }
+}
+.chat-panel-iframe{ flex:1; width:100%; border:0; background:#fff; }
+@media (max-width: 640px){
+  .chat-launcher{ right:16px; bottom:72px; width:52px; height:52px; font-size:22px; }
+  .chat-panel{ right:12px; left:12px; bottom:132px; width:auto; height:min(70vh, 70dvh); }
+}
+@media (max-width: 420px){
+  /* Tela bem pequena: painel vira folha inteira colada na base, como no
+     Hermes -- evita o painel ficar espremido entre o balão e a borda. */
+  .chat-panel{ right:0; left:0; bottom:0; width:100%; height:min(80vh, 80dvh); border-radius:16px 16px 0 0; }
+}
 
 /* Cards grid (docs) */
 .cards-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
@@ -334,7 +367,6 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .badge-live{ padding:5px 10px; font-size:11.5px; }
   .quicknav-inner{ gap:14px 18px; padding:10px 16px; }
   .banner-warn-inner{ padding:7px 16px; font-size:11.5px; }
-  #chat-frame{ height:min(520px, 62vh); height:min(520px, 62dvh); min-height:340px; }
   .bottom-inner{ flex-direction:column; align-items:flex-start; }
   .bottom-copy{ margin-left:0; }
 

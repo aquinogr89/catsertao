@@ -83,6 +83,18 @@
 
   <button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao menu" aria-label="Voltar ao menu">↑</button>
 
+  <!-- Assistente virtual em balão flutuante (mesmo padrão do Hermes Agent):
+       o iframe só carrega no primeiro clique (ver script no fim da página),
+       para não pesar a rolagem da página logo ao entrar. -->
+  <button type="button" id="chat-launcher" class="chat-launcher" title="Assistente CAT Sertão" aria-label="Assistente CAT Sertão">💬</button>
+  <div id="chat-panel" class="chat-panel">
+    <div class="chat-panel-header">
+      <span>🤖 Assistente CAT Sertão</span>
+      <button type="button" id="chat-panel-close" class="chat-panel-close" aria-label="Fechar">×</button>
+    </div>
+    <iframe id="chat-frame" class="chat-panel-iframe" title="Assistente Virtual CAT Sertão"></iframe>
+  </div>
+
   <div class="site-shell wrap pad-x">
     <nav class="site-sidebar" aria-label="Navegação do site">
       <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
@@ -118,10 +130,8 @@
     <section class="section" id="atendimento">
       <div class="eyebrow"><span>Atendimento</span><span class="rule"></span></div>
       <h2>Assistente Virtual</h2>
-      <p class="lead">Tire dúvidas sobre procedimentos técnicos, vistorias e serviços do CAT Sertão. Converse abaixo com o assistente automático — disponível a qualquer hora.</p>
-      <div class="chat-box">
-        <iframe id="chat-frame" title="Assistente Virtual CAT Sertão"></iframe>
-      </div>
+      <p class="lead">Tire dúvidas sobre procedimentos técnicos, vistorias e serviços do CAT Sertão. Toque no balão de chat no canto da tela para conversar com o assistente automático — disponível a qualquer hora.</p>
+      <button type="button" class="btn-red" id="atendimento-abrir-chat" style="width:auto; padding:12px 22px;">💬 Abrir assistente virtual</button>
     </section>
 
     <section class="section" id="documentos">
@@ -268,7 +278,6 @@
     document.getElementById('footer-year').textContent = new Date().getFullYear();
     applyPerfilVisibility();
     renderSatecs();
-    initChat();
     if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
     // Só liga os listeners de atividade (mousemove/keydown/etc.) depois de
     // confirmado o login — na tela de login não há sessão para monitorar.
@@ -400,15 +409,28 @@
     });
   })();
 
-  /* ===================== Assistente virtual (n8n chat) ===================== */
-  function initChat() {
-    if (chatInitialized) return;
-    chatInitialized = true;
-    // Chat roda isolado num iframe (chat.html) para que os proprios scripts do
-    // widget da n8n (ex.: scrollIntoView ao enviar mensagem) nao consigam rolar
-    // a pagina principal — um iframe so pode rolar o proprio documento dele.
-    document.getElementById('chat-frame').src = 'chat.html';
+  /* ===================== Assistente virtual (n8n chat) — balão flutuante =====================
+     Carrega o iframe só no primeiro clique (não mais ao entrar na página):
+     o widget da n8n rodando o tempo todo em segundo plano, mesmo fora da
+     tela, era uma causa provável de travamento ao rolar no celular. Chat
+     roda isolado num iframe (chat.html) para que os proprios scripts do
+     widget (ex.: scrollIntoView ao enviar mensagem) nao consigam rolar a
+     pagina principal — um iframe so pode rolar o proprio documento dele. */
+  var chatPanelEl = document.getElementById('chat-panel');
+  var chatOpen = false;
+
+  function toggleChat(forceOpen) {
+    chatOpen = typeof forceOpen === 'boolean' ? forceOpen : !chatOpen;
+    chatPanelEl.classList.toggle('open', chatOpen);
+    if (chatOpen && !chatInitialized) {
+      chatInitialized = true;
+      document.getElementById('chat-frame').src = 'chat.html';
+    }
   }
+
+  document.getElementById('chat-launcher').addEventListener('click', function () { toggleChat(); });
+  document.getElementById('chat-panel-close').addEventListener('click', function () { toggleChat(false); });
+  document.getElementById('atendimento-abrir-chat').addEventListener('click', function () { toggleChat(true); });
 
   /* ===================== SATECs e Postos ===================== */
   var SATECS_RAW = [
