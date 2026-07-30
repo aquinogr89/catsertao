@@ -43,12 +43,21 @@ var CatAuth = (function () {
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
-  function api(payload) {
+  // Sem timeout, em sinal fraco a Promise nunca resolve nem rejeita: o botão
+  // "Entrar" fica desabilitado pra sempre e "Carregando..." nunca resolve --
+  // nem sucesso, nem erro, sem jeito de tentar de novo.
+  var API_TIMEOUT_MS = 15000;
+
+  function api(payload, timeoutMs) {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, timeoutMs || API_TIMEOUT_MS);
     return fetch(APPS_SCRIPT_URL, {
       method: 'POST',
+      signal: ctrl.signal,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
-    }).then(function (res) { return res.json(); });
+    }).then(function (res) { return res.json(); })
+      .finally(function () { clearTimeout(t); });
   }
 
   // localStorage (não sessionStorage): sessionStorage só é herdado por abas
