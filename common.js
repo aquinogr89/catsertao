@@ -118,11 +118,16 @@ var CatAuth = (function () {
     var limite = limiteMs || INATIVIDADE_LIMITE_MS;
     registrarAtividade(); // carregar a página já conta como atividade
 
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click', 'focus', 'visibilitychange'].forEach(function (evt) {
+    // 'focus' e 'visibilitychange' NAO entram aqui: os dois disparam quando o
+    // usuario VOLTA pra pagina (e visibilitychange dispara tambem ao sair).
+    // Como registrarAtividade regrava o carimbo de tempo, bloquear e
+    // desbloquear a tela do celular zerava a contagem -- a sessao nunca
+    // expirava por inatividade em aparelho movel.
+    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function (evt) {
       document.addEventListener(evt, registrarAtividade, { passive: true });
     });
 
-    setInterval(function () {
+    function verificarInatividade() {
       var saved = loadSession();
       if (!saved) return; // ninguém logado nesta aba, nada a fazer
 
@@ -132,7 +137,16 @@ var CatAuth = (function () {
         clearSession();
         if (typeof onTimeout === 'function') onTimeout();
       }
-    }, INATIVIDADE_CHECK_MS);
+    }
+
+    // Ao voltar pra pagina (desbloquear a tela, trocar de app de volta),
+    // verificar na hora em vez de esperar o proximo tick de 30s: o
+    // setInterval fica suspenso ou muito lento com a aba em segundo plano.
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) verificarInatividade();
+    });
+
+    setInterval(verificarInatividade, INATIVIDADE_CHECK_MS);
   }
 
   return {
