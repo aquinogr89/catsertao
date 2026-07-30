@@ -187,8 +187,11 @@
       : 'Mostrando todos os ' + total + ' registro(s) encontrado(s).';
 
     var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
+    // No mobile (cards empilhados), só os campos com "col-mobile-key" ficam
+    // visíveis -- Login/Ação/Data-hora respondem "quem fez o quê e quando"
+    // sem abrir o card; Perfil e Detalhe ficam ocultos (ver style.css).
     var tbody = '<tbody>' + rows.map(function (r) {
-      return '<tr><td data-label="Data/hora">' + escapeHtml(r.timestamp) + '</td><td data-label="Login">' + escapeHtml(r.login) + '</td><td data-label="Perfil">' + escapeHtml(r.perfil) + '</td><td data-label="Ação">' + escapeHtml(r.acao) + '</td><td data-label="Detalhe">' + escapeHtml(r.detalhe) + '</td></tr>';
+      return '<tr><td class="col-mobile-key" data-label="Data/hora">' + escapeHtml(r.timestamp) + '</td><td class="col-mobile-key" data-label="Login">' + escapeHtml(r.login) + '</td><td data-label="Perfil">' + escapeHtml(r.perfil) + '</td><td class="col-mobile-key col-mobile-key-last" data-label="Ação">' + escapeHtml(r.acao) + '</td><td data-label="Detalhe">' + escapeHtml(r.detalhe) + '</td></tr>';
     }).join('') + '</tbody>';
     logTableEl.innerHTML = thead + tbody;
     show(logTableEl);

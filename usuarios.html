@@ -196,7 +196,7 @@
             '<button type="button" class="btn-danger" data-excluir="' + escapeHtml(u.login) + '">Excluir</button>';
         }
       }
-      return '<tr><td data-label="Login">' + escapeHtml(u.login) + '</td><td data-label="Perfil">' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td data-label="Status">' + pill + '</td><td data-label="Criado por">' + escapeHtml(u.criado_por) + '</td><td data-label="Criado em">' + escapeHtml(u.criado_em) + '</td><td class="termo-actions-cell" data-label="Ações">' + acoes + '</td></tr>';
+      return '<tr><td class="col-mobile-key" data-label="Login">' + escapeHtml(u.login) + '</td><td class="col-mobile-key" data-label="Perfil">' + escapeHtml(PERFIL_LABEL[u.perfil] || u.perfil) + '</td><td class="col-mobile-key" data-label="Status">' + pill + '</td><td data-label="Criado por">' + escapeHtml(u.criado_por) + '</td><td data-label="Criado em">' + escapeHtml(u.criado_em) + '</td><td class="termo-actions-cell" data-label="Ações">' + acoes + '</td></tr>';
     }).join('') + '</tbody>';
     usuariosTableEl.innerHTML = thead + tbody;
     show(usuariosTableEl);

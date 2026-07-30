@@ -309,8 +309,15 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   table.termo-table td:empty{ display:none; }
   table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
   table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
-  /* Mostrar apenas 3 primeiras colunas (dados-chave) — colunas 4+ ficam ocultas. */
-  table.termo-table td:nth-child(n+4):not(.termo-actions-cell){ display:none; }
+  /* Mostrar só as colunas marcadas como chave (ver JS de cada tabela) —
+     por nome, não por posição, já que a ordem das colunas varia por tabela
+     (a do Termo vem de planilha externa) e esconder por posição corria o
+     risco de ocultar justamente a Situação. */
+  table.termo-table td:not(.col-mobile-key):not(.termo-actions-cell){ display:none; }
+  /* Tabelas sem coluna de ações (ex.: LOG): o :last-child de verdade fica
+     oculto, então a borda "some" com ele -- o campo-chave que passa a ser o
+     último visível marca a si mesmo para não sobrar borda residual. */
+  table.termo-table td.col-mobile-key-last{ border-bottom:0; }
 
   /* SATEC: ações (WhatsApp, Mapa, Email) antes dos municípios no mobile. */
   .satec-body{ flex-direction:column-reverse; }

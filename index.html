@@ -529,6 +529,24 @@
   var termoTableEl = document.getElementById('termo-table');
   var termoRows = [];
 
+  // As colunas do Termo vêm de uma planilha externa (n8n), em ordem que não
+  // controlamos daqui. No mobile (cards empilhados), em vez de esconder por
+  // posição -- o que poderia esconder justamente a Situação -- escolhemos por
+  // nome: Situação (sempre, se existir) + uma coluna de data (se existir) +
+  // a primeira coluna restante, até completar 3.
+  function colunasPrioritariasMobile(headers) {
+    var colSituacao = colunaSituacaoTermo(headers);
+    var colData = headers.find(function (h) {
+      return h !== colSituacao && h.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().indexOf('data') !== -1;
+    });
+    var prioritarias = [colSituacao, colData].filter(Boolean);
+    headers.some(function (h) {
+      if (prioritarias.indexOf(h) === -1) prioritarias.push(h);
+      return prioritarias.length >= 3;
+    });
+    return prioritarias;
+  }
+
   function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery, actionsBuilder) {
     var filtered = !filterQuery ? rows : rows.filter(function (row) {
       return Object.keys(row).some(function (k) {
@@ -551,9 +569,23 @@
 
     hide(statusEl);
     var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
-    var thead = '<thead><tr>' + headers.map(function (h) { return '<th>' + escapeHtml(h) + '</th>'; }).join('') + (actionsBuilder ? '<th></th>' : '') + '</tr></thead>';
+    var colSituacao = colunaSituacaoTermo(headers);
+    var prioritarias = colunasPrioritariasMobile(headers);
+    var thead = '<thead><tr>' + headers.map(function (h) {
+      return '<th' + (prioritarias.indexOf(h) !== -1 ? ' class="col-mobile-key"' : '') + '>' + escapeHtml(h) + '</th>';
+    }).join('') + (actionsBuilder ? '<th></th>' : '') + '</tr></thead>';
     var tbody = '<tbody>' + filtered.map(function (row) {
-      return '<tr>' + headers.map(function (h) { return '<td data-label="' + escapeHtml(h) + '">' + escapeHtml(row[h] == null ? '' : row[h]) + '</td>'; }).join('') + (actionsBuilder ? '<td class="termo-actions-cell" data-label="Ações"></td>' : '') + '</tr>';
+      return '<tr>' + headers.map(function (h) {
+        var cls = prioritarias.indexOf(h) !== -1 ? ' class="col-mobile-key"' : '';
+        var valor = row[h] == null ? '' : row[h];
+        if (h === colSituacao && valor !== '') {
+          var normalizada = String(valor).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+          var pillClass = normalizada === 'concluido' ? 'ativo' : 'inativo';
+          valor = '<span class="status-pill ' + pillClass + '">' + escapeHtml(valor) + '</span>';
+          return '<td' + cls + ' data-label="' + escapeHtml(h) + '">' + valor + '</td>';
+        }
+        return '<td' + cls + ' data-label="' + escapeHtml(h) + '">' + escapeHtml(valor) + '</td>';
+      }).join('') + (actionsBuilder ? '<td class="termo-actions-cell" data-label="Ações"></td>' : '') + '</tr>';
     }).join('') + '</tbody>';
     tableEl.innerHTML = thead + tbody;
     show(tableEl);
