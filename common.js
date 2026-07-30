@@ -147,6 +147,7 @@ var CatAuth = (function () {
   var INATIVIDADE_LIMITE_MS = 30 * 60 * 1000; // 30 minutos
   var INATIVIDADE_CHECK_MS = 30 * 1000; // confere a cada 30s
   var INATIVIDADE_THROTTLE_MS = 5 * 1000; // não escreve no localStorage a cada pixel de mousemove
+  var monitorLigado = false; // ver comentário em iniciarMonitorInatividade
 
   function registrarAtividade() {
     var agora = Date.now();
@@ -167,6 +168,19 @@ var CatAuth = (function () {
    * abaixo).
    */
   function iniciarMonitorInatividade(onTimeout, limiteMs, onVisible) {
+    // Nesta aba, esta função pode ser chamada mais de uma vez num único
+    // carregamento de página (ex.: index.html no modo offline -- revalidação
+    // falha de vez, showGate(), usuário loga de novo pelo formulário,
+    // showApp() roda outra vez). Os listeners de atividade (addEventListener
+    // com a mesma referência de função) deduplicam sozinhos, mas o
+    // setInterval e o listener de visibilitychange (anônimo) empilhavam:
+    // verificarInatividade rodava duas vezes por tick (dois logout ao
+    // servidor no mesmo instante) e onVisible disparava em dobro a cada
+    // volta à aba. onTimeout/onVisible são sempre os mesmos em cada página,
+    // então ignorar a segunda chamada é seguro.
+    if (monitorLigado) return;
+    monitorLigado = true;
+
     var limite = limiteMs || INATIVIDADE_LIMITE_MS;
     registrarAtividade(); // carregar a página já conta como atividade
 
