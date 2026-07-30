@@ -16,6 +16,8 @@ var CACHE_ASSETS = [
   './conta.html',
   './usuarios.html',
   './log.html',
+  './chat.html',
+  './hermes.html',
   './style.css',
   './common.js',
   './CAT-SERTAO-SEM-FUNDO.png',
