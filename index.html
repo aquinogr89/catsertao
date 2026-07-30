@@ -630,7 +630,20 @@
     }
   }
 
-  document.getElementById('satec-search').addEventListener('input', renderSatecs);
+  // Sem debounce, cada tecla digitada refazia o innerHTML dos 7 cards (e os
+  // ~80 chips de município dentro deles) na hora -- 120ms de espera depois
+  // da última tecla é imperceptível pra quem digita, mas evita re-renderizar
+  // a cada caractere de uma digitação rápida.
+  function debounce(fn, atraso) {
+    var t;
+    return function () {
+      var args = arguments, ctx = this;
+      clearTimeout(t);
+      t = setTimeout(function () { fn.apply(ctx, args); }, atraso);
+    };
+  }
+
+  document.getElementById('satec-search').addEventListener('input', debounce(renderSatecs, 120));
 
   /* ===================== Termo de Compromisso — visível para admin_master/admin ===================== */
   var termoStatusEl = document.getElementById('termo-status');
