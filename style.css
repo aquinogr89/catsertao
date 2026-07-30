@@ -50,6 +50,19 @@ img{ display:block; max-width:100%; }
 .field input, .field select{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
 .field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
 .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
+/* outline:none acima tira o retângulo padrão do navegador, mas nada o
+   substituía -- Tab pelo login, pelo cadastro de usuário e pelos filtros do
+   LOG não mostrava onde estava o foco. :focus-visible só acende no teclado
+   (Tab), não no clique do mouse, então não conflita com o :focus acima. */
+.field input:focus-visible,
+.field select:focus-visible,
+.cat-filter-row input:focus-visible,
+.cat-filter-row select:focus-visible,
+.site-nav-item:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--navy-2);
+  outline-offset:2px;
+}
 .btn-danger{ font-family:'Public Sans',sans-serif; font-weight:600; font-size:12px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:6px 11px; border-radius:7px; cursor:pointer; }
 @media (hover: hover) and (pointer: fine){
   .btn-danger:hover{ background:#F5D5D5; }
