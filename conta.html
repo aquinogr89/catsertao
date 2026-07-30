@@ -115,35 +115,10 @@
     toggle(document.getElementById('nav-hermes'), perfil === 'admin_master');
   }
 
-  // Menu lateral recolhível no mobile (ver style.css) — mesmo comportamento
-  // em index.html/usuarios.html/log.html.
-  (function () {
-    var toggleEl = document.getElementById('site-nav-toggle');
-    var listEl = document.getElementById('site-sidebar-list');
-    toggleEl.addEventListener('click', function () {
-      var aberto = listEl.classList.toggle('open');
-      toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
-    });
-    listEl.addEventListener('click', function (e) {
-      var item = e.target.closest('.site-nav-item');
-      if (item) {
-        // ver comentario equivalente em index.html: ancoras internas (#...)
-        // recolhem na hora (senao a rolagem calcula com o menu ainda
-        // aberto); links externos recolhem no proximo tick (senao o
-        // navegador cancela o clique por causa do realinhamento do layout).
-        var href = item.getAttribute('href') || '';
-        if (href.charAt(0) === '#') {
-          listEl.classList.remove('open');
-          toggleEl.setAttribute('aria-expanded', 'false');
-        } else {
-          setTimeout(function () {
-            listEl.classList.remove('open');
-            toggleEl.setAttribute('aria-expanded', 'false');
-          }, 0);
-        }
-      }
-    });
-  })();
+  // Menu lateral recolhível no mobile -- lógica compartilhada com
+  // index.html/usuarios.html/log.html, ver CatAuth.iniciarMenuLateral em
+  // common.js (comentários detalhados do porquê estão lá).
+  CatAuth.iniciarMenuLateral();
 
   CatAuth.requireSession(null).then(function (session) {
     hide(document.getElementById('loading-msg'));
