@@ -317,7 +317,7 @@
     CatAuth.requireSession(null).then(function (s) {
       session = s;
       sairModoOffline();
-      applyPerfilVisibility();
+      CatAuth.aplicarPerfil(session, { termoSectionId: 'termo-section' });
       if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
     }, function (err) {
       // network_error de novo: continua offline, tenta na próxima
@@ -339,31 +339,15 @@
   window.addEventListener('offline', atualizarAvisoOfflineGate);
   atualizarAvisoOfflineGate(); // estado inicial, caso a página já abra offline
 
-  function applyPerfilVisibility() {
-    var perfil = session.perfil;
-    var canTermo = perfil === 'admin_master' || perfil === 'admin';
-    var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
-    var canLog = perfil === 'admin_master';
-    var canHermes = perfil === 'admin_master';
-
-    // Mapa de OCI e Triagem de Riscos: visíveis para qualquer usuário logado
-    // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
-    // de cada site, revalidado no servidor).
-    toggle(document.getElementById('nav-termo'), canTermo);
-    toggle(document.getElementById('termo-section'), canTermo);
-    toggle(document.getElementById('nav-usuarios'), canUsuarios);
-    toggle(document.getElementById('nav-log'), canLog);
-    toggle(document.getElementById('nav-hermes'), canHermes);
-
-    document.getElementById('session-login').textContent = session.login;
-    document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[perfil] || perfil;
-  }
-
   function showApp(opts) {
     hide(gateEl);
     show(appEl);
     document.getElementById('footer-year').textContent = new Date().getFullYear();
-    applyPerfilVisibility();
+    // Regra de perfil (quem vê Termo/Usuários/LOG/Hermes) e dados da sessão
+    // no badge -- compartilhado com conta.html/usuarios.html/log.html, ver
+    // CatAuth.aplicarPerfil em common.js. termoSectionId é exclusivo de
+    // index.html (as páginas utilitárias não têm essa seção).
+    CatAuth.aplicarPerfil(session, { termoSectionId: 'termo-section' });
     renderSatecs(); // dados locais, funcionam igual online ou offline
     if (opts && opts.offline) {
       entrarModoOffline();

@@ -105,16 +105,6 @@
 
   var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api;
 
-  // Mesma sidebar de navegação das outras páginas (index.html/usuarios.html/log.html).
-  function montarSidebar(perfil) {
-    document.getElementById('nav-rti').href = CatAuth.RTI_URL;
-    document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
-    toggle(document.getElementById('nav-termo'), perfil === 'admin_master' || perfil === 'admin');
-    toggle(document.getElementById('nav-usuarios'), perfil === 'admin_master' || perfil === 'admin');
-    toggle(document.getElementById('nav-log'), perfil === 'admin_master');
-    toggle(document.getElementById('nav-hermes'), perfil === 'admin_master');
-  }
-
   // Menu lateral recolhível no mobile -- lógica compartilhada com
   // index.html/usuarios.html/log.html, ver CatAuth.iniciarMenuLateral em
   // common.js (comentários detalhados do porquê estão lá).
@@ -123,13 +113,14 @@
   CatAuth.requireSession(null).then(function (session) {
     hide(document.getElementById('loading-msg'));
 
-    montarSidebar(session.perfil);
+    // Regra de perfil (quem vê Termo/Usuários/LOG/Hermes) e dados da sessão
+    // no badge -- compartilhado com index.html/usuarios.html/log.html, ver
+    // CatAuth.aplicarPerfil em common.js.
+    CatAuth.aplicarPerfil(session);
     hide(document.getElementById('conta-outer-back'));
     hide(document.getElementById('conta-outer-main'));
     show(document.getElementById('site-shell'));
 
-    document.getElementById('session-login').textContent = session.login;
-    document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[session.perfil] || session.perfil;
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     document.getElementById('senha-form').addEventListener('submit', function (e) {

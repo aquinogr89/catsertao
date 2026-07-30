@@ -197,6 +197,40 @@ var CatAuth = (function () {
     setInterval(verificarInatividade, INATIVIDADE_CHECK_MS);
   }
 
+  // ===================== Perfil: menu + dados da sessão =====================
+  // Usado por index.html/conta.html/usuarios.html/log.html -- regra idêntica
+  // nas 4 (admin_master/admin veem Termo e Usuários; só admin_master vê LOG
+  // e Hermes), repetida em cada página como montarSidebar()/
+  // applyPerfilVisibility() antes de vir pra cá. hermes.html não usa isso:
+  // painel próprio, tema escuro, sem essa sidebar.
+  // opts.termoSectionId é só de index.html, que tem uma seção própria
+  // (#termo-section) pra mostrar/esconder junto do link do menu -- as
+  // páginas utilitárias não têm essa seção.
+  function aplicarPerfil(session, opts) {
+    opts = opts || {};
+    var perfil = session.perfil;
+    var canTermo = perfil === 'admin_master' || perfil === 'admin';
+    var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
+    var canLog = perfil === 'admin_master';
+    var canHermes = perfil === 'admin_master';
+
+    // Mapa de OCI e Triagem de Riscos: visíveis para qualquer usuário logado
+    // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
+    // de cada site, revalidado no servidor).
+    var navRti = document.getElementById('nav-rti');
+    var navTriagem = document.getElementById('nav-triagem');
+    if (navRti) navRti.href = RTI_URL;
+    if (navTriagem) navTriagem.href = TRIAGEM_URL;
+    toggle(document.getElementById('nav-termo'), canTermo);
+    toggle(document.getElementById('nav-usuarios'), canUsuarios);
+    toggle(document.getElementById('nav-log'), canLog);
+    toggle(document.getElementById('nav-hermes'), canHermes);
+    if (opts.termoSectionId) toggle(document.getElementById(opts.termoSectionId), canTermo);
+
+    document.getElementById('session-login').textContent = session.login;
+    document.getElementById('session-perfil').textContent = PERFIL_LABEL[perfil] || perfil;
+  }
+
   // ===================== Menu lateral recolhível =====================
   // Usado por index.html/conta.html/usuarios.html/log.html -- só aparece no
   // mobile (ver style.css); no desktop o botão fica escondido e a lista
@@ -262,7 +296,8 @@ var CatAuth = (function () {
     getSession: getSession,
     requireSession: requireSession,
     iniciarMonitorInatividade: iniciarMonitorInatividade,
-    iniciarMenuLateral: iniciarMenuLateral
+    iniciarMenuLateral: iniciarMenuLateral,
+    aplicarPerfil: aplicarPerfil
   };
 })();
 
