@@ -596,13 +596,13 @@
       hide(tableEl);
       show(statusEl);
       statusEl.textContent = emptyMsg;
-      return;
+      return 0;
     }
     if (filtered.length === 0) {
       hide(tableEl);
       show(statusEl);
       statusEl.textContent = 'Nenhum registro encontrado para essa busca.';
-      return;
+      return 0;
     }
 
     hide(statusEl);
