@@ -851,6 +851,24 @@
     if (e.key === 'Escape' && !termoModalOverlay.classList.contains('u-hidden')) fecharModalTermo();
   });
 
+  // Armadilha de foco: sem isso, Tab a partir do último campo (ou Shift+Tab
+  // a partir do primeiro) saía do modal e ia pro que está por trás dele na
+  // página -- quem navega por teclado/leitor de tela perdia a noção de que
+  // ainda havia um modal aberto por cima do conteúdo.
+  termoModalOverlay.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var foco = termoModalOverlay.querySelectorAll('input, button');
+    if (!foco.length) return;
+    var primeiro = foco[0], ultimo = foco[foco.length - 1];
+    if (e.shiftKey && document.activeElement === primeiro) {
+      e.preventDefault();
+      ultimo.focus();
+    } else if (!e.shiftKey && document.activeElement === ultimo) {
+      e.preventDefault();
+      primeiro.focus();
+    }
+  });
+
   termoModalForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!termoModalRow) return;
