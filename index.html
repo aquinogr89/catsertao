@@ -630,7 +630,8 @@
   }
 
   function renderSatecs() {
-    var q = normalizar(document.getElementById('satec-search').value.trim());
+    var cru = document.getElementById('satec-search').value.trim();
+    var q = normalizar(cru);
     var filtered = q
       ? SATECS.filter(function (s) {
           return normalizar(s.city + ' ' + s.tag + ' ' + s.contact + ' ' + s.municipios.join(' ')).indexOf(q) !== -1;
@@ -644,7 +645,10 @@
     if (filtered.length === 0) {
       hide(gridEl);
       show(emptyEl);
-      emptyEl.textContent = 'Nenhuma unidade encontrada para “' + q + '”.';
+      // Mensagem usa o texto CRU (não normalizado): "normalizar()" tira
+      // acento e caixa pra comparar, mas ecoar isso na mensagem confundia
+      // quem buscou "São José" e via "sao jose" na resposta.
+      emptyEl.textContent = 'Nenhuma unidade encontrada para “' + cru + '”.';
     } else {
       show(gridEl);
       hide(emptyEl);
