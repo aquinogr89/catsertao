@@ -694,8 +694,14 @@
   }
 
   function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery, actionsBuilder) {
+    // _row (índice interno da planilha, usado só pra identificar a linha ao
+    // salvar edições) não é uma coluna visível em lugar nenhum -- os headers
+    // já filtram ele em todo o resto da função. Este era o único ponto que
+    // não filtrava: buscar "12" trazia a linha 12 da planilha junto com os
+    // resultados de verdade, sem nenhuma coluna visível que explicasse.
     var filtered = !filterQuery ? rows : rows.filter(function (row) {
       return Object.keys(row).some(function (k) {
+        if (k === '_row') return false;
         return normalizar(row[k]).indexOf(filterQuery) !== -1;
       });
     });
