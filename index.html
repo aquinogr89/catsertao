@@ -307,6 +307,12 @@
         showApp();
       } else { showGate(); }
     }).catch(function () { showGate(); });
+  } else if (sessionStorage.getItem('cat_expirado')) {
+    // O reload() do timeout por inatividade já limpou a sessão antes de
+    // recarregar -- sem isso, a página só mostrava o login em silêncio, sem
+    // explicar por que a sessão sumiu.
+    sessionStorage.removeItem('cat_expirado');
+    showGate('Sessão encerrada após 30 minutos sem uso. Entre novamente.');
   }
 
   document.getElementById('gate-form').addEventListener('submit', function (e) {

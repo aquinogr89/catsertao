@@ -293,7 +293,10 @@
     hide(document.getElementById('loading-msg'));
     var denied = document.getElementById('denied-box');
     var text = document.getElementById('denied-text');
-    if (err.code === 'no_session' || err.code === 'invalid_session') {
+    if (sessionStorage.getItem('cat_expirado')) {
+      sessionStorage.removeItem('cat_expirado');
+      text.textContent = 'Sessão encerrada após 30 minutos sem uso. Entre novamente no site principal.';
+    } else if (err.code === 'no_session' || err.code === 'invalid_session') {
       text.textContent = 'Você precisa fazer login no site principal antes de acessar esta página.';
     } else if (err.code === 'forbidden') {
       text.textContent = 'Seu perfil (' + (PERFIL_LABEL[err.perfil] || err.perfil) + ') não tem permissão para gerenciar usuários.';

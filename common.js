@@ -157,6 +157,11 @@ var CatAuth = (function () {
       if (Date.now() - ultimo > limite) {
         api({ action: 'logout', token: saved.token }).catch(function () {});
         clearSession();
+        // sessionStorage (não localStorage): o aviso é só desta aba, não das
+        // outras -- cada onTimeout aqui já dispara um location.reload() na
+        // própria aba, e a página recarregada lê essa flag pra explicar por
+        // que caiu (em vez de só mostrar o login/acesso negado em silêncio).
+        try { sessionStorage.setItem('cat_expirado', '1'); } catch (err) {}
         if (typeof onTimeout === 'function') onTimeout();
       }
     }
