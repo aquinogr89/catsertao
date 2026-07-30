@@ -427,6 +427,12 @@
           showGate();
         }
       });
+    } else {
+      // Sem sessão salva: primeiro acesso (ou logout anterior). Não faz
+      // nada de fato -- o próprio HTML do gate já nasce visível --, mas
+      // deixa o caminho explícito em vez de "funciona por coincidência" de
+      // o markup já estar do jeito certo.
+      showGate();
     }
   }
 
@@ -796,8 +802,11 @@
 
   function renderTermoTable() {
     var q = normalizar(document.getElementById('termo-search').value.trim());
+    // renderTableGeneric sempre devolve um número (0 nos dois casos vazios,
+    // filtered.length no resto) desde a correção do A6 -- nunca undefined,
+    // então o "n == null" que cobria esse caso virou código morto.
     var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q, buildTermoActions);
-    document.getElementById('termo-count').textContent = (n == null ? termoRows.length : n) + ' registro(s)';
+    document.getElementById('termo-count').textContent = n + ' registro(s)';
   }
 
   /* ----- Modal de edição do Termo ----- */

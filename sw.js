@@ -104,7 +104,6 @@ self.addEventListener('fetch', function (e) {
             caches.open(CACHE_NAME).then(function (cache) {
               cache.put(e.request, clone);
             });
-            return res;
           }
           return res;
         })
