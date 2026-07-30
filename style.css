@@ -343,7 +343,9 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   table.termo-table td{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:10px 14px; border-bottom:1px solid var(--border); white-space:normal; word-break:break-word; }
   table.termo-table tr td:last-child{ border-bottom:0; }
   table.termo-table td:empty{ display:none; }
-  table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-3); }
+  /* Mesmo problema de contraste do B6 (--muted-3 abaixo de 4,5:1 AA) --
+     mesma correção: --muted-2. */
+  table.termo-table td::before{ content:attr(data-label); font-family:'Oswald',sans-serif; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-2); }
   table.termo-table td.termo-actions-cell{ flex-direction:row; flex-wrap:wrap; padding-top:8px; }
   /* Mostrar só as colunas marcadas como chave (ver JS de cada tabela) —
      por nome, não por posição, já que a ordem das colunas varia por tabela
