@@ -90,7 +90,16 @@ self.addEventListener('fetch', function (e) {
           return res;
         })
         .catch(function () {
-          return caches.match(e.request);
+          // caches.match() resolve pra undefined quando não há hit --
+          // respondWith(undefined) lança TypeError e o navegador mostra
+          // erro de rede, pior do que não ter Service Worker nenhum. Cai
+          // pro index.html cacheado (SPA-like: melhor mostrar a home do
+          // que travar) e, na ausência total, uma resposta 503 explícita.
+          return caches.match(e.request).then(function (hit) {
+            return hit
+              || caches.match(SCOPE_ROOT_URL + 'index.html')
+              || new Response('Offline', { status: 503, statusText: 'Offline' });
+          });
         })
     );
   }
