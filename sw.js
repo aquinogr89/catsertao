@@ -20,6 +20,11 @@ var CACHE_ASSETS = [
   './hermes.html',
   './style.css',
   './common.js',
+  './fonts/fonts.css',
+  './fonts/oswald-latin.woff2',
+  './fonts/oswald-latin-ext.woff2',
+  './fonts/public-sans-latin.woff2',
+  './fonts/public-sans-latin-ext.woff2',
   './CAT-SERTAO-SEM-FUNDO.png',
   './icon-512.png',
   './manifest.webmanifest'
@@ -110,11 +115,12 @@ self.addEventListener('fetch', function (e) {
         })
     );
   }
-  // Cache-first para imagens e manifest (raramente mudam)
+  // Cache-first para imagens, fontes e manifest (raramente mudam)
   else if (
     p.endsWith('.png') ||
     p.endsWith('.jpg') ||
     p.endsWith('.webp') ||
+    p.endsWith('.woff2') ||
     p.endsWith('.webmanifest')
   ) {
     e.respondWith(

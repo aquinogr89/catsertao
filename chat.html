@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Assistente CAT Sertão</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Public Sans auto-hospedada (ver fonts/fonts.css) -- offline a fonte não
+     carregava do CDN do Google e o layout se deslocava (métricas de
+     fallback diferentes das da fonte real). O arquivo também declara
+     Oswald, sem uso aqui -- @font-face não baixado sem elemento que peça
+     essa fonte, então não pesa nada a mais. -->
+<link rel="stylesheet" href="fonts/fonts.css">
 <!-- Versao do @n8n/chat fixada em 1.30.2 (tag "stable" do pacote) propositalmente: sem essa
      trava o CDN sempre serve a versao "latest", e uma atualizacao upstream ja quebrou o
      tamanho/padding do campo de digitar mensagem (var --chat--input--font-size ficando
