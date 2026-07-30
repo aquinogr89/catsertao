@@ -1,7 +1,15 @@
 // Service Worker — cache offline para SATECs e recursos estáticos
-// Estratégia: network-first para HTML, cache-first para assets
-
-var CACHE_NAME = 'cat-sertao-v1';
+// Estratégia: network-first para HTML/CSS/JS (sempre busca a versão mais
+// recente quando há sinal; cache só cobre o cenário sem sinal), cache-first
+// apenas para imagem/manifest (raramente mudam, sem custo de ficar atrasado).
+//
+// Importante: o navegador só verifica se este arquivo mudou (e reinstala o
+// worker) de tempos em tempos / a cada navegação -- por isso qualquer ajuste
+// na ESTRATÉGIA de cache exige subir a versão abaixo, senão quem já tinha o
+// site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
+// cache-first anterior: uma correção publicada não chegava a quem já tinha
+// o Service Worker instalado).
+var CACHE_NAME = 'cat-sertao-v2';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -47,8 +55,14 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  // Network-first para HTML (tenta rede, depois cache)
-  if (e.request.url.endsWith('.html') || e.request.url === url.origin + '/') {
+  // Network-first para HTML, CSS e JS (tenta rede, cai pro cache só sem
+  // sinal) -- são arquivos pequenos, o custo de rebuscar é irrelevante
+  // perto do risco de prender alguém numa versão desatualizada do site.
+  if (
+    e.request.url.endsWith('.html') || e.request.url === url.origin + '/' ||
+    e.request.url.endsWith('.css') ||
+    e.request.url.endsWith('.js')
+  ) {
     e.respondWith(
       fetch(e.request)
         .then(function (res) {
@@ -66,10 +80,8 @@ self.addEventListener('fetch', function (e) {
         })
     );
   }
-  // Cache-first para CSS, JS, imagens, manifest (usa cache primeiro)
+  // Cache-first para imagens e manifest (raramente mudam)
   else if (
-    e.request.url.endsWith('.css') ||
-    e.request.url.endsWith('.js') ||
     e.request.url.endsWith('.png') ||
     e.request.url.endsWith('.jpg') ||
     e.request.url.endsWith('.webp') ||
