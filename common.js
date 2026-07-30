@@ -158,3 +158,21 @@ var CatAuth = (function () {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
 }
+
+// Links com target="cat-secundaria" (Mapa de OCI, Triagem, Minha Conta,
+// Usuários, LOG, Hermes) sempre reabrem a MESMA aba/janela em vez de criar
+// uma nova a cada clique. O problema: em vários navegadores mobile, quando
+// essa aba já existe e o usuário clica de novo a partir da aba principal, o
+// navegador só atualiza o conteúdo dela em segundo plano sem trazer o foco
+// -- o usuário fica na página principal sem perceber que a outra aba já
+// entrou. window.open() + .focus() reforça esse foco explicitamente; em
+// navegadores que bloqueiam troca de foco por script (ex.: Safari/iOS em
+// alguns casos) o comportamento nativo do target ainda se aplica por baixo,
+// então não piora nada -- só ajuda onde o navegador permite.
+document.addEventListener('click', function (e) {
+  var link = e.target.closest && e.target.closest('a[target="cat-secundaria"]');
+  if (!link || !link.href) return;
+  e.preventDefault();
+  var win = window.open(link.href, 'cat-secundaria');
+  if (win) { try { win.focus(); } catch (err) {} }
+});
