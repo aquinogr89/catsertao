@@ -410,3 +410,13 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .user-form-row .field{ min-width:0; }
   .user-form-row button{ width:100%; }
 }
+
+/* Impressão: esconde navegação, avisos e ações que não fazem sentido no
+   papel -- quem imprime o Termo ou o LOG quer a tabela, não o menu, o
+   filtro ou os botões de editar/excluir de cada linha. */
+@media print{
+  .site-sidebar, .banner-warn, .top-actions, .btn-float,
+  .termo-actions-cell, .cat-filter-row, footer.bottom{
+    display:none !important;
+  }
+}
