@@ -209,6 +209,12 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('click', function (e) {
   var link = e.target.closest && e.target.closest('a[target="cat-secundaria"]');
   if (!link || !link.href) return;
+  // Ctrl/Cmd/Shift/Alt+clique e clique do meio são o jeito padrão do usuário
+  // pedir "abre numa aba/janela separada" -- sem essa checagem, esses
+  // cliques eram engolidos pelo preventDefault() e reusavam a mesma aba
+  // nomeada, tornando impossível abrir Usuários e LOG lado a lado.
+  if (e.defaultPrevented || e.button !== 0) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   e.preventDefault();
   var win = window.open(link.href, 'cat-secundaria');
   if (win) { try { win.focus(); } catch (err) {} }
