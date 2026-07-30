@@ -322,8 +322,14 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
      último visível marca a si mesmo para não sobrar borda residual. */
   table.termo-table td.col-mobile-key-last{ border-bottom:0; }
 
-  /* SATEC: ações (WhatsApp, Mapa, Email) antes dos municípios no mobile. */
-  .satec-body{ flex-direction:column-reverse; }
+  /* SATEC: ações (WhatsApp, Mapa, E-mail) antes da lista de municípios --
+     a 3ª SATEC tem 27 municípios em chips, o que empurrava o WhatsApp (a
+     ação principal) muito abaixo da dobra num card de uma coluna.
+     order no bloco de municípios, e NAO flex-direction:column-reverse no
+     card: reverter o card inteiro jogava o nome da SATEC para o rodapé e
+     invertia o efeito do margin-top:auto do .satec-meta. */
+  .satec-munis-block{ order:1; }
+  .satec-meta{ margin-top:0; }
 }
 
 @media (max-width: 640px){
