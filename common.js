@@ -68,7 +68,20 @@ var CatAuth = (function () {
   // mesma origem. A expiração de verdade continua sendo sempre no servidor
   // (token de 8h, revalidado a cada chamada) — isso aqui é só onde o
   // navegador guarda o token entre uma página e outra.
+  //
+  // saved_at espelha localmente o mesmo limite de 8h do servidor: os
+  // relógios de inatividade/revalidação (ver iniciarMonitorInatividade)
+  // só agem em cima de INATIVIDADE, então uma aba usada continuamente por
+  // mais de 8h sem nunca recarregar nem ficar ociosa passava batido --
+  // o token já teria expirado no servidor, mas nada localmente percebia
+  // isso até a próxima chamada de fato falhar. saved_at preserva o
+  // momento do login original entre revalidações (não reinicia a cada
+  // saveSession -- o relógio é o do login, não o da última confirmação).
+  var SESSAO_MAX_MS = 8 * 60 * 60 * 1000; // 8 horas
+
   function saveSession(s) {
+    var existente = loadSessionBruta();
+    s.saved_at = (existente && existente.saved_at) || Date.now();
     session = s;
     localStorage.setItem(SESSION_KEY, JSON.stringify(s));
   }
@@ -76,9 +89,17 @@ var CatAuth = (function () {
     session = null;
     localStorage.removeItem(SESSION_KEY);
   }
-  function loadSession() {
+  function loadSessionBruta() {
     try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
     catch (e) { return null; }
+  }
+  function loadSession() {
+    var s = loadSessionBruta();
+    if (s && s.saved_at && Date.now() - s.saved_at > SESSAO_MAX_MS) {
+      clearSession();
+      return null;
+    }
+    return s;
   }
   function getSession() { return session; }
 
