@@ -102,15 +102,23 @@ self.addEventListener('fetch', function (e) {
           return res;
         })
         .catch(function () {
-          // caches.match() resolve pra undefined quando não há hit --
-          // respondWith(undefined) lança TypeError e o navegador mostra
-          // erro de rede, pior do que não ter Service Worker nenhum. Cai
-          // pro index.html cacheado (SPA-like: melhor mostrar a home do
-          // que travar) e, na ausência total, uma resposta 503 explícita.
+          // caches.match() devolve uma Promise -- testar Promise com ||
+          // nunca funciona (objeto Promise é sempre truthy, então o operando
+          // seguinte do || nunca é avaliado), é preciso encadear com .then
+          // até o fim. Isso já derrubou a correção anterior deste mesmo bug:
+          // se index.html também não estivesse em cache (antes do primeiro
+          // install terminar, ou entre um activate que limpou o cache velho
+          // e o novo ainda não populado), a cadeia resolvia pra undefined e
+          // respondWith(undefined) lançava TypeError -- o navegador mostrava
+          // erro de rede, pior do que não ter Service Worker nenhum.
           return caches.match(e.request).then(function (hit) {
-            return hit
-              || caches.match(SCOPE_ROOT_URL + 'index.html')
-              || new Response('Offline', { status: 503, statusText: 'Offline' });
+            if (hit) return hit;
+            return caches.match(SCOPE_ROOT_URL + 'index.html').then(function (home) {
+              return home || new Response(
+                'Offline — conteúdo não disponível em cache.',
+                { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/plain;charset=utf-8' } }
+              );
+            });
           });
         })
     );
