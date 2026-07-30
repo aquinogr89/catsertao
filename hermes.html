@@ -1312,9 +1312,22 @@ document.addEventListener('keydown', function (e) {
     el.addEventListener('click', function () { goTo(el.dataset.goto); });
   });
 
+  // Mais barato que renderTermoTable/renderSatecs de index.html (só
+  // classList.toggle em nós já existentes, sem refazer innerHTML), mas
+  // ainda assim sem proteção nenhuma contra digitação rápida -- mesmo
+  // tratamento por consistência (achado ao auditar G4 em outras páginas).
+  function debounce(fn, atraso) {
+    var t;
+    return function () {
+      var args = arguments, ctx = this;
+      clearTimeout(t);
+      t = setTimeout(function () { fn.apply(ctx, args); }, atraso);
+    };
+  }
+
   var searchEl = document.getElementById('hz-search');
   if (searchEl) {
-    searchEl.addEventListener('input', function () { applySearch(searchEl.value); });
+    searchEl.addEventListener('input', debounce(function () { applySearch(searchEl.value); }, 120));
   }
 
   window.addEventListener('hashchange', function () {

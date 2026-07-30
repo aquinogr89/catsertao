@@ -900,7 +900,11 @@
   }
 
   document.getElementById('termo-refresh').addEventListener('click', carregarTermo);
-  document.getElementById('termo-search').addEventListener('input', renderTermoTable);
+  // O D3 (rodada anterior) só cobriu satec-search -- renderTermoTable é mais
+  // caro que renderSatecs (refaz o innerHTML da tabela inteira E recria dois
+  // <button> com listener por linha em buildTermoActions), então digitar
+  // aqui engasgava mais do que engasgava nos SATECs.
+  document.getElementById('termo-search').addEventListener('input', debounce(renderTermoTable, 120));
 
   // Usuários, LOG e Minha Conta agora são páginas separadas (usuarios.html,
   // log.html, conta.html), abertas em nova aba a partir do menu acima —
