@@ -69,6 +69,13 @@ var SCOPE_ROOT_URL = new URL('./', self.registration.scope).href;
 
 // Fetch: estratégias por tipo
 self.addEventListener('fetch', function (e) {
+  // Só GET passa daqui pra frente. Hoje só escapa porque os POSTs (login,
+  // ações do Apps Script) vão pra script.google.com e já caem no próximo
+  // "return" (origem diferente) -- mas cache.put() lança
+  // "TypeError: Request method POST is unsupported" no dia em que existir
+  // um POST de mesma origem. Melhor travar aqui de propósito.
+  if (e.request.method !== 'GET') return;
+
   var url = new URL(e.request.url);
 
   // Nunca cachear respostas do Apps Script (autenticadas, mudam)
