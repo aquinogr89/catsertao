@@ -105,7 +105,12 @@ var CatAuth = (function () {
       saveSession(s);
       return s;
     }, function () {
-      return Promise.reject({ code: 'network_error' });
+      // Falha de REDE (não do servidor) não deve apagar uma sessão local
+      // válida -- só não deu pra confirmar agora. Devolve a sessão salva
+      // pra quem chamou decidir: negar acesso como sessão inválida, ou
+      // degradar pra um modo offline sabendo quem provavelmente está
+      // logado.
+      return Promise.reject({ code: 'network_error', sessaoLocal: saved });
     });
   }
 
@@ -134,9 +139,13 @@ var CatAuth = (function () {
    * Liga o monitor de inatividade nesta página. onTimeout é chamado quando o
    * limite é atingido, depois da sessão já ter sido limpa (local e, best
    * effort, no servidor). Passa limiteMs só para testes locais (ex.: alguns
-   * segundos) — em produção usa o padrão de 30 minutos.
+   * segundos) — em produção usa o padrão de 30 minutos. onVisible (opcional)
+   * é chamado sempre que a página volta a ficar visível E a sessão NÃO
+   * acabou de expirar agora -- usado por index.html pra tentar revalidar o
+   * modo offline sem precisar de outro listener de visibilitychange (ver
+   * abaixo).
    */
-  function iniciarMonitorInatividade(onTimeout, limiteMs) {
+  function iniciarMonitorInatividade(onTimeout, limiteMs, onVisible) {
     var limite = limiteMs || INATIVIDADE_LIMITE_MS;
     registrarAtividade(); // carregar a página já conta como atividade
 
@@ -149,9 +158,13 @@ var CatAuth = (function () {
       document.addEventListener(evt, registrarAtividade, { passive: true });
     });
 
+    // Devolve true quando decidiu por expirar a sessão agora -- usado logo
+    // abaixo pra dar precedência ao logout por inatividade sobre onVisible:
+    // se a sessão acabou de cair, não faz sentido também tentar revalidar
+    // um modo offline na mesma volada de eventos.
     function verificarInatividade() {
       var saved = loadSession();
-      if (!saved) return; // ninguém logado nesta aba, nada a fazer
+      if (!saved) return false; // ninguém logado nesta aba, nada a fazer
 
       var ultimo = Number(localStorage.getItem(INATIVIDADE_KEY) || 0);
       if (Date.now() - ultimo > limite) {
@@ -163,14 +176,22 @@ var CatAuth = (function () {
         // que caiu (em vez de só mostrar o login/acesso negado em silêncio).
         try { sessionStorage.setItem('cat_expirado', '1'); } catch (err) {}
         if (typeof onTimeout === 'function') onTimeout();
+        return true;
       }
+      return false;
     }
 
     // Ao voltar pra pagina (desbloquear a tela, trocar de app de volta),
     // verificar na hora em vez de esperar o proximo tick de 30s: o
     // setInterval fica suspenso ou muito lento com a aba em segundo plano.
+    // Mesmo listener também dispara onVisible (revalidação do modo offline)
+    // -- só quando NÃO expirou agora, pra não empilhar um segundo listener
+    // de visibilitychange à toa nem disputar com o logout por inatividade.
     document.addEventListener('visibilitychange', function () {
-      if (!document.hidden) verificarInatividade();
+      if (!document.hidden) {
+        var expirou = verificarInatividade();
+        if (!expirou && typeof onVisible === 'function') onVisible();
+      }
     });
 
     setInterval(verificarInatividade, INATIVIDADE_CHECK_MS);
