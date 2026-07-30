@@ -1,11 +1,14 @@
 {
   "name": "CAT Sertão — CBMPE",
   "short_name": "CAT Sertão",
+  "description": "Portal interno do CAT Sertão — Corpo de Bombeiros Militar de Pernambuco.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#14204A",
   "theme_color": "#14204A",
+  "lang": "pt-BR",
   "icons": [
     { "src": "CAT-SERTAO-SEM-FUNDO.png", "sizes": "591x621", "type": "image/png", "purpose": "any" }
   ]

@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v2';
+var CACHE_NAME = 'cat-sertao-v3';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -22,11 +22,18 @@ var CACHE_ASSETS = [
   './manifest.webmanifest'
 ];
 
-// Instalar: pré-cachear assets críticos
+// Instalar: pre-cachear assets criticos.
+// cache.add por item (nao addAll): addAll e atomico -- um unico 404 na lista
+// rejeita a Promise inteira, o install falha e o Service Worker nunca ativa,
+// deixando o site sem offline nenhum. Blindagem preventiva: se um item futuro
+// sumir do repositorio, o resto do cache continua funcionando em vez de tudo
+// falhar silenciosamente.
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(CACHE_ASSETS);
+      return Promise.all(CACHE_ASSETS.map(function (url) {
+        return cache.add(url).catch(function () { /* segue sem esse item */ });
+      }));
     })
   );
   self.skipWaiting();
