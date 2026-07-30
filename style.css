@@ -140,11 +140,12 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
      encolherem pra caber no conteúdo mais largo (a tabela) em vez de ocupar
      a largura toda -- troca pra stretch só aqui. */
   .site-shell{ flex-direction:column; align-items:stretch; }
-  .site-sidebar{
-    width:100%; position:sticky; top:0; z-index:80;
-    background:#FCFBF8; border-right:0; border-bottom:1px solid var(--border);
-    padding:10px 16px;
-  }
+  /* position:static (não sticky): um menu fixo no topo ficava sobrepondo os
+     títulos das seções (ex.: "Atendimento") conforme a página rolava por
+     baixo dele, e a camada extra fixada pesava um pouco no repaint em
+     aparelhos mais simples. O botão flutuante "voltar ao topo" cobre a
+     necessidade de acesso rápido ao menu sem esse efeito colateral. */
+  .site-sidebar{ width:100%; position:static; border-right:0; border-bottom:1px solid var(--border); padding:10px 16px; }
   .site-content{ padding-left:0; min-width:0; }
   .site-nav-toggle{
     display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 12px;
@@ -279,9 +280,6 @@ table.termo-table th{ font-family:'Oswald',sans-serif; font-size:11px; letter-sp
 }
 .btn-float.top{ bottom:24px; right:24px; }
 .btn-float.back{ bottom:24px; left:24px; }
-@media (max-width: 860px){
-  .btn-float.top{ display:none; }
-}
 @media (max-width: 640px){
   .btn-float{ width:44px; height:44px; font-size:18px; }
   .btn-float.top{ bottom:16px; right:16px; }
