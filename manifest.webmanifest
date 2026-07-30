@@ -10,6 +10,6 @@
   "theme_color": "#14204A",
   "lang": "pt-BR",
   "icons": [
-    { "src": "CAT-SERTAO-SEM-FUNDO.png", "sizes": "591x621", "type": "image/png", "purpose": "any" }
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

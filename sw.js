@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v3';
+var CACHE_NAME = 'cat-sertao-v4';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -19,6 +19,7 @@ var CACHE_ASSETS = [
   './style.css',
   './common.js',
   './CAT-SERTAO-SEM-FUNDO.png',
+  './icon-512.png',
   './manifest.webmanifest'
 ];
 
@@ -53,6 +54,12 @@ self.addEventListener('activate', function (e) {
   self.clients.claim();
 });
 
+// URL da raiz do escopo (ex.: https://aquinogr89.github.io/catsertao/) --
+// comparar direto com "origin + '/'" nunca casava em GitHub Pages de
+// projeto, porque falta o "/catsertao/" do caminho: o fallback offline da
+// própria raiz do site ficava sem cobertura nenhuma.
+var SCOPE_ROOT_URL = new URL('./', self.registration.scope).href;
+
 // Fetch: estratégias por tipo
 self.addEventListener('fetch', function (e) {
   var url = new URL(e.request.url);
@@ -66,7 +73,7 @@ self.addEventListener('fetch', function (e) {
   // sinal) -- são arquivos pequenos, o custo de rebuscar é irrelevante
   // perto do risco de prender alguém numa versão desatualizada do site.
   if (
-    e.request.url.endsWith('.html') || e.request.url === url.origin + '/' ||
+    e.request.url.endsWith('.html') || e.request.url === SCOPE_ROOT_URL ||
     e.request.url.endsWith('.css') ||
     e.request.url.endsWith('.js')
   ) {
