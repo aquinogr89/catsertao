@@ -585,12 +585,16 @@
       : '';
     var noteHtml = s.note ? '<div class="note">' + escapeHtml(s.note) + '</div>' : '';
 
+    // accent/wa/mapUrl/mailto vêm de SATECS_RAW, uma constante local hoje --
+    // inofensivo agora, mas escapado do mesmo jeito que os outros campos
+    // (tag/city/mode/phone/email) pra não depender disso continuar sendo
+    // verdade se essa lista um dia vier de uma planilha/API.
     return (
       '<div class="satec-card">' +
-        '<div class="satec-accent" style="background:' + s.accent + ';"></div>' +
+        '<div class="satec-accent" style="background:' + escapeHtml(s.accent) + ';"></div>' +
         '<div class="satec-body">' +
           '<div class="satec-head">' +
-            '<span class="satec-tag" style="background:' + s.accent + ';">' + escapeHtml(s.tag) + '</span>' +
+            '<span class="satec-tag" style="background:' + escapeHtml(s.accent) + ';">' + escapeHtml(s.tag) + '</span>' +
             '<div class="satec-city">' + escapeHtml(s.city) + '</div>' +
           '</div>' +
           '<div class="satec-addr">' + addrHtml + '</div>' +
@@ -599,9 +603,9 @@
             '<div class="satec-munis-label">Municípios atendidos · ' + s.municipios.length + '</div>' +
             '<div class="satec-munis">' + munisHtml + '</div>' +
           '</div>' +
-          '<a class="satec-btn wa" href="' + s.wa + '" target="_blank" rel="noopener"><span class="dot"></span>WhatsApp · ' + escapeHtml(s.phone) + '</a>' +
-          '<a class="satec-btn map" href="' + s.mapUrl + '" target="_blank" rel="noopener">Ver no mapa</a>' +
-          '<a class="satec-btn mail" href="' + s.mailto + '">E-mail · ' + escapeHtml(s.email) + '</a>' +
+          '<a class="satec-btn wa" href="' + escapeHtml(s.wa) + '" target="_blank" rel="noopener"><span class="dot"></span>WhatsApp · ' + escapeHtml(s.phone) + '</a>' +
+          '<a class="satec-btn map" href="' + escapeHtml(s.mapUrl) + '" target="_blank" rel="noopener">Ver no mapa</a>' +
+          '<a class="satec-btn mail" href="' + escapeHtml(s.mailto) + '">E-mail · ' + escapeHtml(s.email) + '</a>' +
         '</div>' +
       '</div>'
     );
