@@ -80,8 +80,17 @@ var CatAuth = (function () {
   var SESSAO_MAX_MS = 8 * 60 * 60 * 1000; // 8 horas
 
   function saveSession(s) {
+    // Preservar saved_at só faz sentido se "existente" for a MESMA sessão
+    // (mesmo token) -- sem essa checagem, uma sessão de outro login que
+    // nunca foi limpa (aba fechada em vez de "Sair") emprestava o relógio
+    // pro login novo, que podia expirar localmente em minutos. Pior num
+    // aparelho compartilhado, que é onde mais acontece. Um token novo
+    // (login de verdade, ou reemissão após trocar a senha) sempre começa
+    // com saved_at novo -- e faz sentido: o servidor também reinicia a
+    // validade de 8h pra um token novo.
     var existente = loadSessionBruta();
-    s.saved_at = (existente && existente.saved_at) || Date.now();
+    var mesmaSessao = existente && existente.token === s.token;
+    s.saved_at = (mesmaSessao && existente.saved_at) || Date.now();
     session = s;
     localStorage.setItem(SESSION_KEY, JSON.stringify(s));
   }
