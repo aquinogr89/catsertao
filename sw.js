@@ -69,14 +69,19 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  // Network-first para HTML, CSS e JS (tenta rede, cai pro cache só sem
-  // sinal) -- são arquivos pequenos, o custo de rebuscar é irrelevante
-  // perto do risco de prender alguém numa versão desatualizada do site.
-  if (
-    e.request.url.endsWith('.html') || e.request.url === SCOPE_ROOT_URL ||
-    e.request.url.endsWith('.css') ||
-    e.request.url.endsWith('.js')
-  ) {
+  // Decide pelo pathname, não pela URL completa: e.request.url incluiria
+  // qualquer query string (ex.: style.css?v=2, o ?expirado=1 do aviso de
+  // sessão), e um endsWith('.css') contra isso falha -- o pedido escapava
+  // dos dois ramos abaixo, sem cache e sem fallback offline nenhum.
+  var p = url.pathname;
+  var isNavegacao = e.request.mode === 'navigate';
+
+  // Network-first para navegação (HTML) e para CSS/JS (tenta rede, cai pro
+  // cache só sem sinal) -- são arquivos pequenos, o custo de rebuscar é
+  // irrelevante perto do risco de prender alguém numa versão desatualizada
+  // do site. mode==='navigate' cobre a raiz do site e qualquer navegação
+  // direta, sem depender de comparar a URL exata.
+  if (isNavegacao || p.endsWith('.html') || p.endsWith('.css') || p.endsWith('.js')) {
     e.respondWith(
       fetch(e.request)
         .then(function (res) {
@@ -105,10 +110,10 @@ self.addEventListener('fetch', function (e) {
   }
   // Cache-first para imagens e manifest (raramente mudam)
   else if (
-    e.request.url.endsWith('.png') ||
-    e.request.url.endsWith('.jpg') ||
-    e.request.url.endsWith('.webp') ||
-    e.request.url.endsWith('.webmanifest')
+    p.endsWith('.png') ||
+    p.endsWith('.jpg') ||
+    p.endsWith('.webp') ||
+    p.endsWith('.webmanifest')
   ) {
     e.respondWith(
       caches.match(e.request).then(function (cached) {
