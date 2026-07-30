@@ -278,9 +278,17 @@
     show(termoStatusEl);
     termoStatusEl.textContent = 'Indisponível offline — requer conexão.';
 
+    // pointer-events:none (.offline-disabled) só bloqueia mouse/toque -- o
+    // <a> continuava na ordem de tabulação, então Tab+Enter navegava pra
+    // usuarios.html offline (justo a página que não funciona sem rede).
+    // tabindex="-1" tira do fluxo de Tab; aria-disabled anuncia o estado
+    // pra quem usa leitor de tela (o title sozinho não é lido de forma
+    // confiável).
     ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
       var el = document.getElementById(id);
       el.classList.add('offline-disabled');
+      el.setAttribute('aria-disabled', 'true');
+      el.setAttribute('tabindex', '-1');
       el.title = 'Indisponível offline — requer conexão.';
     });
   }
@@ -301,6 +309,8 @@
     ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
       var el = document.getElementById(id);
       el.classList.remove('offline-disabled');
+      el.removeAttribute('aria-disabled');
+      el.removeAttribute('tabindex');
       el.title = '';
     });
   }
