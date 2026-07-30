@@ -89,20 +89,8 @@
       <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
         <span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span>
       </button>
+      <!-- Itens gerados por CatAuth.montarSidebarItens() -- ver common.js. -->
       <div class="site-sidebar-list" id="site-sidebar-list">
-        <div class="site-nav-label">Página</div>
-        <a href="#atendimento" class="site-nav-item">Atendimento</a>
-        <a href="#documentos" class="site-nav-item">Documentos</a>
-        <a id="nav-termo" href="#termo-section" class="site-nav-item u-hidden">Termo de Compromisso</a>
-        <a href="#satecs" class="site-nav-item">SATECs</a>
-        <div class="site-nav-label">Ferramentas</div>
-        <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">Mapa de OCI ↗</a>
-        <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">Triagem de Riscos ↗</a>
-        <div class="site-nav-label">Admin</div>
-        <a id="nav-usuarios" href="usuarios.html" target="cat-secundaria" class="site-nav-item u-hidden">Usuários ↗</a>
-        <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">LOG ↗</a>
-        <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">Hermes Agent ↗</a>
-        <a href="conta.html" target="cat-secundaria" class="site-nav-item">Minha Conta ↗</a>
       </div>
     </nav>
 
@@ -492,6 +480,13 @@
       behavior: 'smooth'
     });
   });
+
+  // Itens da sidebar -- gerados a partir de uma lista única em common.js
+  // (antes eram HTML estático repetido nos 4 arquivos). index.html não tem
+  // "página atual" nessa lista (é a própria página com várias seções, não
+  // uma das páginas Usuários/LOG/Minha Conta) e os links de âncora usam o
+  // próprio "#id" (paginaBase vazio), diferente das páginas utilitárias.
+  document.getElementById('site-sidebar-list').innerHTML = CatAuth.montarSidebarItens({ paginaAtual: null, paginaBase: '' });
 
   // Menu lateral recolhível (só aparece no mobile) -- lógica compartilhada
   // com conta.html/usuarios.html/log.html, ver CatAuth.iniciarMenuLateral

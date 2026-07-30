@@ -231,6 +231,75 @@ var CatAuth = (function () {
     document.getElementById('session-perfil').textContent = PERFIL_LABEL[perfil] || perfil;
   }
 
+  // ===================== Itens da sidebar =====================
+  // Os 11 itens (+ 3 rótulos de grupo) do menu lateral eram HTML estático
+  // repetido nos 4 arquivos -- e já tinham divergido: nav-usuarios tinha
+  // target="cat-secundaria" em index.html/log.html mas não em
+  // usuarios.html (onde é a página atual, com classe "active" e sem seta
+  // "↗" no rótulo). hermes.html não usa essa sidebar (painel próprio) e
+  // fica de fora.
+  //
+  // tipo 'ancora': seções da própria index.html (#atendimento etc.) --
+  //   dentro de index.html o href é só "#id"; nas páginas utilitárias, que
+  //   estão em outro arquivo, precisa do prefixo "index.html#id"
+  //   (paginaBase).
+  // tipo 'externo': Mapa de OCI / Triagem -- nunca é "página atual" nessa
+  //   lista (são outro site), sempre target="cat-secundaria".
+  // tipo 'pagina': Usuários / LOG / Hermes / Minha Conta -- páginas
+  //   separadas de verdade. Quando é a PRÓPRIA página atual (paginaAtual),
+  //   perde o target (não faz sentido abrir a si mesma em outra aba), ganha
+  //   classe "active" e perde a seta "↗" do rótulo.
+  var SIDEBAR_ITEMS = [
+    { grupo: 'Página' },
+    { tipo: 'ancora', key: 'atendimento', label: 'Atendimento', anchor: 'atendimento' },
+    { tipo: 'ancora', key: 'documentos', label: 'Documentos', anchor: 'documentos' },
+    { tipo: 'ancora', key: 'termo', id: 'nav-termo', label: 'Termo de Compromisso', anchor: 'termo-section', hiddenByDefault: true },
+    { tipo: 'ancora', key: 'satecs', label: 'SATECs', anchor: 'satecs' },
+    { grupo: 'Ferramentas' },
+    { tipo: 'externo', key: 'rti', id: 'nav-rti', label: 'Mapa de OCI', href: '#' },
+    { tipo: 'externo', key: 'triagem', id: 'nav-triagem', label: 'Triagem de Riscos', href: '#' },
+    { grupo: 'Admin' },
+    { tipo: 'pagina', key: 'usuarios', id: 'nav-usuarios', label: 'Usuários', href: 'usuarios.html', hiddenByDefault: true },
+    { tipo: 'pagina', key: 'log', id: 'nav-log', label: 'LOG', href: 'log.html', hiddenByDefault: true },
+    { tipo: 'pagina', key: 'hermes', id: 'nav-hermes', label: 'Hermes Agent', href: 'hermes.html', hiddenByDefault: true },
+    { tipo: 'pagina', key: 'conta', label: 'Minha Conta', href: 'conta.html' }
+  ];
+
+  /**
+   * Gera o HTML dos itens da sidebar para #site-sidebar-list. Chamar antes
+   * de CatAuth.aplicarPerfil() (que faz o toggle de visibilidade dos itens
+   * com hiddenByDefault, usando os mesmos ids). opts.paginaAtual: 'usuarios'
+   * | 'log' | 'conta' | null (index.html não tem página "atual" nessa
+   * lista). opts.paginaBase: '' em index.html, 'index.html' nas utilitárias.
+   */
+  function montarSidebarItens(opts) {
+    opts = opts || {};
+    var paginaAtual = opts.paginaAtual || null;
+    var paginaBase = opts.paginaBase || '';
+
+    return SIDEBAR_ITEMS.map(function (item) {
+      if (item.grupo) return '<div class="site-nav-label">' + item.grupo + '</div>';
+
+      var idAttr = item.id ? ' id="' + item.id + '"' : '';
+
+      if (item.tipo === 'ancora') {
+        var classeAncora = 'site-nav-item' + (item.hiddenByDefault ? ' u-hidden' : '');
+        return '<a' + idAttr + ' href="' + paginaBase + '#' + item.anchor + '" class="' + classeAncora + '">' + item.label + '</a>';
+      }
+
+      if (item.tipo === 'externo') {
+        return '<a' + idAttr + ' href="' + item.href + '" target="cat-secundaria" class="site-nav-item">' + item.label + ' ↗</a>';
+      }
+
+      // tipo === 'pagina'
+      var ehAtual = item.key === paginaAtual;
+      var classePagina = 'site-nav-item' + (ehAtual ? ' active' : '') + (item.hiddenByDefault ? ' u-hidden' : '');
+      var targetAttr = ehAtual ? '' : ' target="cat-secundaria"';
+      var rotulo = item.label + (ehAtual ? '' : ' ↗');
+      return '<a' + idAttr + ' href="' + item.href + '"' + targetAttr + ' class="' + classePagina + '">' + rotulo + '</a>';
+    }).join('');
+  }
+
   // ===================== Menu lateral recolhível =====================
   // Usado por index.html/conta.html/usuarios.html/log.html -- só aparece no
   // mobile (ver style.css); no desktop o botão fica escondido e a lista
@@ -297,7 +366,8 @@ var CatAuth = (function () {
     requireSession: requireSession,
     iniciarMonitorInatividade: iniciarMonitorInatividade,
     iniciarMenuLateral: iniciarMenuLateral,
-    aplicarPerfil: aplicarPerfil
+    aplicarPerfil: aplicarPerfil,
+    montarSidebarItens: montarSidebarItens
   };
 })();
 

@@ -48,20 +48,8 @@
     <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
       <span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span>
     </button>
+    <!-- Itens gerados por CatAuth.montarSidebarItens() -- ver common.js. -->
     <div class="site-sidebar-list" id="site-sidebar-list">
-      <div class="site-nav-label">Página</div>
-      <a href="index.html#atendimento" class="site-nav-item">Atendimento</a>
-      <a href="index.html#documentos" class="site-nav-item">Documentos</a>
-      <a id="nav-termo" href="index.html#termo-section" class="site-nav-item u-hidden">Termo de Compromisso</a>
-      <a href="index.html#satecs" class="site-nav-item">SATECs</a>
-      <div class="site-nav-label">Ferramentas</div>
-      <a id="nav-rti" href="#" target="cat-secundaria" class="site-nav-item">Mapa de OCI ↗</a>
-      <a id="nav-triagem" href="#" target="cat-secundaria" class="site-nav-item">Triagem de Riscos ↗</a>
-      <div class="site-nav-label">Admin</div>
-      <a id="nav-usuarios" href="usuarios.html" class="site-nav-item active u-hidden">Usuários</a>
-      <a id="nav-log" href="log.html" target="cat-secundaria" class="site-nav-item u-hidden">LOG ↗</a>
-      <a id="nav-hermes" href="hermes.html" target="cat-secundaria" class="site-nav-item u-hidden">Hermes Agent ↗</a>
-      <a href="conta.html" target="cat-secundaria" class="site-nav-item">Minha Conta ↗</a>
     </div>
   </nav>
 
@@ -114,6 +102,13 @@
 
   var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api, escapeHtml = CatAuth.escapeHtml;
   var PERFIL_LABEL = CatAuth.PERFIL_LABEL;
+
+  // Itens da sidebar -- gerados a partir de uma lista única em common.js
+  // (antes eram HTML estático repetido nos 4 arquivos). Esta é a página
+  // "Usuários" (paginaAtual: 'usuarios'), então o próprio item de menu
+  // perde o target e ganha "active"; os links de âncora apontam de volta
+  // pra index.html (paginaBase).
+  document.getElementById('site-sidebar-list').innerHTML = CatAuth.montarSidebarItens({ paginaAtual: 'usuarios', paginaBase: 'index.html' });
 
   // Menu lateral recolhível no mobile -- lógica compartilhada com
   // index.html/conta.html/log.html, ver CatAuth.iniciarMenuLateral em
