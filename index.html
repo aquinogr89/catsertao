@@ -578,7 +578,11 @@
       return norm.indexOf('nome') !== -1 || norm.indexOf('respons') !== -1 || norm.indexOf('unidade') !== -1;
     });
     var prioritarias = [colSituacao, colNome, colData].filter(Boolean);
+    // Checar o limite ANTES de empurrar: com Situação, Nome e Data já
+    // encontradas (3), o some() empurrava mais um header antes de checar a
+    // condição de parada -- o card no celular acabava com 4 campos, não 3.
     headers.some(function (h) {
+      if (prioritarias.length >= 3) return true;
       if (prioritarias.indexOf(h) === -1) prioritarias.push(h);
       return prioritarias.length >= 3;
     });
