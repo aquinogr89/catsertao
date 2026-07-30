@@ -233,10 +233,18 @@
   var escapeHtml = CatAuth.escapeHtml;
   var normalizar = CatAuth.normalizar;
 
-  document.getElementById('nav-rti').href = CatAuth.RTI_URL;
-  document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
+  // nav-rti/nav-triagem (sidebar de quem já logou) NÃO são setados aqui --
+  // desde que a sidebar passou a ser gerada por CatAuth.montarSidebarItens()
+  // (mais abaixo neste script), esses elementos não existem ainda neste
+  // ponto do código; setar .href causava TypeError (elemento null) que
+  // interrompia TODO o resto do script síncrono -- inclusive o listener do
+  // formulário de login, quebrando o login inteiro. CatAuth.aplicarPerfil()
+  // já cuida do href certo desses dois toda vez que roda (showApp/
+  // tentarRevalidar), depois que a sidebar já existe.
+  //
   // Mapa de OCI (visualização) e Triagem de Riscos são públicos: qualquer
-  // pessoa pode acessá-los sem login, direto da tela de login.
+  // pessoa pode acessá-los sem login, direto da tela de login -- estes dois
+  // são estáticos no HTML do gate, sempre existem.
   document.getElementById('gate-nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('gate-nav-triagem').href = CatAuth.TRIAGEM_URL;
 
