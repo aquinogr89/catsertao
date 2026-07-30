@@ -12,6 +12,11 @@
    CSS de autor sempre supera o stylesheet padrao do navegador. Por isso todo
    show/hide no JS usa esta classe com !important em vez do atributo hidden. */
 .u-hidden{ display:none !important; }
+/* Modo offline (index.html): item de menu/ação temporariamente indisponível
+   por falta de conexão -- ao contrário de u-hidden, continua ocupando
+   espaço no layout (some assim que a conexão volta, sem os itens ao redor
+   pularem de lugar). */
+.offline-disabled{ opacity:.45; pointer-events:none; cursor:not-allowed; }
 body{ font-family:'Public Sans', sans-serif; color:var(--ink); background:#FBFAF8; }
 h1,h2{ font-family:'Oswald', sans-serif; }
 a{ color:inherit; }
@@ -110,6 +115,11 @@ header.top{ background:var(--navy); color:#fff; padding:22px 28px; }
 .top-actions{ margin-left:auto; align-self:flex-start; display:flex; align-items:center; gap:10px; white-space:nowrap; }
 .badge-live{ display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); padding:7px 13px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.04em; }
 .badge-live .dot{ width:8px; height:8px; border-radius:50%; background:#3FBF6A; box-shadow:0 0 0 3px rgba(63,191,106,.25); }
+/* Modo offline (index.html): o ponto verde ("sessão confirmada") mentiria
+   se ficasse assim sem revalidar -- vira âmbar, mesma cor de aviso já usada
+   no site, enquanto a sessão não é confirmada de novo com o servidor. */
+.badge-live .dot.offline{ background:var(--gold); box-shadow:0 0 0 3px rgba(232,179,2,.25); }
+#session-offline-suffix{ opacity:.85; font-style:italic; }
 .btn-logout{ display:flex; align-items:center; gap:7px; background:transparent; border:1px solid rgba(255,255,255,.28); color:#fff; font-family:'Public Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:.04em; padding:7px 13px; border-radius:999px; cursor:pointer; }
 @media (hover: hover) and (pointer: fine){
   .btn-logout:hover{ background:rgba(255,255,255,.14); }

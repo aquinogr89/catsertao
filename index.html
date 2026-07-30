@@ -58,6 +58,7 @@
       <p class="gate-public-hint">Acesso público, sem necessidade de login:</p>
       <a id="gate-nav-rti" href="#" target="cat-secundaria" class="btn-outline-navy gate-public-link">Ver Mapa de OCI ↗</a>
       <a id="gate-nav-triagem" href="#" target="cat-secundaria" class="btn-outline-navy gate-public-link">Fazer Triagem de Riscos ↗</a>
+      <p id="gate-public-offline-hint" class="gate-public-hint u-hidden">Esses links também exigem conexão com a internet.</p>
     </div>
   </div>
 </div>
@@ -75,7 +76,7 @@
         <div class="top-sub">CAT Sertão</div>
       </div>
       <div class="top-actions">
-        <span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span>
+        <span class="badge-live"><span class="dot" id="session-dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span><span id="session-offline-suffix" class="u-hidden"> · não validado</span></span>
         <button id="logout-btn" type="button" class="btn-logout">Sair</button>
       </div>
     </div>
@@ -110,6 +111,17 @@
         <div class="banner-warn-inner">
           <span class="sq"></span>
           <span><strong>Acesso restrito.</strong> Site autorizado exclusivamente para uso interno do efetivo do CAT Sertão — CBMPE. É vedada a divulgação a pessoas externas à corporação.</span>
+        </div>
+      </div>
+
+      <!-- Modo offline (sessão salva localmente, mas não confirmada com o
+           servidor agora) -- no fluxo do documento, não position:fixed: uma
+           faixa fixa come altura de viewport no celular, exatamente onde
+           esse modo é mais provável de ser usado. -->
+      <div class="banner-warn u-hidden" id="banner-offline">
+        <div class="banner-warn-inner">
+          <span class="sq"></span>
+          <span>Offline — sessão não validada. Alguns recursos indisponíveis.</span>
         </div>
       </div>
 
@@ -244,6 +256,89 @@
   var chatInitialized = false;
   var session = null; // { token, login, perfil }
 
+  /* ===================== Modo offline =====================
+     Quando há uma sessão salva localmente mas não dá pra confirmar com o
+     servidor agora (sem rede), o site não desloga -- entra num modo
+     degradado: SATECs e Documentos continuam (são dados locais), o resto
+     fica indisponível com aviso, e a sessão volta a ser "confirmada" assim
+     que a conexão retornar (evento 'online' ou a página voltar a ficar
+     visível -- ver iniciarMonitorInatividade em common.js). */
+  var offlineModoAtivo = false;
+
+  function entrarModoOffline() {
+    offlineModoAtivo = true;
+    show(document.getElementById('banner-offline'));
+    document.getElementById('session-dot').classList.add('offline');
+    show(document.getElementById('session-offline-suffix'));
+
+    var chatBtn = document.getElementById('atendimento-abrir-chat');
+    chatBtn.disabled = true;
+    chatBtn.title = 'Indisponível offline — requer conexão.';
+
+    var termoRefreshBtn = document.getElementById('termo-refresh');
+    termoRefreshBtn.disabled = true;
+    hide(termoTableEl);
+    show(termoStatusEl);
+    termoStatusEl.textContent = 'Indisponível offline — requer conexão.';
+
+    ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.classList.add('offline-disabled');
+      el.title = 'Indisponível offline — requer conexão.';
+    });
+  }
+
+  function sairModoOffline() {
+    if (!offlineModoAtivo) return;
+    offlineModoAtivo = false;
+    hide(document.getElementById('banner-offline'));
+    document.getElementById('session-dot').classList.remove('offline');
+    hide(document.getElementById('session-offline-suffix'));
+
+    var chatBtn = document.getElementById('atendimento-abrir-chat');
+    chatBtn.disabled = false;
+    chatBtn.title = '';
+
+    document.getElementById('termo-refresh').disabled = false;
+
+    ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.classList.remove('offline-disabled');
+      el.title = '';
+    });
+  }
+
+  // Chamado quando a conexão volta (evento 'online') ou a página volta a
+  // ficar visível (onVisible de iniciarMonitorInatividade, coordenado com o
+  // mesmo listener de visibilitychange do monitor de inatividade -- ver
+  // common.js). Sem efeito se não estiver em modo offline.
+  function tentarRevalidar() {
+    if (!offlineModoAtivo) return;
+    CatAuth.requireSession(null).then(function (s) {
+      session = s;
+      sairModoOffline();
+      applyPerfilVisibility();
+      if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
+    }, function (err) {
+      // network_error de novo: continua offline, tenta na próxima
+      // oportunidade. Qualquer outro código (sessão de fato inválida,
+      // expirada, ou perfil sem permissão) significa que não dá mais pra
+      // fingir que está tudo bem -- desloga de verdade.
+      if (err.code !== 'network_error') showGate();
+    });
+  }
+
+  function atualizarAvisoOfflineGate() {
+    toggle(document.getElementById('gate-public-offline-hint'), navigator.onLine === false);
+  }
+
+  window.addEventListener('online', function () {
+    atualizarAvisoOfflineGate();
+    tentarRevalidar();
+  });
+  window.addEventListener('offline', atualizarAvisoOfflineGate);
+  atualizarAvisoOfflineGate(); // estado inicial, caso a página já abra offline
+
   function applyPerfilVisibility() {
     var perfil = session.perfil;
     var canTermo = perfil === 'admin_master' || perfil === 'admin';
@@ -264,16 +359,30 @@
     document.getElementById('session-perfil').textContent = CatAuth.PERFIL_LABEL[perfil] || perfil;
   }
 
-  function showApp() {
+  function showApp(opts) {
     hide(gateEl);
     show(appEl);
     document.getElementById('footer-year').textContent = new Date().getFullYear();
     applyPerfilVisibility();
-    renderSatecs();
-    if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
+    renderSatecs(); // dados locais, funcionam igual online ou offline
+    if (opts && opts.offline) {
+      entrarModoOffline();
+    } else {
+      // sairModoOffline() não faz nada se já não estiver em modo offline --
+      // chamado incondicionalmente aqui só pra garantir estado limpo caso
+      // um login novo aconteça logo depois de um modo offline anterior
+      // nesta mesma aba (ex.: revalidação falhou de vez, showGate() rodou,
+      // usuário logou de novo pelo formulário).
+      sairModoOffline();
+      if (session.perfil === 'admin_master' || session.perfil === 'admin') carregarTermo();
+    }
     // Só liga os listeners de atividade (mousemove/keydown/etc.) depois de
     // confirmado o login — na tela de login não há sessão para monitorar.
-    CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
+    // Terceiro parâmetro (onVisible): ao voltar a ver a página, tenta sair
+    // do modo offline -- mesmo listener de visibilitychange do monitor de
+    // inatividade, sem empilhar outro (o evento 'online' sozinho é pouco
+    // confiável no Android).
+    CatAuth.iniciarMonitorInatividade(function () { location.reload(); }, null, tentarRevalidar);
   }
 
   function showGate(message) {
@@ -297,22 +406,37 @@
     show(document.getElementById('gate-loading-card'));
   }
 
-  var saved = CatAuth.loadSession();
-  if (saved && saved.token) {
-    showGateLoading();
-    api({ action: 'validarToken', token: saved.token }).then(function (res) {
-      if (res.ok) {
-        session = { token: saved.token, login: res.login, perfil: res.perfil };
-        CatAuth.saveSession(session);
-        showApp();
-      } else { showGate(); }
-    }).catch(function () { showGate(); });
-  } else if (sessionStorage.getItem('cat_expirado')) {
-    // O reload() do timeout por inatividade já limpou a sessão antes de
-    // recarregar -- sem isso, a página só mostrava o login em silêncio, sem
-    // explicar por que a sessão sumiu.
+  // Precedência do logout por inatividade sobre o modo offline: se a sessão
+  // expirou por inatividade (flag gravada por common.js antes do reload()),
+  // o usuário PRECISA logar de novo -- não faz sentido "continuar offline"
+  // numa sessão que a própria aba decidiu encerrar. Por isso esse caso é
+  // resolvido primeiro, e nem tenta revalidar/entrar em modo offline.
+  var expiradoPorInatividade = false;
+  if (sessionStorage.getItem('cat_expirado')) {
     sessionStorage.removeItem('cat_expirado');
+    expiradoPorInatividade = true;
+  }
+
+  if (expiradoPorInatividade) {
     showGate('Sessão encerrada após 30 minutos sem uso. Entre novamente.');
+  } else {
+    var savedInicial = CatAuth.loadSession();
+    if (savedInicial && savedInicial.token) {
+      showGateLoading();
+      CatAuth.requireSession(null).then(function (s) {
+        session = s;
+        showApp();
+      }, function (err) {
+        if (err.code === 'network_error' && err.sessaoLocal) {
+          // Sem rede pra confirmar, mas havia uma sessão salva -- entra
+          // degradado em vez de deslogar por causa de uma falha momentânea.
+          session = err.sessaoLocal;
+          showApp({ offline: true });
+        } else {
+          showGate();
+        }
+      });
+    }
   }
 
   document.getElementById('gate-form').addEventListener('submit', function (e) {
@@ -345,7 +469,16 @@
         show(errEl);
       }
     }).catch(function () {
-      errEl.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente.';
+      // Sem sessão salva nenhuma pra degradar: se a rede falhar aqui, é o
+      // primeiro acesso mesmo, sem jeito de contornar -- deixa isso
+      // explícito em vez de sugerir "tente de novo" como se fosse um
+      // problema passageiro do servidor (quando navigator.onLine confirma
+      // que é falta de conexão mesmo).
+      if (navigator.onLine === false) {
+        errEl.textContent = 'Sem conexão com a internet. É necessário estar online para o primeiro acesso.';
+      } else {
+        errEl.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente.';
+      }
       show(errEl);
     }).finally(function () {
       btn.disabled = false;
@@ -355,6 +488,10 @@
   });
 
   document.getElementById('logout-btn').addEventListener('click', function () {
+    // A chamada ao servidor é "fire and forget" (catch vazio, sem .then
+    // encadeado): clearSession() e reload() rodam de qualquer jeito, mesmo
+    // sem rede -- nunca prender alguém numa sessão só porque o logout
+    // remoto falhou.
     if (session) api({ action: 'logout', token: session.token }).catch(function () {});
     CatAuth.clearSession();
     location.reload();
