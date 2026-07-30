@@ -230,6 +230,7 @@
 
   var show = CatAuth.show, hide = CatAuth.hide, toggle = CatAuth.toggle, api = CatAuth.api;
   var escapeHtml = CatAuth.escapeHtml;
+  var normalizar = CatAuth.normalizar;
 
   document.getElementById('nav-rti').href = CatAuth.RTI_URL;
   document.getElementById('nav-triagem').href = CatAuth.TRIAGEM_URL;
@@ -354,7 +355,15 @@
   });
 
   document.getElementById('btn-scroll-top').addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // "Voltar ao menu" rolava sempre até top:0 -- o cabeçalho, não o menu --
+    // porque o alvo nunca foi calculado de verdade. Rola até a barra
+    // .site-sidebar quando ela existir; cai para o topo da página como
+    // fallback (ela sempre existe aqui, mas por segurança).
+    var alvo = document.querySelector('.site-sidebar');
+    window.scrollTo({
+      top: alvo ? alvo.getBoundingClientRect().top + window.scrollY - 8 : 0,
+      behavior: 'smooth'
+    });
   });
 
   // Menu lateral recolhível (só aparece no mobile, ver style.css). No desktop
@@ -422,7 +431,11 @@
       chatInitialized = true;
       document.getElementById('chat-frame').src = 'chat.html';
     }
-    if (abrindo) chatBoxEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Sem "smooth": a rolagem suave concorre com o iframe carregando --
+    // suspeito nº 1 se ainda houver travamento de rolagem no celular.
+    if (abrindo) {
+      window.scrollTo({ top: chatBoxEl.getBoundingClientRect().top + window.scrollY - 12 });
+    }
   });
 
   /* ===================== SATECs e Postos ===================== */
@@ -509,11 +522,6 @@
     );
   }
 
-  function normalizar(s) {
-    return String(s == null ? '' : s)
-      .normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  }
-
   function renderSatecs() {
     var q = normalizar(document.getElementById('satec-search').value.trim());
     var filtered = q
@@ -552,9 +560,18 @@
   function colunasPrioritariasMobile(headers) {
     var colSituacao = colunaSituacaoTermo(headers);
     var colData = headers.find(function (h) {
-      return h !== colSituacao && h.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().indexOf('data') !== -1;
+      return h !== colSituacao && normalizar(h).indexOf('data') !== -1;
     });
-    var prioritarias = [colSituacao, colData].filter(Boolean);
+    // Procura explicitamente por nome/responsável/unidade antes de cair no
+    // fallback posicional -- se a planilha começar por carimbo de hora ou
+    // ID, o card no celular mostrava 3 campos e nenhum nome de quem é o
+    // registro.
+    var colNome = headers.find(function (h) {
+      if (h === colSituacao || h === colData) return false;
+      var norm = normalizar(h);
+      return norm.indexOf('nome') !== -1 || norm.indexOf('respons') !== -1 || norm.indexOf('unidade') !== -1;
+    });
+    var prioritarias = [colSituacao, colNome, colData].filter(Boolean);
     headers.some(function (h) {
       if (prioritarias.indexOf(h) === -1) prioritarias.push(h);
       return prioritarias.length >= 3;
@@ -565,7 +582,7 @@
   function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery, actionsBuilder) {
     var filtered = !filterQuery ? rows : rows.filter(function (row) {
       return Object.keys(row).some(function (k) {
-        return String(row[k]).toLowerCase().indexOf(filterQuery) !== -1;
+        return normalizar(row[k]).indexOf(filterQuery) !== -1;
       });
     });
 
@@ -594,7 +611,7 @@
         var cls = prioritarias.indexOf(h) !== -1 ? ' class="col-mobile-key"' : '';
         var valor = row[h] == null ? '' : row[h];
         if (h === colSituacao && valor !== '') {
-          var normalizada = String(valor).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+          var normalizada = normalizar(valor);
           var pillClass = normalizada === 'concluido' ? 'ativo' : 'inativo';
           valor = '<span class="status-pill ' + pillClass + '">' + escapeHtml(valor) + '</span>';
           return '<td' + cls + ' data-label="' + escapeHtml(h) + '">' + valor + '</td>';
@@ -617,7 +634,7 @@
   // e handleConcluirTermo_ em oci-catsertao/apps-script/Auth.gs).
   function colunaSituacaoTermo(headers) {
     return headers.filter(function (h) { return h !== '_row'; }).find(function (h) {
-      return h.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().indexOf('situa') !== -1;
+      return normalizar(h).indexOf('situa') !== -1;
     });
   }
 
@@ -632,7 +649,7 @@
     // Já concluído: some com o botão em vez de deixar concluir de novo à toa.
     var headers = Object.keys(row).filter(function (h) { return h !== '_row'; });
     var colSituacao = colunaSituacaoTermo(headers);
-    var situacaoAtual = colSituacao ? String(row[colSituacao] || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() : '';
+    var situacaoAtual = colSituacao ? normalizar(row[colSituacao]) : '';
     if (situacaoAtual === 'concluido') return;
 
     var btnConcluir = document.createElement('button');
@@ -644,7 +661,7 @@
   }
 
   function renderTermoTable() {
-    var q = document.getElementById('termo-search').value.trim().toLowerCase();
+    var q = normalizar(document.getElementById('termo-search').value.trim());
     var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q, buildTermoActions);
     document.getElementById('termo-count').textContent = (n == null ? termoRows.length : n) + ' registro(s)';
   }

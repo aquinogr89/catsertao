@@ -30,6 +30,19 @@ var CatAuth = (function () {
     });
   }
 
+  // Remove acentos para busca/comparação tolerante (ex.: "joao" encontra
+  // "João", "sao jose" encontra "São José"). ̀-ͯ (marcas de acento
+  // combinantes) via escape Unicode em vez do caractere combinante literal
+  // no regex: literal funciona só enquanto o arquivo permanecer em UTF-8
+  // intacto -- qualquer editor, minificador ou copy-paste que normalize o
+  // texto quebra a remoção de acentos silenciosamente. Usado em index.html,
+  // e antes reescrito à mão em várias funções ali -- centralizado aqui para
+  // não repetir a lógica.
+  function normalizar(s) {
+    return String(s == null ? '' : s)
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
   function api(payload) {
     return fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -158,6 +171,7 @@ var CatAuth = (function () {
     hide: hide,
     toggle: toggle,
     escapeHtml: escapeHtml,
+    normalizar: normalizar,
     api: api,
     saveSession: saveSession,
     clearSession: clearSession,

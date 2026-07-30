@@ -335,6 +335,11 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .satec-munis-block{ order:1; }
   .satec-meta{ margin-top:0; }
 
+  /* Espaço reservado para o botão flutuante "voltar ao menu" não cobrir o
+     último elemento da página (ex.: o botão de e-mail do último card de
+     SATEC) quando o usuário rola até o fim. */
+  main.content{ padding-bottom:76px; }
+
   /* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
   .field input, .field select,
   .cat-filter-row input, .cat-filter-row select, .cat-filter-row input[type=date],
