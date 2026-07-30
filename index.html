@@ -131,7 +131,7 @@
       <h2>Documentos e formulários</h2>
       <p class="lead">Requerimentos, termos, formulários e legislação técnica oficiais. Os arquivos são mantidos no site do CBMPE e abrem em nova aba.</p>
       <div class="cards-grid">
-        <a class="doc-card" href="https://www.bombeiros.pe.gov.br/index.php/documentos-para-baixar/termos-e-requerimentos" target="_blank" rel="noopener">
+        <a id="doc-card-termos" class="doc-card" href="https://www.bombeiros.pe.gov.br/index.php/documentos-para-baixar/termos-e-requerimentos" target="_blank" rel="noopener">
           <span class="doc-kind">LINK</span>
           <span style="display:flex; flex-direction:column; gap:3px; min-width:0;">
             <span class="doc-title">Termos e Requerimentos</span>
@@ -139,7 +139,7 @@
           </span>
           <span class="doc-arrow">›</span>
         </a>
-        <a class="doc-card" href="https://www.bombeiros.pe.gov.br/index.php/documentos-para-baixar/legislacoes-tecnicas" target="_blank" rel="noopener">
+        <a id="doc-card-legislacoes" class="doc-card" href="https://www.bombeiros.pe.gov.br/index.php/documentos-para-baixar/legislacoes-tecnicas" target="_blank" rel="noopener">
           <span class="doc-kind">LINK</span>
           <span style="display:flex; flex-direction:column; gap:3px; min-width:0;">
             <span class="doc-title">Legislações Técnicas</span>
@@ -155,7 +155,7 @@
       <h2>Termo de Compromisso</h2>
       <p class="lead">Preencha o termo de compromisso técnico pelo formulário oficial. A tabela de controle com os termos já registrados abaixo é visível apenas para Admin Master e Admin, e cada consulta é registrada no LOG de auditoria.</p>
 
-      <a class="btn-outline-navy" href="https://sternplatypus-n8n.cloudfy.live/form/termo-de-compromisso" target="_blank" rel="noopener">Preencher Termo de Compromisso ↗</a>
+      <a id="termo-form-link" class="btn-outline-navy" href="https://sternplatypus-n8n.cloudfy.live/form/termo-de-compromisso" target="_blank" rel="noopener">Preencher Termo de Compromisso ↗</a>
 
       <div class="termo-panel">
         <div class="cat-filter-row">
@@ -291,6 +291,19 @@
       el.setAttribute('tabindex', '-1');
       el.title = 'Indisponível offline — requer conexão.';
     });
+
+    // G11: os cards de documentos e o botão do formulário do Termo abrem em
+    // nova aba (target="_blank") -- sem rede, a aba nova só mostraria o erro
+    // padrão do navegador. Mesmo tratamento visual/a11y dos itens de menu
+    // acima, por consistência: title explica o motivo, aria-disabled anuncia
+    // pra leitor de tela, tabindex="-1" tira do fluxo de Tab.
+    ['doc-card-termos', 'doc-card-legislacoes', 'termo-form-link'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.classList.add('offline-disabled');
+      el.setAttribute('aria-disabled', 'true');
+      el.setAttribute('tabindex', '-1');
+      el.title = 'Indisponível offline — requer conexão.';
+    });
   }
 
   function sairModoOffline() {
@@ -307,6 +320,14 @@
     document.getElementById('termo-refresh').disabled = false;
 
     ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.classList.remove('offline-disabled');
+      el.removeAttribute('aria-disabled');
+      el.removeAttribute('tabindex');
+      el.title = '';
+    });
+
+    ['doc-card-termos', 'doc-card-legislacoes', 'termo-form-link'].forEach(function (id) {
       var el = document.getElementById(id);
       el.classList.remove('offline-disabled');
       el.removeAttribute('aria-disabled');
