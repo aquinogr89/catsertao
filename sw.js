@@ -1,6 +1,6 @@
 // Service Worker — cache offline para SATECs e recursos estáticos
-// Estratégia: network-first para HTML/CSS/JS (sempre busca a versão mais
-// recente quando há sinal; cache só cobre o cenário sem sinal), cache-first
+// Estratégia: network-first para HTML/CSS/JS/JSON (sempre busca a versão
+// mais recente quando há sinal; cache só cobre o cenário sem sinal), cache-first
 // apenas para imagem/manifest (raramente mudam, sem custo de ficar atrasado).
 //
 // Importante: o navegador só verifica se este arquivo mudou (e reinstala o
@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v6';
+var CACHE_NAME = 'cat-sertao-v7';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -18,8 +18,10 @@ var CACHE_ASSETS = [
   './log.html',
   './chat.html',
   './hermes.html',
+  './eventos.html',
   './style.css',
   './common.js',
+  './content/tac-mppe.json',
   './fonts/fonts.css',
   './fonts/oswald-latin.woff2',
   './fonts/oswald-latin-ext.woff2',
@@ -90,12 +92,13 @@ self.addEventListener('fetch', function (e) {
   var p = url.pathname;
   var isNavegacao = e.request.mode === 'navigate';
 
-  // Network-first para navegação (HTML) e para CSS/JS (tenta rede, cai pro
-  // cache só sem sinal) -- são arquivos pequenos, o custo de rebuscar é
-  // irrelevante perto do risco de prender alguém numa versão desatualizada
-  // do site. mode==='navigate' cobre a raiz do site e qualquer navegação
-  // direta, sem depender de comparar a URL exata.
-  if (isNavegacao || p.endsWith('.html') || p.endsWith('.css') || p.endsWith('.js')) {
+  // Network-first para navegação (HTML), CSS/JS e JSON de conteúdo (ex.:
+  // content/tac-mppe.json) -- tenta rede, cai pro cache só sem sinal. São
+  // arquivos pequenos, o custo de rebuscar é irrelevante perto do risco de
+  // prender alguém numa versão desatualizada do site (ou, no caso do JSON,
+  // com texto de conteúdo desatualizado). mode==='navigate' cobre a raiz do
+  // site e qualquer navegação direta, sem depender de comparar a URL exata.
+  if (isNavegacao || p.endsWith('.html') || p.endsWith('.css') || p.endsWith('.js') || p.endsWith('.json')) {
     e.respondWith(
       fetch(e.request)
         .then(function (res) {
