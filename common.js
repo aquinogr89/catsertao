@@ -242,11 +242,11 @@ var CatAuth = (function () {
   }
 
   // ===================== Perfil: menu + dados da sessão =====================
-  // Usado por index.html/conta.html/usuarios.html/log.html -- regra idêntica
-  // nas 4 (admin_master/admin veem Termo e Usuários; só admin_master vê LOG
-  // e Hermes), repetida em cada página como montarSidebar()/
-  // applyPerfilVisibility() antes de vir pra cá. hermes.html não usa isso:
-  // painel próprio, tema escuro, sem essa sidebar.
+  // Usado por index.html/conta.html/usuarios.html/log.html/eventos.html --
+  // regra idêntica em todas (admin_master/admin veem Termo, Usuários e
+  // Controle de Eventos; só admin_master vê LOG e Hermes), repetida em cada
+  // página como montarSidebar()/applyPerfilVisibility() antes de vir pra cá.
+  // hermes.html não usa isso: painel próprio, tema escuro, sem essa sidebar.
   // opts.termoSectionId é só de index.html, que tem uma seção própria
   // (#termo-section) pra mostrar/esconder junto do link do menu -- as
   // páginas utilitárias não têm essa seção.
@@ -257,6 +257,7 @@ var CatAuth = (function () {
     var canUsuarios = perfil === 'admin_master' || perfil === 'admin';
     var canLog = perfil === 'admin_master';
     var canHermes = perfil === 'admin_master';
+    var canEventos = perfil === 'admin_master' || perfil === 'admin';
 
     // Mapa de OCI e Triagem de Riscos: visíveis para qualquer usuário logado
     // (todos podem ver os mapas; cadastrar/editar continua restrito dentro
@@ -269,6 +270,7 @@ var CatAuth = (function () {
     toggle(document.getElementById('nav-usuarios'), canUsuarios);
     toggle(document.getElementById('nav-log'), canLog);
     toggle(document.getElementById('nav-hermes'), canHermes);
+    toggle(document.getElementById('nav-eventos'), canEventos);
     if (opts.termoSectionId) toggle(document.getElementById(opts.termoSectionId), canTermo);
 
     document.getElementById('session-login').textContent = session.login;
@@ -289,10 +291,10 @@ var CatAuth = (function () {
   //   (paginaBase).
   // tipo 'externo': Mapa de OCI / Triagem -- nunca é "página atual" nessa
   //   lista (são outro site), sempre target="cat-secundaria".
-  // tipo 'pagina': Usuários / LOG / Hermes / Minha Conta -- páginas
-  //   separadas de verdade. Quando é a PRÓPRIA página atual (paginaAtual),
-  //   perde o target (não faz sentido abrir a si mesma em outra aba), ganha
-  //   classe "active" e perde a seta "↗" do rótulo.
+  // tipo 'pagina': Usuários / LOG / Hermes / Controle de Eventos / Minha
+  //   Conta -- páginas separadas de verdade. Quando é a PRÓPRIA página atual
+  //   (paginaAtual), perde o target (não faz sentido abrir a si mesma em
+  //   outra aba), ganha classe "active" e perde a seta "↗" do rótulo.
   var SIDEBAR_ITEMS = [
     { grupo: 'Página' },
     { tipo: 'ancora', key: 'atendimento', label: 'Atendimento', anchor: 'atendimento' },
@@ -306,6 +308,7 @@ var CatAuth = (function () {
     { tipo: 'pagina', key: 'usuarios', id: 'nav-usuarios', label: 'Usuários', href: 'usuarios.html', hiddenByDefault: true },
     { tipo: 'pagina', key: 'log', id: 'nav-log', label: 'LOG', href: 'log.html', hiddenByDefault: true },
     { tipo: 'pagina', key: 'hermes', id: 'nav-hermes', label: 'Hermes Agent', href: 'hermes.html', hiddenByDefault: true },
+    { tipo: 'pagina', key: 'eventos', id: 'nav-eventos', label: 'Controle de Eventos', href: 'eventos.html', hiddenByDefault: true },
     { tipo: 'pagina', key: 'conta', label: 'Minha Conta', href: 'conta.html' }
   ];
 
