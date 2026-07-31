@@ -1,0 +1,23 @@
+{
+  "_comentario": "Conteúdo do card 'MPPE / Termo de Ajustamento de Conduta (TAC)' da aba Controle de Eventos (eventos.html). Separado do HTML/JS de propósito -- para atualizar o texto, edite só este arquivo (sem mexer em eventos.html) e publique. Isso continua exigindo um novo deploy (git push), já que o site é estático no GitHub Pages e não tem banco de dados: uma edição sem deploy nenhum exigiria buscar este texto de uma fonte editável ao vivo (ex.: uma aba do Apps Script, como o Termo de Compromisso), o que não foi implementado agora porque o backend real do site vive no repositório oci-catsertao, fora deste repositório.",
+  "titulo": "MPPE — Termo de Ajustamento de Conduta (TAC)",
+  "atualizadoEm": "2026-07-31",
+  "secoes": [
+    {
+      "titulo": "Compete à Prefeitura (ou organizador do evento)",
+      "paragrafos": [
+        "A Prefeitura (ou organizador do evento), em observância à Lei Estadual nº 14.133/2010 (Lei de Grandes Eventos de Pernambuco), deve solicitar a aprovação do Projeto de Segurança Contra Incêndio e Pânico (PSCIP) e o competente Auto de Vistoria do Corpo de Bombeiros (AVCB), com antecedência mínima de 15 dias úteis da data do evento, mediante protocolo através do site www.bombeiros.pe.gov.br.",
+        "Entregar as instalações do evento com os sistemas preventivos de segurança contra incêndio e pânico já instalados em até 24 horas antes do início do evento, conforme orientação do Corpo de Bombeiros Militar de Pernambuco (CBMPE), informando ao CBMPE e aos demais órgãos fiscalizadores sobre a conclusão das instalações.",
+        "Orientar as empresas contratadas que atuarão no evento (palco, som, iluminação, gerador, barracas, tendas, blimps, camarim, camarote, entre outras estruturas) para que sigam as normas e orientações de segurança do Corpo de Bombeiros, devendo observar se há autorização para uso de gases, fogos de artifício ou demais shows pirotécnicos dentro do local do evento.",
+        "Solicitar a vistoria do CREA-PE para fins de avaliação da montagem, desmontagem e estrutura do evento."
+      ]
+    },
+    {
+      "titulo": "Compete ao Corpo de Bombeiros",
+      "paragrafos": [
+        "Realizar a triagem da documentação protocolada pelo organizador do evento através do site www.bombeiros.pe.gov.br, verificando o atendimento aos requisitos técnicos de segurança contra incêndio e pânico exigidos para o tipo de evento.",
+        "Após a aprovação da triagem documental, realizar a vistoria técnica de toda a estrutura do evento, verificando a conformidade com o projeto aprovado e com as normas de segurança contra incêndio e pânico, comunicando ao Ministério Público eventuais irregularidades que não tenham sido sanadas em tempo hábil pela organização do evento."
+      ]
+    }
+  ]
+}

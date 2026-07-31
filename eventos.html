@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!-- header/footer/bloco de sessão duplicados de propósito: consolidar por
+     JS deixaria a tela em branco antes do script rodar, já que esse trecho
+     (ao contrário da sidebar) fica visível ANTES da sessão ser confirmada
+     (ver C4 da auditoria de 30/07/2026). Página no mesmo padrão de
+     usuarios.html/log.html/hermes.html: verificação de sessão via
+     CatAuth.requireSession, "Verificando sessão...", "Acesso não
+     disponível" e item próprio na seção "Admin" do menu. -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controle de Eventos — CAT Sertão</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14204A">
+<link rel="icon" type="image/png" href="CAT-SERTAO-SEM-FUNDO.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-512.png">
+<!-- Oswald/Public Sans auto-hospedadas (ver fonts/fonts.css) -- offline as
+     fontes não carregavam do CDN do Google e o layout se deslocava
+     (métricas de fallback diferentes das da fonte real). -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Cards colapsáveis (▼) no mesmo padrão visual do hz-card de hermes.html,
+     mas em tema claro (esta página usa o mesmo header/rodapé navy+dourado
+     das demais páginas utilitárias, não o painel escuro do Hermes) -- reusa
+     as variáveis de cor já definidas em :root no style.css. */
+  .evt-card{ background:#fff; border:1px solid var(--border-2); border-radius:12px; margin-bottom:14px; overflow:hidden; }
+  .evt-card-header{ padding:16px 20px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:14px; user-select:none; }
+  @media (hover: hover) and (pointer: fine){
+    .evt-card-header:hover{ background:var(--field-bg); }
+  }
+  .evt-card-header:focus-visible{ outline:2px solid var(--red); outline-offset:-2px; }
+  .evt-card-header .evt-title{ font-family:'Oswald',sans-serif; font-weight:600; font-size:17px; color:var(--ink); }
+  .evt-card-header .evt-desc{ font-size:.85em; color:var(--muted); margin-top:3px; }
+  .evt-card-header .evt-toggle{ color:var(--muted-3); font-size:1.1em; transition:transform .2s; flex:none; }
+  .evt-card.open .evt-card-header .evt-toggle{ transform:rotate(180deg); }
+  .evt-card-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; border-top:0 solid var(--border); }
+  .evt-card.open .evt-card-body{ max-height:none; border-top-width:1px; border-top-style:solid; }
+  .evt-card-body-inner{ padding:18px 20px; font-size:.95em; color:var(--ink); }
+  .evt-card-body-inner h4{ font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; margin:18px 0 8px; }
+  .evt-card-body-inner h4:first-child{ margin-top:0; }
+  .evt-card-body-inner p{ margin:0 0 12px; line-height:1.6; color:var(--muted); }
+
+  .evt-sheet-wrap{ position:relative; margin-top:14px; border:1px solid var(--border-2); border-radius:10px; overflow:hidden; background:var(--field-bg); }
+  .evt-sheet-frame{ width:100%; height:min(70vh, 620px); border:0; display:block; background:#fff; }
+  .evt-sheet-fallback{ padding:14px 16px; font-size:13.5px; color:var(--warn-text); background:var(--warn-bg); border-top:1px solid var(--warn-border); }
+
+  .evt-tac-error{ padding:12px 14px; font-size:13.5px; color:var(--warn-text); background:var(--warn-bg); border:1px solid var(--warn-border); border-radius:8px; }
+</style>
+</head>
+<body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
+
+<a id="eventos-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+
+<header id="eventos-outer-header" class="top pad-x">
+  <div class="top-inner wrap">
+    <div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div>
+    <div style="min-width:0;">
+      <div class="top-org">Corpo de Bombeiros Militar de Pernambuco</div>
+      <h1 class="top-title">Controle de Eventos</h1>
+      <div class="top-sub">CAT Sertão</div>
+    </div>
+    <div class="top-actions">
+      <span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span>
+    </div>
+  </div>
+</header>
+
+<main id="eventos-outer-main" class="content pad-x wrap">
+  <a id="eventos-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
+
+  <div id="loading-msg" class="table-status">Verificando sessão...</div>
+
+  <div id="denied-box" class="access-denied u-hidden" role="alert">
+    <strong>Acesso não disponível</strong>
+    <p id="denied-text"></p>
+  </div>
+</main>
+
+<div class="site-shell wrap pad-x u-hidden" id="site-shell">
+  <nav class="site-sidebar" aria-label="Navegação do site">
+    <button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list">
+      <span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span>
+    </button>
+    <!-- Itens gerados por CatAuth.montarSidebarItens() -- ver common.js. -->
+    <div class="site-sidebar-list" id="site-sidebar-list">
+    </div>
+  </nav>
+
+  <div class="site-content">
+    <main class="content">
+      <section id="eventos-content" class="section">
+        <div class="eyebrow"><span>Admin</span><span class="rule"></span></div>
+        <h2>Controle de Eventos</h2>
+        <p class="lead">Planilha oficial de controle de eventos e resumo do Termo de Ajustamento de Conduta (TAC) firmado com o MPPE. Visível apenas para Admin Master e Admin; cada consulta é registrada no LOG de auditoria.</p>
+
+        <div class="evt-card" id="evt-card-planilha">
+          <div class="evt-card-header" onclick="toggleEvtCard(this)" role="button" tabindex="0" aria-expanded="true">
+            <div>
+              <div class="evt-title">Planilha de Controle de Eventos</div>
+              <div class="evt-desc">Consulta rápida embutida na tela, ou abra a planilha completa em nova aba.</div>
+            </div>
+            <span class="evt-toggle">▼</span>
+          </div>
+          <div class="evt-card-body">
+            <div class="evt-card-body-inner">
+              <a class="btn-outline-navy" href="https://docs.google.com/spreadsheets/d/15eI3Clost0ButxOUaAJPlligvVTkChFPhovu5zQrYTM/edit" target="_blank" rel="noopener" style="margin-bottom:14px;">Abrir planilha em nova aba ↗</a>
+
+              <div class="evt-sheet-wrap">
+                <!-- /preview (não /edit) porque funciona pra qualquer pessoa com
+                     permissão de VISUALIZAÇÃO na planilha (não exige acesso de
+                     edição) -- pré-requisito: a planilha precisa estar
+                     compartilhada como "qualquer pessoa com o link pode
+                     visualizar" (ou com a conta Google de quem for abrir),
+                     senão o Google mostra a própria tela de "solicitar acesso"
+                     dentro do iframe. -->
+                <iframe id="evt-sheet-frame" class="evt-sheet-frame" title="Planilha de Controle de Eventos" src="https://docs.google.com/spreadsheets/d/15eI3Clost0ButxOUaAJPlligvVTkChFPhovu5zQrYTM/preview" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <!-- Aviso de fallback: onload do iframe dispara mesmo quando o
+                     Google bloqueia por permissão (o bloqueio é a própria
+                     página do Google carregando dentro do frame, não uma
+                     falha de rede) -- então este aviso só cobre o caso de o
+                     embed nunca terminar de carregar (sem rede, ID errado
+                     etc.), via timeout. Falha de permissão aparece dentro do
+                     próprio iframe, pedindo acesso -- por isso o botão acima
+                     continua sendo o caminho garantido. -->
+                <p id="evt-sheet-fallback" class="evt-sheet-fallback u-hidden">Não foi possível carregar a planilha embutida agora. Verifique a conexão ou use o botão "Abrir planilha em nova aba" acima. Se o problema persistir, confirme com o administrador se a planilha está compartilhada como "qualquer pessoa com o link pode visualizar".</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="evt-card" id="evt-card-tac">
+          <div class="evt-card-header" onclick="toggleEvtCard(this)" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="evt-title">MPPE — Termo de Ajustamento de Conduta (TAC)</div>
+              <div class="evt-desc">Responsabilidades da Prefeitura/organizador do evento e do Corpo de Bombeiros.</div>
+            </div>
+            <span class="evt-toggle">▼</span>
+          </div>
+          <div class="evt-card-body">
+            <div class="evt-card-body-inner" id="evt-tac-body">
+              <p class="table-status">Carregando...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer class="bottom pad-x">
+  <div class="bottom-inner wrap">
+    <img src="CAT-SERTAO-SEM-FUNDO.png" alt="">
+    <div style="line-height:1.5;">
+      <div class="bottom-org">CAT Sertão — CBMPE</div>
+      <div>Centro de Atividades Técnicas do Sertão · Uso interno da corporação</div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+<script>
+function toggleEvtCard(el) {
+  var card = el.closest('.evt-card');
+  card.classList.toggle('open');
+  el.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
+}
+document.addEventListener('keydown', function (e) {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('evt-card-header')) {
+    e.preventDefault();
+    toggleEvtCard(e.target);
+  }
+});
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var show = CatAuth.show, hide = CatAuth.hide, escapeHtml = CatAuth.escapeHtml;
+
+  // Itens da sidebar -- gerados a partir de uma lista única em common.js
+  // (mesmo mecanismo de conta.html/usuarios.html/log.html).
+  document.getElementById('site-sidebar-list').innerHTML = CatAuth.montarSidebarItens({ paginaAtual: 'eventos', paginaBase: 'index.html' });
+
+  // Menu lateral recolhível no mobile -- lógica compartilhada com as demais
+  // páginas utilitárias, ver CatAuth.iniciarMenuLateral em common.js.
+  CatAuth.iniciarMenuLateral();
+
+  // Card da planilha abre expandido por padrão (é o conteúdo principal da
+  // aba); o card do TAC começa fechado -- consulta secundária.
+  document.getElementById('evt-card-planilha').classList.add('open');
+
+  // Timeout de fallback do iframe da planilha -- ver comentário junto do
+  // <iframe> sobre o que este aviso cobre e o que não cobre.
+  var sheetFrame = document.getElementById('evt-sheet-frame');
+  var sheetFallback = document.getElementById('evt-sheet-fallback');
+  var sheetTimeout = setTimeout(function () { show(sheetFallback); }, 8000);
+  sheetFrame.addEventListener('load', function () {
+    clearTimeout(sheetTimeout);
+    hide(sheetFallback);
+  });
+
+  function renderTac(dados) {
+    var tacBody = document.getElementById('evt-tac-body');
+    var html = dados.secoes.map(function (secao) {
+      var paragrafos = secao.paragrafos.map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; }).join('');
+      return '<h4>' + escapeHtml(secao.titulo) + '</h4>' + paragrafos;
+    }).join('');
+    tacBody.innerHTML = html;
+  }
+
+  function carregarTac() {
+    // Texto vem de content/tac-mppe.json (separado do HTML/JS) -- ver
+    // comentário no próprio arquivo sobre a limitação de ainda exigir um
+    // novo deploy (git push) pra atualizar, já que o site é estático.
+    fetch('content/tac-mppe.json').then(function (res) {
+      if (!res.ok) throw new Error('http_' + res.status);
+      return res.json();
+    }).then(renderTac).catch(function () {
+      document.getElementById('evt-tac-body').innerHTML = '<p class="evt-tac-error">Não foi possível carregar o texto do TAC agora. Tente novamente em instantes.</p>';
+    });
+  }
+
+  CatAuth.requireSession(['admin_master', 'admin']).then(function (session) {
+    hide(document.getElementById('loading-msg'));
+
+    // Regra de perfil (quem vê Termo/Usuários/LOG/Hermes/Eventos) e dados
+    // da sessão no badge -- compartilhado com as demais páginas utilitárias,
+    // ver CatAuth.aplicarPerfil em common.js.
+    CatAuth.aplicarPerfil(session);
+    hide(document.getElementById('eventos-outer-back'));
+    hide(document.getElementById('eventos-outer-main'));
+    show(document.getElementById('site-shell'));
+
+    CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
+
+    // Registra o acesso no LOG, no mesmo padrão já usado para a consulta da
+    // tabela de Termos de Compromisso (lá, o próprio "obterTermo" já loga
+    // "acesso_termo" no servidor). Fire-and-forget: não bloqueia a tela nem
+    // repete em caso de falha -- consultar a aba não deve travar por causa
+    // do registro do acesso. IMPORTANTE: esta ação ("registrarAcessoEventos")
+    // ainda não existe no backend (Apps Script, repositório oci-catsertao,
+    // fora deste repositório) -- precisa ser adicionada lá espelhando o
+    // handler de obterTermo/acesso_termo antes desta chamada logar de
+    // verdade. Até lá, ela só recebe o "Ação inválida" padrão do backend e
+    // é ignorada, sem quebrar a página.
+    CatAuth.api({ action: 'registrarAcessoEventos', token: session.token }).catch(function () {});
+
+    carregarTac();
+  }, function (err) {
+    hide(document.getElementById('loading-msg'));
+    var denied = document.getElementById('denied-box');
+    var text = document.getElementById('denied-text');
+    if (sessionStorage.getItem('cat_expirado')) {
+      sessionStorage.removeItem('cat_expirado');
+      text.textContent = 'Sessão encerrada após 30 minutos sem uso. Entre novamente no site principal.';
+    } else if (err.code === 'network_error') {
+      // Falha de rede não é falta de permissão -- "Acesso não disponível"
+      // (título fixo da caixa) já soa como problema de perfil; sem essa
+      // mensagem própria, o admin ia achar que perdeu o acesso.
+      text.textContent = 'Sem conexão — esta página precisa de rede para validar sua sessão.';
+    } else if (err.code === 'no_session' || err.code === 'invalid_session') {
+      text.textContent = 'Você precisa fazer login no site principal antes de acessar esta página.';
+    } else if (err.code === 'forbidden') {
+      text.textContent = 'O Controle de Eventos é visível apenas para os perfis Admin Master e Admin.';
+    } else {
+      text.textContent = 'Não foi possível conectar ao servidor agora. Tente novamente em instantes.';
+    }
+    show(denied);
+  });
+})();
+</script>
+</body>
+</html>
