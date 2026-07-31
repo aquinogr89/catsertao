@@ -85,10 +85,10 @@
           </select>
           <input id="log-filtro-inicio" type="date" title="Data inicial">
           <input id="log-filtro-fim" type="date" title="Data final">
-          <select id="log-filtro-limite" title="Quantidade de registros">
-            <option value="10">10 mais recentes</option>
-            <option value="50">50 mais recentes</option>
-            <option value="100">100 mais recentes (máximo)</option>
+          <select id="log-filtro-limite" title="Registros por página">
+            <option value="10">10 por página</option>
+            <option value="50">50 por página</option>
+            <option value="100">100 por página</option>
           </select>
           <button id="log-filtrar" type="button" class="btn-navy">Filtrar</button>
           <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
@@ -97,6 +97,14 @@
         <div class="table-wrap">
           <p id="log-status" class="table-status" aria-live="polite"></p>
           <table id="log-table" class="termo-table u-hidden"></table>
+        </div>
+        <div class="cat-filter-row cat-pagination u-hidden" id="log-pagination">
+          <span class="cat-per-page-label">Selecione acima quantos registros por página (10, 50 ou 100).</span>
+          <div class="cat-pager">
+            <button type="button" id="log-pag-anterior" class="btn-ghost">‹ Anterior</button>
+            <span id="log-pag-info" aria-live="polite"></span>
+            <button type="button" id="log-pag-proxima" class="btn-ghost">Próxima ›</button>
+          </div>
         </div>
       </section>
     </main>
@@ -137,20 +145,26 @@
   var logTableEl = document.getElementById('log-table');
 
   var logResumoEl = document.getElementById('log-resumo');
+  var logPaginacaoEl = document.getElementById('log-pagination');
+  var logPaginaAtual = 1;
 
-  function renderLogTable(rows, total) {
+  function renderLogTable(rows, total, limite, pagina) {
     if (rows.length === 0) {
       hide(logTableEl);
       hide(logResumoEl);
+      hide(logPaginacaoEl);
       show(logStatusEl);
       logStatusEl.textContent = 'Nenhum registro para os filtros selecionados.';
       return;
     }
     hide(logStatusEl);
     show(logResumoEl);
-    logResumoEl.textContent = rows.length < total
-      ? 'Mostrando os ' + rows.length + ' mais recentes de ' + total + ' registro(s) encontrado(s) — refine a busca ou aumente o limite para ver mais.'
-      : 'Mostrando todos os ' + total + ' registro(s) encontrado(s).';
+    // Faixa (ex.: "11–20 de 47") em vez de "os N mais recentes" -- com
+    // páginas, "N mais recentes" deixou de fazer sentido a partir da 2ª
+    // página (não são mais os mais recentes, e sim um recorte no meio).
+    var primeiroNumero = (pagina - 1) * limite + 1;
+    var ultimoNumero = primeiroNumero + rows.length - 1;
+    logResumoEl.textContent = 'Mostrando ' + primeiroNumero + '–' + ultimoNumero + ' de ' + total + ' registro(s) encontrado(s).';
 
     var thead = '<thead><tr><th>Data/hora</th><th>Login</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>';
     // No mobile (cards empilhados), só os campos com "col-mobile-key" ficam
@@ -161,6 +175,17 @@
     }).join('') + '</tbody>';
     logTableEl.innerHTML = thead + tbody;
     show(logTableEl);
+
+    atualizarPaginacaoLog(total, limite, pagina);
+  }
+
+  function atualizarPaginacaoLog(total, limite, pagina) {
+    if (total === 0) { hide(logPaginacaoEl); return; }
+    var totalPaginas = Math.max(1, Math.ceil(total / limite));
+    show(logPaginacaoEl);
+    document.getElementById('log-pag-info').textContent = 'Página ' + pagina + ' de ' + totalPaginas;
+    document.getElementById('log-pag-anterior').disabled = pagina <= 1;
+    document.getElementById('log-pag-proxima').disabled = pagina >= totalPaginas;
   }
 
   function carregarLog() {
@@ -172,16 +197,38 @@
     var acao = document.getElementById('log-filtro-acao').value;
     var inicio = document.getElementById('log-filtro-inicio').value;
     var fim = document.getElementById('log-filtro-fim').value;
-    var limite = document.getElementById('log-filtro-limite').value;
-    api({ action: 'listarLog', token: session.token, busca: busca, acao: acao, dataInicio: inicio, dataFim: fim, limite: Number(limite) }).then(function (res) {
+    var limite = Number(document.getElementById('log-filtro-limite').value);
+    var pagina = logPaginaAtual;
+    api({ action: 'listarLog', token: session.token, busca: busca, acao: acao, dataInicio: inicio, dataFim: fim, limite: limite, pagina: pagina }).then(function (res) {
       if (!res.ok) {
         logStatusEl.textContent = res.error || 'Não foi possível carregar o LOG.';
+        hide(logPaginacaoEl);
         return;
       }
-      renderLogTable(res.log || [], res.total != null ? res.total : (res.log || []).length);
+      var total = res.total != null ? res.total : (res.log || []).length;
+      var totalPaginas = Math.max(1, Math.ceil(total / limite));
+      if (pagina > totalPaginas) {
+        // A página pedida ficou fora do intervalo (ex.: um filtro reduziu o
+        // total entre uma navegação e outra) -- volta pra última página
+        // válida e busca de novo, em vez de mostrar "nenhum registro" com
+        // total > 0 (mensagem que soaria como bug).
+        logPaginaAtual = totalPaginas;
+        carregarLog();
+        return;
+      }
+      renderLogTable(res.log || [], total, limite, pagina);
     }).catch(function () {
       logStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
+      hide(logPaginacaoEl);
     });
+  }
+
+  // Qualquer mudança de filtro (busca, ação, datas, registros por página) ou
+  // "Atualizar" reinicia da página 1 -- continuar na página 3 depois de
+  // trocar o filtro quase sempre cai num recorte sem sentido pro filtro novo.
+  function carregarLogDoInicio() {
+    logPaginaAtual = 1;
+    carregarLog();
   }
 
   CatAuth.requireSession(['admin_master']).then(function (s) {
@@ -199,11 +246,19 @@
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
     carregarLog();
-    document.getElementById('log-filtrar').addEventListener('click', carregarLog);
-    document.getElementById('log-refresh').addEventListener('click', carregarLog);
-    document.getElementById('log-filtro-limite').addEventListener('change', carregarLog);
+    document.getElementById('log-filtrar').addEventListener('click', carregarLogDoInicio);
+    document.getElementById('log-refresh').addEventListener('click', carregarLogDoInicio);
+    document.getElementById('log-filtro-limite').addEventListener('change', carregarLogDoInicio);
     document.getElementById('log-filtro-busca').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') carregarLog();
+      if (e.key === 'Enter') carregarLogDoInicio();
+    });
+    document.getElementById('log-pag-anterior').addEventListener('click', function () {
+      logPaginaAtual -= 1;
+      carregarLog();
+    });
+    document.getElementById('log-pag-proxima').addEventListener('click', function () {
+      logPaginaAtual += 1;
+      carregarLog();
     });
   }, function (err) {
     hide(document.getElementById('loading-msg'));
