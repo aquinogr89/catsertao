@@ -37,7 +37,11 @@
   .evt-card-header .evt-toggle{ color:var(--muted-3); font-size:1.1em; transition:transform .2s; flex:none; }
   .evt-card.open .evt-card-header .evt-toggle{ transform:rotate(180deg); }
   .evt-card-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; border-top:0 solid var(--border); }
-  .evt-card.open .evt-card-body{ max-height:none; border-top-width:1px; border-top-style:solid; }
+  /* max-height:none não anima (CSS não interpola de/para "none" -- o efeito
+     seria um corte seco em vez de um deslizar suave); um valor fixo bem
+     acima do conteúdo real resolve, mesmo padrão usado no hz-card de
+     hermes.html. */
+  .evt-card.open .evt-card-body{ max-height:2400px; border-top-width:1px; border-top-style:solid; }
   .evt-card-body-inner{ padding:18px 20px; font-size:.95em; color:var(--ink); }
   .evt-card-body-inner h4{ font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; margin:18px 0 8px; }
   .evt-card-body-inner h4:first-child{ margin-top:0; }
