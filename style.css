@@ -194,6 +194,14 @@ main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px
 .cat-filter-row input{ flex:1; min-width:220px; max-width:440px; font-family:'Public Sans',sans-serif; font-size:14.5px; padding:11px 15px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
 .count-badge{ font-size:13px; color:var(--muted-3); font-weight:500; }
 .table-wrap{ overflow-x:auto; }
+/* Paginação do Termo de Compromisso: reaproveita .cat-filter-row (flex+wrap)
+   como base, só ajustando o espaçamento entre "Por página" (esquerda) e o
+   bloco Anterior/Página X de Y/Próxima (direita). */
+.termo-pagination{ justify-content:space-between; margin-top:14px; margin-bottom:0; }
+.termo-per-page-label{ display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--muted); white-space:nowrap; }
+.termo-pager{ display:flex; align-items:center; gap:10px; }
+.termo-pager span{ font-size:13px; color:var(--muted-3); white-space:nowrap; }
+.btn-ghost:disabled{ opacity:.5; cursor:default; }
 .table-status{ font-size:13.5px; color:var(--muted-3); padding:10px 2px; }
 table.termo-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
 table.termo-table th, table.termo-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }

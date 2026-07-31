@@ -167,6 +167,24 @@
           <p id="termo-status" class="table-status" aria-live="polite"></p>
           <table id="termo-table" class="termo-table u-hidden"></table>
         </div>
+        <!-- Ordenação (mais próximo de vencer primeiro) acontece uma vez ao
+             carregar (ver ordenarTermoPorVencimento em index.html); aqui só
+             o controle de quantos registros por página e a navegação. -->
+        <div class="cat-filter-row termo-pagination u-hidden" id="termo-pagination">
+          <label class="termo-per-page-label">
+            Por página:
+            <select id="termo-per-page">
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+            </select>
+          </label>
+          <div class="termo-pager">
+            <button type="button" id="termo-pag-anterior" class="btn-ghost">‹ Anterior</button>
+            <span id="termo-pag-info" aria-live="polite"></span>
+            <button type="button" id="termo-pag-proxima" class="btn-ghost">Próxima ›</button>
+          </div>
+        </div>
       </div>
 
       <div id="termo-modal-overlay" class="modal-overlay u-hidden">
@@ -702,6 +720,45 @@
   var termoStatusEl = document.getElementById('termo-status');
   var termoTableEl = document.getElementById('termo-table');
   var termoRows = [];
+  var termoPaginaAtual = 1;
+  var termoPorPagina = 3; // padrão pedido: só 3 na página principal
+
+  // "EM VIGOR ATÉ" (ou qualquer variação com "vigor"/"venc" no nome) é a
+  // coluna que decide a ordem do Termo: mais perto de vencer primeiro.
+  // Mesmo critério de nome usado no servidor pra decidir formatação sem
+  // hora (ver formatarCelula_ em oci-catsertao/apps-script/Auth.gs).
+  function colunaVencimentoTermo(headers) {
+    return headers.filter(function (h) { return h !== '_row'; }).find(function (h) {
+      var norm = normalizar(h);
+      return norm.indexOf('vigor') !== -1 || norm.indexOf('venc') !== -1;
+    });
+  }
+
+  // Converte "dd/MM/yyyy" ou "dd/MM/yyyy HH:mm" (formato que o servidor
+  // manda, ver formatarCelula_) num timestamp comparável. Datas ausentes ou
+  // ilegíveis viram Infinity -- ficam por último na ordenação em vez de
+  // quebrar a comparação ou sumirem da lista.
+  function timestampVencimentoTermo(valor) {
+    var texto = String(valor == null ? '' : valor).trim();
+    var m = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?$/);
+    if (!m) return Infinity;
+    var data = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]), Number(m[4] || 0), Number(m[5] || 0));
+    return isNaN(data.getTime()) ? Infinity : data.getTime();
+  }
+
+  // Ordena uma vez, ao carregar (não a cada busca/paginação) -- a ordem por
+  // vencimento não muda com o filtro de texto, só o recorte de quais linhas
+  // aparecem. Sem coluna de vencimento na planilha, devolve a ordem original
+  // (nunca esconde nem quebra a tabela por causa disso).
+  function ordenarTermoPorVencimento(rows) {
+    if (!rows.length) return rows;
+    var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
+    var colVenc = colunaVencimentoTermo(headers);
+    if (!colVenc) return rows;
+    return rows.slice().sort(function (a, b) {
+      return timestampVencimentoTermo(a[colVenc]) - timestampVencimentoTermo(b[colVenc]);
+    });
+  }
 
   // As colunas do Termo vêm de uma planilha externa (n8n), em ordem que não
   // controlamos daqui. No mobile (cards empilhados), em vez de esconder por
@@ -734,40 +791,29 @@
     return prioritarias;
   }
 
-  function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, filterQuery, actionsBuilder) {
-    // _row (índice interno da planilha, usado só pra identificar a linha ao
-    // salvar edições) não é uma coluna visível em lugar nenhum -- os headers
-    // já filtram ele em todo o resto da função. Este era o único ponto que
-    // não filtrava: buscar "12" trazia a linha 12 da planilha junto com os
-    // resultados de verdade, sem nenhuma coluna visível que explicasse.
-    var filtered = !filterQuery ? rows : rows.filter(function (row) {
-      return Object.keys(row).some(function (k) {
-        if (k === '_row') return false;
-        return normalizar(row[k]).indexOf(filterQuery) !== -1;
-      });
-    });
-
+  // Recebe as linhas JÁ filtradas (busca) e paginadas (Termo é a única
+  // tabela que usa isto hoje) -- quem filtra/pagina e decide qual das duas
+  // mensagens de vazio ("nada carregado" vs. "nada encontrado pra essa
+  // busca") se aplica é o chamador (renderTermoTable), porque só ele sabe o
+  // total antes do recorte de página.
+  function renderTableGeneric(rows, tableEl, statusEl, emptyMsg, actionsBuilder) {
     if (rows.length === 0) {
       hide(tableEl);
       show(statusEl);
       statusEl.textContent = emptyMsg;
-      return 0;
-    }
-    if (filtered.length === 0) {
-      hide(tableEl);
-      show(statusEl);
-      statusEl.textContent = 'Nenhum registro encontrado para essa busca.';
-      return 0;
+      return;
     }
 
     hide(statusEl);
+    // _row (índice interno da planilha, usado só pra identificar a linha ao
+    // salvar edições) não é uma coluna visível em lugar nenhum.
     var headers = Object.keys(rows[0]).filter(function (h) { return h !== '_row'; });
     var colSituacao = colunaSituacaoTermo(headers);
     var prioritarias = colunasPrioritariasMobile(headers);
     var thead = '<thead><tr>' + headers.map(function (h) {
       return '<th' + (prioritarias.indexOf(h) !== -1 ? ' class="col-mobile-key"' : '') + '>' + escapeHtml(h) + '</th>';
     }).join('') + (actionsBuilder ? '<th></th>' : '') + '</tr></thead>';
-    var tbody = '<tbody>' + filtered.map(function (row) {
+    var tbody = '<tbody>' + rows.map(function (row) {
       return '<tr>' + headers.map(function (h) {
         var cls = prioritarias.indexOf(h) !== -1 ? ' class="col-mobile-key"' : '';
         var valor = row[h] == null ? '' : row[h];
@@ -785,9 +831,22 @@
 
     if (actionsBuilder) {
       var cells = tableEl.querySelectorAll('tbody .termo-actions-cell');
-      filtered.forEach(function (row, i) { actionsBuilder(cells[i], row); });
+      rows.forEach(function (row, i) { actionsBuilder(cells[i], row); });
     }
-    return filtered.length;
+  }
+
+  // Mesma lógica de busca que renderTableGeneric usava internamente antes
+  // (excluindo _row) -- extraída pra cá porque agora precisa rodar ANTES da
+  // paginação (a página é um recorte do resultado já filtrado, não da
+  // planilha inteira).
+  function filtrarTermoPorBusca(rows, q) {
+    if (!q) return rows;
+    return rows.filter(function (row) {
+      return Object.keys(row).some(function (k) {
+        if (k === '_row') return false;
+        return normalizar(row[k]).indexOf(q) !== -1;
+      });
+    });
   }
 
   // Situação vem pronta do workflow do n8n (fórmula na planilha) — nunca é
@@ -823,12 +882,55 @@
 
   function renderTermoTable() {
     var q = normalizar(document.getElementById('termo-search').value.trim());
-    // renderTableGeneric sempre devolve um número (0 nos dois casos vazios,
-    // filtered.length no resto) desde a correção do A6 -- nunca undefined,
-    // então o "n == null" que cobria esse caso virou código morto.
-    var n = renderTableGeneric(termoRows, termoTableEl, termoStatusEl, 'Nenhum termo de compromisso registrado ainda.', q, buildTermoActions);
-    document.getElementById('termo-count').textContent = n + ' registro(s)';
+    var filtrados = filtrarTermoPorBusca(termoRows, q);
+
+    var mensagemVazio = termoRows.length === 0
+      ? 'Nenhum termo de compromisso registrado ainda.'
+      : 'Nenhum registro encontrado para essa busca.';
+
+    var totalPaginas = Math.max(1, Math.ceil(filtrados.length / termoPorPagina));
+    // Clampa em vez de deixar a página "sumir" -- acontece ao trocar pra um
+    // "por página" maior (menos páginas no total) ou ao filtrar pra um
+    // resultado menor enquanto numa página avançada.
+    if (termoPaginaAtual > totalPaginas) termoPaginaAtual = totalPaginas;
+    if (termoPaginaAtual < 1) termoPaginaAtual = 1;
+
+    var inicio = (termoPaginaAtual - 1) * termoPorPagina;
+    var paginaAtualRows = filtrados.slice(inicio, inicio + termoPorPagina);
+
+    renderTableGeneric(paginaAtualRows, termoTableEl, termoStatusEl, mensagemVazio, buildTermoActions);
+    document.getElementById('termo-count').textContent = filtrados.length + ' registro(s)';
+    atualizarPaginacaoTermo(filtrados.length, totalPaginas);
   }
+
+  // Mostra a paginação só quando há algo pra paginar (mesma condição que
+  // deixa a tabela visível em renderTableGeneric) -- escondida junto com a
+  // tabela nos dois casos de vazio (nada carregado / nada encontrado).
+  function atualizarPaginacaoTermo(totalFiltrado, totalPaginas) {
+    var painel = document.getElementById('termo-pagination');
+    if (totalFiltrado === 0) {
+      hide(painel);
+      return;
+    }
+    show(painel);
+    document.getElementById('termo-pag-info').textContent = 'Página ' + termoPaginaAtual + ' de ' + totalPaginas;
+    document.getElementById('termo-pag-anterior').disabled = termoPaginaAtual <= 1;
+    document.getElementById('termo-pag-proxima').disabled = termoPaginaAtual >= totalPaginas;
+  }
+
+  document.getElementById('termo-per-page').addEventListener('change', function (e) {
+    termoPorPagina = Number(e.target.value) || 3;
+    termoPaginaAtual = 1; // trocar o tamanho da página sem voltar ao início desorientava mais do que ajudava
+    renderTermoTable();
+  });
+  document.getElementById('termo-pag-anterior').addEventListener('click', function () {
+    termoPaginaAtual -= 1;
+    renderTermoTable();
+  });
+  document.getElementById('termo-pag-proxima').addEventListener('click', function () {
+    termoPaginaAtual += 1;
+    renderTermoTable();
+  });
 
   /* ----- Modal de edição do Termo ----- */
   var termoModalOverlay = document.getElementById('termo-modal-overlay');
@@ -944,7 +1046,12 @@
         termoStatusEl.textContent = res.error || 'Não foi possível carregar a tabela.';
         return;
       }
-      termoRows = res.rows || [];
+      // Ordena por vencimento uma vez aqui (não a cada render) -- ver
+      // ordenarTermoPorVencimento. Recarregar do zero também volta pra
+      // página 1: manter a página antiga não faz sentido depois de um
+      // "Atualizar" (a lista pode ter mudado de tamanho ou de ordem).
+      termoRows = ordenarTermoPorVencimento(res.rows || []);
+      termoPaginaAtual = 1;
       renderTermoTable();
     }).catch(function () {
       termoStatusEl.textContent = 'Não foi possível conectar ao servidor agora.';
@@ -956,7 +1063,10 @@
   // caro que renderSatecs (refaz o innerHTML da tabela inteira E recria dois
   // <button> com listener por linha em buildTermoActions), então digitar
   // aqui engasgava mais do que engasgava nos SATECs.
-  document.getElementById('termo-search').addEventListener('input', debounce(renderTermoTable, 120));
+  document.getElementById('termo-search').addEventListener('input', debounce(function () {
+    termoPaginaAtual = 1; // toda busca nova recomeça da primeira página do resultado
+    renderTermoTable();
+  }, 120));
 
   // Usuários, LOG e Minha Conta agora são páginas separadas (usuarios.html,
   // log.html, conta.html), abertas em nova aba a partir do menu acima —
