@@ -18,22 +18,36 @@ conta.html                  Minha Conta (troca de senha) — abre em nova aba
 usuarios.html               gestão de usuários — abre em nova aba
 log.html                    LOG de auditoria — abre em nova aba
 hermes.html                 painel de bastidores do agente Hermes (skills, cron jobs, wiki de normas) — abre em nova aba, só Admin Master
+eventos.html                Controle de Eventos (planilha + TAC/MPPE) — abre em nova aba, Admin Master e Admin
 common.js                   sessão, chamadas à API, helpers — compartilhado por todas as páginas
 style.css                    estilos compartilhados por todas as páginas
 chat.html                   iframe isolado do widget de chat (n8n)
+content/tac-mppe.json       texto do TAC/MPPE exibido em eventos.html, separado do HTML/JS
 apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota abaixo)
 CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
 ```
 
-`conta.html`, `usuarios.html`, `log.html` e `hermes.html` são páginas próprias
-(não seções da mesma página) para poderem abrir em **nova aba** a partir do
-menu — cada uma revalida a sessão e o perfil no servidor de forma independente
-(via `CatAuth.requireSession`, em `common.js`); se a sessão for inválida ou o
-perfil não tiver permissão, a página mostra uma mensagem de acesso negado
-em vez do conteúdo. `hermes.html` segue exatamente o mesmo modelo de
-`log.html` (`CatAuth.requireSession(['admin_master'])`), então só aparece na
-navegação e só carrega o conteúdo para quem está logado como `admin_master`
-(hoje, `geraldo.reis`).
+`conta.html`, `usuarios.html`, `log.html`, `hermes.html` e `eventos.html` são
+páginas próprias (não seções da mesma página) para poderem abrir em **nova
+aba** a partir do menu — cada uma revalida a sessão e o perfil no servidor de
+forma independente (via `CatAuth.requireSession`, em `common.js`); se a
+sessão for inválida ou o perfil não tiver permissão, a página mostra uma
+mensagem de acesso negado em vez do conteúdo. `hermes.html` segue exatamente
+o mesmo modelo de `log.html` (`CatAuth.requireSession(['admin_master'])`),
+então só aparece na navegação e só carrega o conteúdo para quem está logado
+como `admin_master` (hoje, `geraldo.reis`). `eventos.html` segue o mesmo
+modelo, mas com `CatAuth.requireSession(['admin_master', 'admin'])`.
+
+> **Pendência de backend em `eventos.html`:** a página chama a ação
+> `registrarAcessoEventos` (via `CatAuth.api`) para registrar cada consulta
+> no LOG, no mesmo padrão de `obterTermo` → `acesso_termo`. Essa ação **ainda
+> não existe** no backend real (repositório
+> [oci-catsertao](https://github.com/aquinogr89/oci-catsertao), fora deste
+> repositório) — até ser adicionada lá (validar token, checar perfil,
+> gravar uma linha de LOG com `acao: 'acesso_eventos'`), a chamada só recebe
+> o "Ação inválida" padrão e é ignorada (`.catch()` vazio, não quebra a
+> página). A opção `acesso_eventos` já foi adicionada ao filtro de ação em
+> `log.html`, pronta para quando o backend passar a gravar esse registro.
 
 > **Sobre `hermes.html`:** é o painel de bastidores gerado e mantido pelo
 > agente Hermes (skills carregadas, cron jobs, wiki de normas do CBMPE,
@@ -62,8 +76,8 @@ pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
-| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`). |
-| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`). Sem LOG. |
+| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`), **Controle de Eventos** (`eventos.html`). |
+| `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`), **Controle de Eventos**. Sem LOG, sem Hermes Agent. |
 | `user1`        | Atendimento, Documentos, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 | `user2`        | Atendimento, Documentos, SATECs, Mapa de OCI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 
@@ -140,3 +154,10 @@ atualiza o site automaticamente em alguns segundos.
   por isso ele nunca deve conter senha, token ou segredo em texto puro:
   quem tiver a URL pode ler o HTML bruto (Ctrl+U / `curl`) mesmo sem passar
   pelo gate de sessão em JavaScript.
+- `eventos.html` é o mesmo caso: o gate de sessão só controla o que aparece
+  na tela, não o HTML bruto. Por isso a página não embute nenhum dado de
+  evento além do que já está na própria planilha do Google Sheets embutida
+  por `iframe` (cujo controle de acesso é do próprio Google, independente do
+  login do site — ver pré-requisito de compartilhamento comentado em
+  `eventos.html`) e do texto do TAC/MPPE (`content/tac-mppe.json`), que é
+  conteúdo público, não sensível.
