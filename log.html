@@ -78,6 +78,13 @@
             <option value="logout">logout</option>
             <option value="cadastro_rti">cadastro_rti</option>
             <option value="acesso_termo">acesso_termo</option>
+            <!-- H4 da auditoria: combinado com o backend (fora deste
+                 repositório) -- a ACTION que eventos.html chama é
+                 "registrarAcessoEventos" (ver common.js/CatAuth.api), mas a
+                 COLUNA "acao" gravada no LOG precisa ser exatamente
+                 "acesso_eventos", espelhando o par já existente
+                 obterTermo -> acesso_termo. Sem isso o filtro abaixo nunca
+                 traz nada e ninguém entenderia por quê. -->
             <option value="acesso_eventos">acesso_eventos</option>
             <option value="edicao_termo">edicao_termo</option>
             <option value="conclusao_termo">conclusao_termo</option>

@@ -52,6 +52,10 @@
   .evt-sheet-fallback{ padding:14px 16px; font-size:13.5px; color:var(--warn-text); background:var(--warn-bg); border-top:1px solid var(--warn-border); }
 
   .evt-tac-error{ padding:12px 14px; font-size:13.5px; color:var(--warn-text); background:var(--warn-bg); border:1px solid var(--warn-border); border-radius:8px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .evt-card-body{ transition:none; }
+  }
 </style>
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
@@ -104,7 +108,7 @@
         <p class="lead">Planilha oficial de controle de eventos e resumo do Termo de Ajustamento de Conduta (TAC) firmado com o MPPE. Visível apenas para Admin Master e Admin; cada consulta é registrada no LOG de auditoria.</p>
 
         <div class="evt-card" id="evt-card-planilha">
-          <div class="evt-card-header" onclick="toggleEvtCard(this)" role="button" tabindex="0" aria-expanded="true">
+          <div class="evt-card-header" role="button" tabindex="0" aria-expanded="true">
             <div>
               <div class="evt-title">Planilha de Controle de Eventos</div>
               <div class="evt-desc">Consulta rápida embutida na tela, ou abra a planilha completa em nova aba.</div>
@@ -139,7 +143,7 @@
         </div>
 
         <div class="evt-card" id="evt-card-tac">
-          <div class="evt-card-header" onclick="toggleEvtCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="evt-card-header" role="button" tabindex="0" aria-expanded="false">
             <div>
               <div class="evt-title">MPPE — Termo de Ajustamento de Conduta (TAC)</div>
               <div class="evt-desc">Responsabilidades da Prefeitura/organizador do evento e do Corpo de Bombeiros.</div>
@@ -174,11 +178,15 @@ function toggleEvtCard(el) {
   card.classList.toggle('open');
   el.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
 }
-document.addEventListener('keydown', function (e) {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('evt-card-header')) {
-    e.preventDefault();
-    toggleEvtCard(e.target);
-  }
+// Clique e teclado ligados direto em cada cabeçalho (H10 da auditoria) --
+// antes era onclick= inline (padrão que o resto do site abandonou) + um
+// keydown na página inteira que rodava a cada tecla digitada em QUALQUER
+// lugar só pra descobrir que o alvo não era um card.
+Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), function (h) {
+  h.addEventListener('click', function () { toggleEvtCard(h); });
+  h.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleEvtCard(h); }
+  });
 });
 </script>
 <script>

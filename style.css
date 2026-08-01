@@ -171,6 +171,12 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 @media (prefers-reduced-motion: reduce){
   .site-nav-item{ transition:none; }
   .btn-float.top{ transition:none; }
+  /* Desacelerar em vez de parar (J4 da auditoria): um spinner PARADO deixa
+     de comunicar "está carregando", que é a função dele -- pedir menos
+     movimento não é o mesmo que pedir nenhuma indicação de progresso.
+     .btn-spinner (botão "Entrar") e .gate-spinner (revalidação de sessão
+     salva) ficaram de fora do bloco original, que só cobria .site-nav-item. */
+  .btn-spinner, .gate-spinner{ animation-duration:2.4s; }
 }
 .site-content{ flex:1; min-width:0; padding-left:28px; }
 .site-content .content{ padding-left:0; padding-right:0; }

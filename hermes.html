@@ -7,6 +7,11 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0b1020">
 <link rel="icon" type="image/png" href="CAT-SERTAO-SEM-FUNDO.png">
+<!-- manifest + apple-touch-icon que faltavam (J5 da auditoria) -- o
+     theme-color acima já era intencional (tema escuro do painel, mantido),
+     só as outras duas tags de PWA tinham ficado de fora. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-512.png">
 <!-- Oswald/Public Sans auto-hospedadas (ver fonts/fonts.css) -- offline as
      fontes não carregavam do CDN do Google e o layout se deslocava
      (métricas de fallback diferentes das da fonte real). JetBrains Mono
