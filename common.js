@@ -446,3 +446,25 @@ document.addEventListener('click', function (e) {
   var win = window.open(link.href, 'cat-secundaria');
   if (win) { try { win.focus(); } catch (err) {} }
 });
+
+// "Voltar ao site principal" (botão flutuante ← e o link inline .util-back)
+// nas páginas utilitárias abertas em nova aba (conta, usuários, LOG, Hermes,
+// Eventos): esses links não têm target, então o clique navegava NESTA aba
+// secundária para index.html -- a aba principal, que já tem o portal aberto,
+// nunca saía do lugar, então o resultado era uma SEGUNDA cópia do portal
+// nessa aba, ainda com o mesmo nome de janela (cat-secundaria): o próximo
+// clique em "Usuários" a partir da aba principal ia PARA ESSA cópia,
+// sobrescrevendo-a. O certo é fechar a aba e devolver o foco à principal.
+// window.close() só funciona em aba aberta por script (via window.opener) --
+// se a página foi aberta direto pela URL/favorito (sem opener), o close é
+// ignorado e o href original assume, que é o comportamento certo nesse caso.
+document.addEventListener('click', function (e) {
+  var link = e.target.closest && e.target.closest('.btn-float.back, .util-back');
+  if (!link) return;
+  if (e.defaultPrevented || e.button !== 0) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (!window.opener || window.opener.closed) return;
+  e.preventDefault();
+  try { window.opener.focus(); } catch (err) {}
+  window.close();
+});
