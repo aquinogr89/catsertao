@@ -168,7 +168,10 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 }
 .site-nav-item:active{ transform:scale(.98); }
 .site-nav-item.active{ background:var(--navy); color:#fff; font-weight:600; border-left-color:var(--gold); }
-@media (prefers-reduced-motion: reduce){ .site-nav-item{ transition:none; } }
+@media (prefers-reduced-motion: reduce){
+  .site-nav-item{ transition:none; }
+  .btn-float.top{ transition:none; }
+}
 .site-content{ flex:1; min-width:0; padding-left:28px; }
 .site-content .content{ padding-left:0; padding-right:0; }
 
@@ -177,6 +180,14 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
 
 main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
+/* Espaço reservado pro botão flutuante "voltar ao topo"/"voltar" não cobrir
+   o último elemento da página (ex.: o botão de e-mail do último card de
+   SATEC) quando o usuário rola até o fim -- o botão é position:fixed em
+   QUALQUER largura, mas até aqui essa folga só existia dentro do bloco
+   @media (max-width:860px) (I4 da auditoria). O bloco mobile abaixo
+   continua com um valor um pouco maior (o botão lá é a mesma engrenagem,
+   mas a tela é mais estreita). */
+main.content{ padding-bottom:72px; }
 
 /* Assistente virtual (chat) — embutido na seção, não em painel flutuante
    (um painel position:fixed alternando visibilidade de um iframe travava a
@@ -297,7 +308,16 @@ table.termo-table th{ font-family:'Oswald',sans-serif; font-size:12.5px; letter-
 @media (hover: hover) and (pointer: fine){
   .btn-float:hover{ background:var(--navy-2); color:#fff; }
 }
-.btn-float.top{ bottom:24px; right:24px; }
+/* Só aparece depois de rolar -- no topo da página o botão não tem função e
+   ainda cobre o canto da tela à toa. opacity+visibility (não display) pra
+   poder animar a entrada; pointer-events:none impede clique no estado
+   invisível (I2 da auditoria). */
+.btn-float.top{
+  bottom:24px; right:24px;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .2s ease, visibility .2s ease;
+}
+.btn-float.top.visivel{ opacity:1; visibility:visible; pointer-events:auto; }
 .btn-float.back{ bottom:24px; left:24px; }
 
 footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
@@ -387,9 +407,8 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .satec-munis-block{ order:1; }
   .satec-meta{ margin-top:0; }
 
-  /* Espaço reservado para o botão flutuante "voltar ao menu" não cobrir o
-     último elemento da página (ex.: o botão de e-mail do último card de
-     SATEC) quando o usuário rola até o fim. */
+  /* Override do valor base (72px, fora desta media query -- ver I4) só um
+     pouco maior aqui: mesmo botão, tela mais estreita. */
   main.content{ padding-bottom:76px; }
 
   /* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */

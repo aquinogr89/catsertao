@@ -563,6 +563,16 @@
     window.scrollTo({ top: 0, behavior: semMovimento ? 'auto' : 'smooth' });
   });
 
+  // Só aparece depois de rolar -- no topo da página o botão oferece rolar
+  // pra onde o usuário já está, e ainda cobre o canto inferior direito o
+  // tempo todo à toa (ver .btn-float.top.visivel em style.css).
+  var btnTopo = document.getElementById('btn-scroll-top');
+  function atualizarBotaoTopo() {
+    btnTopo.classList.toggle('visivel', window.scrollY > 400);
+  }
+  window.addEventListener('scroll', atualizarBotaoTopo, { passive: true });
+  atualizarBotaoTopo(); // estado inicial (recarga no meio da página)
+
   // Itens da sidebar -- gerados a partir de uma lista única em common.js
   // (antes eram HTML estático repetido nos 4 arquivos). index.html não tem
   // "página atual" nessa lista (é a própria página com várias seções, não
