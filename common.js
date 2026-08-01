@@ -290,11 +290,18 @@ var CatAuth = (function () {
   //   estão em outro arquivo, precisa do prefixo "index.html#id"
   //   (paginaBase).
   // tipo 'externo': Mapa de OCI / Triagem -- nunca é "página atual" nessa
-  //   lista (são outro site), sempre target="cat-secundaria".
+  //   lista (são outro site), sempre target="cat-ferramenta".
   // tipo 'pagina': Usuários / LOG / Hermes / Controle de Eventos / Minha
   //   Conta -- páginas separadas de verdade. Quando é a PRÓPRIA página atual
   //   (paginaAtual), perde o target (não faz sentido abrir a si mesma em
   //   outra aba), ganha classe "active" e perde a seta "↗" do rótulo.
+  //
+  // I8: "externo" e "pagina" usavam o MESMO nome de janela
+  // (cat-secundaria) -- abrir "Usuários" depois de "Mapa de OCI" reusava a
+  // aba do mapa e a substituía, fechando de fato o que o usuário tinha
+  // deixado aberto. Dois nomes separam os dois contextos: cat-ferramenta
+  // (sites irmãos, o usuário costuma querer manter aberto ao lado) e
+  // cat-admin (páginas internas do próprio site, sempre uma por vez).
   var SIDEBAR_ITEMS = [
     { grupo: 'Página' },
     { tipo: 'ancora', key: 'atendimento', label: 'Atendimento', anchor: 'atendimento' },
@@ -335,13 +342,13 @@ var CatAuth = (function () {
       }
 
       if (item.tipo === 'externo') {
-        return '<a' + idAttr + ' href="' + item.href + '" target="cat-secundaria" class="site-nav-item">' + item.label + ' ↗</a>';
+        return '<a' + idAttr + ' href="' + item.href + '" target="cat-ferramenta" class="site-nav-item">' + item.label + ' ↗</a>';
       }
 
       // tipo === 'pagina'
       var ehAtual = item.key === paginaAtual;
       var classePagina = 'site-nav-item' + (ehAtual ? ' active' : '') + (item.hiddenByDefault ? ' u-hidden' : '');
-      var targetAttr = ehAtual ? '' : ' target="cat-secundaria"';
+      var targetAttr = ehAtual ? '' : ' target="cat-admin"';
       var rotulo = item.label + (ehAtual ? '' : ' ↗');
       return '<a' + idAttr + ' href="' + item.href + '"' + targetAttr + ' class="' + classePagina + '">' + rotulo + '</a>';
     }).join('');
@@ -377,7 +384,7 @@ var CatAuth = (function () {
           listEl.classList.remove('open');
           toggleEl.setAttribute('aria-expanded', 'false');
         } else {
-          // Link externo/outra pagina (target=cat-secundaria, .html):
+          // Link externo/outra pagina (target=cat-ferramenta/cat-admin, .html):
           // recolher na mesma tacada do toque faz o conteudo da pagina se
           // realinhar embaixo do dedo entre o touchstart e o touchend -- no
           // celular isso e frequentemente interpretado como um gesto de
@@ -423,18 +430,26 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {});
 }
 
-// Links com target="cat-secundaria" (Mapa de OCI, Triagem, Minha Conta,
-// Usuários, LOG, Hermes) sempre reabrem a MESMA aba/janela em vez de criar
-// uma nova a cada clique. O problema: em vários navegadores mobile, quando
-// essa aba já existe e o usuário clica de novo a partir da aba principal, o
-// navegador só atualiza o conteúdo dela em segundo plano sem trazer o foco
-// -- o usuário fica na página principal sem perceber que a outra aba já
-// entrou. window.open() + .focus() reforça esse foco explicitamente; em
-// navegadores que bloqueiam troca de foco por script (ex.: Safari/iOS em
-// alguns casos) o comportamento nativo do target ainda se aplica por baixo,
-// então não piora nada -- só ajuda onde o navegador permite.
+// Links com target="cat-ferramenta" (Mapa de OCI, Triagem) ou
+// target="cat-admin" (Usuários, LOG, Minha Conta, Hermes, Controle de
+// Eventos) sempre reabrem a MESMA aba/janela dentro do próprio grupo, em vez
+// de criar uma nova a cada clique. O problema: em vários navegadores mobile,
+// quando essa aba já existe e o usuário clica de novo a partir da aba
+// principal, o navegador só atualiza o conteúdo dela em segundo plano sem
+// trazer o foco -- o usuário fica na página principal sem perceber que a
+// outra aba já entrou. window.open() + .focus() reforça esse foco
+// explicitamente; em navegadores que bloqueiam troca de foco por script
+// (ex.: Safari/iOS em alguns casos) o comportamento nativo do target ainda
+// se aplica por baixo, então não piora nada -- só ajuda onde o navegador
+// permite.
+//
+// I8: antes, os dois grupos usavam o MESMO nome de janela (cat-secundaria)
+// -- abrir "Usuários" depois de "Mapa de OCI" reusava a aba do mapa e a
+// substituía, fechando de fato o que o usuário tinha deixado aberto lá. O
+// nome vem do próprio link (link.target) em vez de fixo, então cada grupo
+// abre/reusa a sua própria aba.
 document.addEventListener('click', function (e) {
-  var link = e.target.closest && e.target.closest('a[target="cat-secundaria"]');
+  var link = e.target.closest && e.target.closest('a[target="cat-ferramenta"], a[target="cat-admin"]');
   if (!link || !link.href) return;
   // Ctrl/Cmd/Shift/Alt+clique e clique do meio são o jeito padrão do usuário
   // pedir "abre numa aba/janela separada" -- sem essa checagem, esses
@@ -443,7 +458,7 @@ document.addEventListener('click', function (e) {
   if (e.defaultPrevented || e.button !== 0) return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   e.preventDefault();
-  var win = window.open(link.href, 'cat-secundaria');
+  var win = window.open(link.href, link.target);
   if (win) { try { win.focus(); } catch (err) {} }
 });
 
