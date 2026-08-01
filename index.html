@@ -302,7 +302,11 @@
     // tabindex="-1" tira do fluxo de Tab; aria-disabled anuncia o estado
     // pra quem usa leitor de tela (o title sozinho não é lido de forma
     // confiável).
-    ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
+    // Toda página nova que dependa do servidor entra aqui -- 'nav-eventos'
+    // ficou de fora quando eventos.html foi criada, e só se descobria
+    // clicando (a página abre e falha na validação de sessão em vez de
+    // avisar antes, como os outros três itens já fazem).
+    ['nav-usuarios', 'nav-log', 'nav-hermes', 'nav-eventos'].forEach(function (id) {
       var el = document.getElementById(id);
       el.classList.add('offline-disabled');
       el.setAttribute('aria-disabled', 'true');
@@ -337,7 +341,7 @@
 
     document.getElementById('termo-refresh').disabled = false;
 
-    ['nav-usuarios', 'nav-log', 'nav-hermes'].forEach(function (id) {
+    ['nav-usuarios', 'nav-log', 'nav-hermes', 'nav-eventos'].forEach(function (id) {
       var el = document.getElementById(id);
       el.classList.remove('offline-disabled');
       el.removeAttribute('aria-disabled');
