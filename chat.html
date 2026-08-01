@@ -54,7 +54,15 @@
 </style>
 </head>
 <body>
-<div id="n8n-chat"></div>
+<div id="n8n-chat">
+  <!-- Substituído por createChat() quando o widget carrega. O Service Worker
+       ignora origens externas de propósito (não pode cachear o CDN nem o
+       webhook do Apps Script) -- offline, o shell desta página carrega do
+       cache, mas o import do CDN falha, então sem este texto o usuário via
+       um retângulo em branco dentro da seção Atendimento, sem explicação
+       nenhuma (J2 da auditoria). -->
+  <p id="chat-offline-msg" style="padding:24px; font-size:14.5px; line-height:1.6; color:#6B6F7D;">O assistente virtual precisa de conexão com a internet. Verifique a rede e recarregue a página.</p>
+</div>
 <script type="module">
   import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat@1.30.2/dist/chat.bundle.es.js';
 

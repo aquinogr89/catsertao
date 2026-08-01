@@ -287,6 +287,17 @@
     show(document.getElementById('session-offline-suffix'));
 
     var chatBtn = document.getElementById('atendimento-abrir-chat');
+    // Fechar antes de desabilitar: se o usuário estava com o assistente
+    // aberto quando a conexão caiu, desabilitar só o botão deixava um iframe
+    // morto na tela sem nenhum jeito de fechar (o botão que fecharia estava
+    // desabilitado) -- só recarregando a página. chatBoxEl/chatOpenBtn são
+    // declarados mais abaixo neste arquivo, mas var é hoisted e só são usados
+    // em tempo de execução (o clique em "Modo offline" só acontece depois de
+    // toda a IIFE já ter rodado), então funciona.
+    if (!chatBoxEl.classList.contains('u-hidden')) {
+      hide(chatBoxEl);
+      chatOpenBtn.textContent = '💬 Abrir assistente virtual';
+    }
     chatBtn.disabled = true;
     chatBtn.title = 'Indisponível offline — requer conexão.';
 
