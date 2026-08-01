@@ -534,15 +534,18 @@
   });
 
   document.getElementById('btn-scroll-top').addEventListener('click', function () {
-    // "Voltar ao menu" rolava sempre até top:0 -- o cabeçalho, não o menu --
-    // porque o alvo nunca foi calculado de verdade. Rola até a barra
-    // .site-sidebar quando ela existir; cai para o topo da página como
-    // fallback (ela sempre existe aqui, mas por segurança).
-    var alvo = document.querySelector('.site-sidebar');
-    window.scrollTo({
-      top: alvo ? alvo.getBoundingClientRect().top + window.scrollY - 8 : 0,
-      behavior: 'smooth'
-    });
+    // Direto pro topo do documento: no desktop a sidebar é sticky (o menu
+    // nunca sai da tela) e no mobile ela é o primeiro bloco da página, então
+    // top:0 chega no menu nos dois casos. Medir a sidebar não funcionava:
+    // sticky grudada tem getBoundingClientRect().top === 0, e a conta antiga
+    // resolvia pra "posição atual − 8px" -- o botão rolava 8 pixels e parava,
+    // e quanto mais a página estava rolada, mais óbvio ficava que ele não
+    // fazia nada.
+    // behavior 'auto' (sem animação) pra quem pediu menos movimento no
+    // sistema -- rolagem suave incomoda quem ativou essa preferência de
+    // acessibilidade.
+    var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: semMovimento ? 'auto' : 'smooth' });
   });
 
   // Itens da sidebar -- gerados a partir de uma lista única em common.js
