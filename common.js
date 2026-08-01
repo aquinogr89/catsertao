@@ -402,6 +402,36 @@ var CatAuth = (function () {
     });
   }
 
+  // ===================== Botão flutuante "voltar ao topo" =====================
+  // Usado por index.html e pelas páginas utilitárias com tabela longa
+  // (Usuários, LOG, Controle de Eventos) -- no celular, log.html com 100
+  // registros por página vira 100 cards empilhados, e sem este botão não
+  // havia como voltar ao topo a não ser rolando tudo de novo (I3 da
+  // auditoria). Título/aria-label ficam no HTML de cada página (index.html
+  // diz "Voltar ao menu"; as utilitárias dizem "Voltar ao topo") -- não
+  // reaproveitados aqui de propósito, cada página mantém o próprio texto.
+  //
+  // Direto pro topo do documento: no desktop a sidebar é sticky (o menu
+  // nunca sai da tela) e no mobile ela é o primeiro bloco da página, então
+  // top:0 chega no menu nos dois casos (I1) -- medir a posição da sidebar
+  // não funcionava: sticky grudada tem getBoundingClientRect().top === 0.
+  // behavior:'auto' (sem animação) pra quem pediu menos movimento no sistema
+  // (J4). Só fica visível depois de rolar (I2, ver .btn-float.top.visivel em
+  // style.css) -- no topo da página o botão não tem função nenhuma.
+  function iniciarBotaoTopo() {
+    var btn = document.getElementById('btn-scroll-top');
+    if (!btn) return;
+
+    function atualizar() { btn.classList.toggle('visivel', window.scrollY > 400); }
+
+    btn.addEventListener('click', function () {
+      var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: semMovimento ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('scroll', atualizar, { passive: true });
+    atualizar(); // estado inicial (recarga no meio da página)
+  }
+
   return {
     APPS_SCRIPT_URL: APPS_SCRIPT_URL,
     PERFIL_LABEL: PERFIL_LABEL,
@@ -420,6 +450,7 @@ var CatAuth = (function () {
     requireSession: requireSession,
     iniciarMonitorInatividade: iniciarMonitorInatividade,
     iniciarMenuLateral: iniciarMenuLateral,
+    iniciarBotaoTopo: iniciarBotaoTopo,
     aplicarPerfil: aplicarPerfil,
     montarSidebarItens: montarSidebarItens
   };

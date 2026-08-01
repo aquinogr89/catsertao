@@ -548,30 +548,12 @@
     location.reload();
   });
 
-  document.getElementById('btn-scroll-top').addEventListener('click', function () {
-    // Direto pro topo do documento: no desktop a sidebar é sticky (o menu
-    // nunca sai da tela) e no mobile ela é o primeiro bloco da página, então
-    // top:0 chega no menu nos dois casos. Medir a sidebar não funcionava:
-    // sticky grudada tem getBoundingClientRect().top === 0, e a conta antiga
-    // resolvia pra "posição atual − 8px" -- o botão rolava 8 pixels e parava,
-    // e quanto mais a página estava rolada, mais óbvio ficava que ele não
-    // fazia nada.
-    // behavior 'auto' (sem animação) pra quem pediu menos movimento no
-    // sistema -- rolagem suave incomoda quem ativou essa preferência de
-    // acessibilidade.
-    var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: 0, behavior: semMovimento ? 'auto' : 'smooth' });
-  });
-
-  // Só aparece depois de rolar -- no topo da página o botão oferece rolar
-  // pra onde o usuário já está, e ainda cobre o canto inferior direito o
-  // tempo todo à toa (ver .btn-float.top.visivel em style.css).
-  var btnTopo = document.getElementById('btn-scroll-top');
-  function atualizarBotaoTopo() {
-    btnTopo.classList.toggle('visivel', window.scrollY > 400);
-  }
-  window.addEventListener('scroll', atualizarBotaoTopo, { passive: true });
-  atualizarBotaoTopo(); // estado inicial (recarga no meio da página)
+  // Botão "voltar ao topo/menu" -- lógica compartilhada com as páginas
+  // utilitárias (I3 da auditoria), ver CatAuth.iniciarBotaoTopo em
+  // common.js (comentários detalhados do porquê estão lá). Título continua
+  // "Voltar ao menu" aqui (ver HTML do botão) -- CatAuth.iniciarBotaoTopo
+  // não mexe em título/aria-label, só no comportamento.
+  CatAuth.iniciarBotaoTopo();
 
   // Itens da sidebar -- gerados a partir de uma lista única em common.js
   // (antes eram HTML estático repetido nos 4 arquivos). index.html não tem

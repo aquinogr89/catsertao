@@ -22,6 +22,10 @@
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
 <a id="usuarios-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<!-- Lista de usuários pode ficar longa (cards empilhados no celular) -- sem
+     este botão não havia como voltar ao topo a não ser rolando tudo de novo
+     (I3 da auditoria). Lógica em CatAuth.iniciarBotaoTopo (common.js). -->
+<button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
 
 <header id="usuarios-outer-header" class="top pad-x">
   <div class="top-inner wrap">
@@ -119,6 +123,10 @@
   // index.html/conta.html/log.html, ver CatAuth.iniciarMenuLateral em
   // common.js (comentários detalhados do porquê estão lá).
   CatAuth.iniciarMenuLateral();
+
+  // Botão flutuante "voltar ao topo" -- ver CatAuth.iniciarBotaoTopo em
+  // common.js.
+  CatAuth.iniciarBotaoTopo();
 
   var session = null;
   var usuariosRows = [];
