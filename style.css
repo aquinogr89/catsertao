@@ -79,6 +79,18 @@ button:focus-visible{
    --muted-2 (mesma paleta, só mais escuro) chega a ~4,8:1. */
 .status-pill.inativo{ background:var(--chip-bg); color:var(--muted-2); }
 .field-error{ font-size:12.5px; color:#9c1c1c; background:#FBEAEA; border:1px solid #F0C7C7; padding:9px 11px; border-radius:9px; text-align:center; }
+/* Variante de sucesso do .field-error (mesma caixa, cores de confirmação) --
+   antes conta.html pintava isso via estilo inline no caminho de sucesso e
+   "esquecia" de limpar no .catch() de falha de rede: uma queda de conexão
+   depois de uma troca de senha bem-sucedida mostrava "Não foi possível
+   conectar ao servidor agora" em VERDE, com fundo de sucesso -- um erro com
+   cara de confirmação. Classe em vez de estilo inline, alternada por uma
+   função só, elimina o esquecimento estrutural (H3 da auditoria). */
+.field-error.field-ok{
+  color:var(--green-hover);
+  background:#E9F7EF;
+  border-color:#BFE8D2;
+}
 
 /* Login gate (acesso geral) */
 /* min-height:100vh conta a altura da barra de endereco/teclado do celular

@@ -205,6 +205,14 @@
     montarOpcoesPerfil();
     carregarUsuarios();
 
+    // Mesma função/classe .field-ok de conta.html (H3/H6 da auditoria) --
+    // .field-error é reaproveitado nas duas páginas do mesmo jeito.
+    function mostrarMsg(msgEl, texto, ok) {
+      msgEl.textContent = texto;
+      msgEl.classList.toggle('field-ok', !!ok);
+      show(msgEl);
+    }
+
     document.getElementById('usuario-form').addEventListener('submit', function (e) {
       e.preventDefault();
       var msgEl = document.getElementById('usuario-form-msg');
@@ -215,16 +223,18 @@
 
       api({ action: 'criarUsuario', token: session.token, login: login, senha: senha, perfil: perfil }).then(function (res) {
         if (res.ok) {
+          // Em lista longa o usuário novo entra fora da área visível --
+          // sem essa mensagem, o formulário limpo era a única pista de que
+          // deu certo, indistinguível de "resetou sozinho".
           e.target.reset();
           montarOpcoesPerfil();
           carregarUsuarios();
+          mostrarMsg(msgEl, 'Usuário "' + login + '" criado com sucesso.', true);
         } else {
-          msgEl.textContent = res.error || 'Não foi possível criar o usuário.';
-          show(msgEl);
+          mostrarMsg(msgEl, res.error || 'Não foi possível criar o usuário.', false);
         }
       }).catch(function () {
-        msgEl.textContent = 'Não foi possível conectar ao servidor agora.';
-        show(msgEl);
+        mostrarMsg(msgEl, 'Não foi possível conectar ao servidor agora.', false);
       });
     });
 
