@@ -150,7 +150,14 @@
     var tbody = '<tbody>' + usuariosRows.map(function (u) {
       var pill = u.ativo ? '<span class="status-pill ativo">Ativo</span>' : '<span class="status-pill inativo">Inativo</span>';
       var acoes = '';
-      if (podeGerenciarPerfilLocal(u.perfil)) {
+      // ehEuMesmo: o admin logado aparece na própria lista. Sem essa checagem,
+      // ele podia se desativar -- a aba fica num limbo (sessão ainda na tela
+      // até a próxima chamada falhar) e o login deixa de existir pra entrar de
+      // novo; se for o único admin_master, ninguém mais consegue reativar sem
+      // editar a planilha à mão. O servidor também deveria barrar isso, mas a
+      // correção aqui é simplesmente não oferecer o botão.
+      var ehEuMesmo = u.login === session.login;
+      if (podeGerenciarPerfilLocal(u.perfil) && !ehEuMesmo) {
         if (u.ativo) {
           acoes = '<button type="button" class="btn-danger" data-desativar="' + escapeHtml(u.login) + '">Desativar</button>';
         } else {
@@ -229,6 +236,12 @@
         api({ action: 'desativarUsuario', token: session.token, login: loginDesativar }).then(function (res) {
           if (res.ok) carregarUsuarios();
           else window.alert(res.error || 'Não foi possível desativar o usuário.');
+        }).catch(function () {
+          // Sem isso, uma queda de rede (ou o timeout de 15s da api()) fazia a
+          // Promise rejeitar em silêncio: a tela não mudava, a lista não
+          // recarregava, nenhum erro aparecia -- o admin confirmava a ação e
+          // via nada acontecer, sem saber se tinha funcionado ou não.
+          window.alert('Não foi possível conectar ao servidor agora. A ação pode não ter sido concluída — atualize a lista para conferir.');
         });
         return;
       }
@@ -239,6 +252,8 @@
         api({ action: 'reativarUsuario', token: session.token, login: loginReativar }).then(function (res) {
           if (res.ok) carregarUsuarios();
           else window.alert(res.error || 'Não foi possível reativar o usuário.');
+        }).catch(function () {
+          window.alert('Não foi possível conectar ao servidor agora. A ação pode não ter sido concluída — atualize a lista para conferir.');
         });
         return;
       }
@@ -250,6 +265,8 @@
         api({ action: 'excluirUsuario', token: session.token, login: loginExcluir }).then(function (res) {
           if (res.ok) carregarUsuarios();
           else window.alert(res.error || 'Não foi possível excluir o usuário.');
+        }).catch(function () {
+          window.alert('Não foi possível conectar ao servidor agora. A ação pode não ter sido concluída — atualize a lista para conferir.');
         });
       }
     });
