@@ -200,7 +200,18 @@ document.addEventListener('keydown', function (e) {
   // <iframe> sobre o que este aviso cobre e o que não cobre.
   var sheetFrame = document.getElementById('evt-sheet-frame');
   var sheetFallback = document.getElementById('evt-sheet-fallback');
-  var sheetTimeout = setTimeout(function () { show(sheetFallback); }, 8000);
+  var sheetTimeout = null;
+  // Só é chamada depois que #site-shell (onde o iframe vive) sai do
+  // display:none -- iniciar o timer na carga da página, antes da sessão ser
+  // confirmada, contava esses segundos com o iframe ainda invisível (um
+  // iframe loading="lazy" dentro de display:none não carrega, o evento
+  // 'load' não tem como chegar antes disso). Em sinal fraco ou num cold
+  // start do Apps Script (acima de 8s de requireSession), o card abria já
+  // mostrando "Não foi possível carregar a planilha" -- e ela carregava
+  // logo depois, contradizendo o aviso na tela (H2 da auditoria).
+  function iniciarTimeoutPlanilha() {
+    sheetTimeout = setTimeout(function () { show(sheetFallback); }, 8000);
+  }
   sheetFrame.addEventListener('load', function () {
     clearTimeout(sheetTimeout);
     hide(sheetFallback);
@@ -237,6 +248,7 @@ document.addEventListener('keydown', function (e) {
     hide(document.getElementById('eventos-outer-back'));
     hide(document.getElementById('eventos-outer-main'));
     show(document.getElementById('site-shell'));
+    iniciarTimeoutPlanilha();
 
     CatAuth.iniciarMonitorInatividade(function () { location.reload(); });
 
