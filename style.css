@@ -156,7 +156,13 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
    a tabela do Termo de Compromisso, com white-space:nowrap) em vez de
    encolher e deixar o scroll interno (.table-wrap) cuidar disso. */
 .site-shell{ display:flex; align-items:flex-start; width:100%; min-width:0; }
-.site-sidebar{ width:210px; flex:none; background:#FCFBF8; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; }
+/* max-height+overflow-y (L4 da auditoria): sticky sem limite de altura nem
+   rolagem própria -- hoje o menu cabe, mas já cresceu uma vez (Controle de
+   Eventos); numa janela baixa, os últimos itens ficariam abaixo da dobra,
+   grudados no sticky, sem subir com a página nem rolar sozinhos. Só no
+   desktop -- abaixo de 860px a sidebar é position:static (bloco logo
+   abaixo), onde isso não se aplica. */
+.site-sidebar{ width:210px; flex:none; background:#FCFBF8; border-right:1px solid var(--border); padding:28px 14px; position:sticky; top:0; align-self:flex-start; max-height:100vh; overflow-y:auto; }
 .site-sidebar-list{ display:flex; flex-direction:column; gap:2px; }
 .site-nav-toggle{ display:none; }
 .site-nav-label{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; color:var(--muted-3); text-transform:uppercase; padding:16px 10px 8px; display:flex; align-items:center; gap:9px; }
@@ -259,7 +265,12 @@ table.termo-table th{ font-family:'Oswald',sans-serif; font-size:12.5px; letter-
 
 /* Modal (usado pela edição do Termo de Compromisso) */
 .modal-overlay{ position:fixed; inset:0; background:rgba(20,32,74,.55); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000; }
-.modal-card{ background:#fff; border-radius:14px; padding:24px; width:100%; max-width:520px; max-height:85vh; overflow-y:auto; }
+/* dvh depois de vh (L5 da auditoria), mesmo padrão de .gate (100svh) e
+   #chat-frame (dvh): vh conta a barra de endereço/teclado do celular como
+   parte da tela -- e o modal de edição do Termo é justamente uma caixa com
+   campos de texto, onde o teclado abre. Navegador sem suporte a dvh
+   simplesmente ignora essa segunda linha e fica só com a de cima. */
+.modal-card{ background:#fff; border-radius:14px; padding:24px; width:100%; max-width:520px; max-height:85vh; max-height:85dvh; overflow-y:auto; }
 .modal-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
 .modal-head h3{ font-family:'Oswald',sans-serif; font-size:19px; font-weight:700; color:var(--ink); text-transform:uppercase; margin:0; }
 .modal-close{ background:none; border:none; font-size:22px; line-height:1; cursor:pointer; color:var(--muted); padding:0 4px; flex:none; }
@@ -437,6 +448,18 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   input[type=search], input[type=text], input[type=password], input[type=date], select{
     font-size:16px;
   }
+}
+
+/* .site-nav-toggle-caret gira 180° ao abrir o menu do celular -- ficou de
+   fora do bloco global de prefers-reduced-motion (L6 da auditoria) porque
+   sua única transition vive aqui dentro do bloco de 860px. Precisa da
+   MESMA especificidade do seletor original (.site-nav-toggle
+   .site-nav-toggle-caret, duas classes) combinada com a mesma largura --
+   um "@media (prefers-reduced-motion:reduce)" sozinho, com um seletor mais
+   fraco, perderia a disputa de cascata pra regra de cima (mesma
+   especificidade, mas ela vem depois no arquivo). */
+@media (max-width: 860px) and (prefers-reduced-motion: reduce){
+  .site-nav-toggle .site-nav-toggle-caret{ transition:none; }
 }
 
 @media (max-width: 640px){
