@@ -82,6 +82,10 @@
   .hz-card-body-inner hr{ border:none; border-top:1px solid var(--hz-border); margin:14px 0; }
   .hz-card-body-inner blockquote{ border-left:3px solid var(--hz-gold); padding-left:14px; margin:10px 0; color:var(--hz-muted); }
   .hz-card.hz-search-hidden{ display:none; }
+  /* Mesma classe, aplicada em <tr> das tabelas soltas fora de .hz-card
+     (K4 da auditoria) -- display:none numa linha de tabela é válido e tira
+     ela do layout normalmente. */
+  tr.hz-search-hidden{ display:none; }
 
   /* Tags */
   .hz-tag{ display:inline-block; padding:2px 9px; border-radius:10px; font-size:.72em; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
@@ -289,6 +293,11 @@
     </nav>
 
     <div class="hz-content-area" id="hz-content-area">
+
+      <!-- Mensagem de "nada encontrado" (K4 da auditoria) -- um elemento só,
+           fora de qualquer seção: sempre no topo da área de conteúdo,
+           independente de qual seção estiver ativa. -->
+      <p id="hz-search-empty" class="table-status u-hidden">Nenhum resultado nesta seção.</p>
 
       <!-- ============ SKILLS ============ -->
       <section class="hz-section" id="skills">
@@ -1291,17 +1300,42 @@ document.addEventListener('keydown', function (e) {
     });
   }
 
+  // K4 da auditoria: comparava só .hz-title + .hz-desc, então buscar
+  // qualquer coisa que só aparecesse no CORPO do card (ex.: "PQS", "6 kg",
+  // um trecho de norma, o nome de um script) não encontrava nada, mesmo com
+  // o card visível na tela contendo o termo. card.textContent cobre o card
+  // inteiro (título, descrição, tags e todo o corpo). Também não tocava em
+  // nada fora de .hz-card -- #sites e parte de #avancado são só uma
+  // <table> solta, então digitar ali não mudava nada na tela.
   function applySearch(query) {
     var q = query.trim().toLowerCase();
     var activeSection = document.querySelector('.hz-section.active');
+    var emptyMsg = document.getElementById('hz-search-empty');
     if (!activeSection) return;
+
+    var algumVisivel = false;
+
     activeSection.querySelectorAll('.hz-card').forEach(function (card) {
-      if (!q) { card.classList.remove('hz-search-hidden'); return; }
-      var title = card.querySelector('.hz-title');
-      var desc = card.querySelector('.hz-desc');
-      var text = ((title ? title.textContent : '') + ' ' + (desc ? desc.textContent : '')).toLowerCase();
-      card.classList.toggle('hz-search-hidden', text.indexOf(q) === -1);
+      if (!q) { card.classList.remove('hz-search-hidden'); algumVisivel = true; return; }
+      var oculto = card.textContent.toLowerCase().indexOf(q) === -1;
+      card.classList.toggle('hz-search-hidden', oculto);
+      if (!oculto) algumVisivel = true;
     });
+
+    // Linha a linha nas tabelas que não estão dentro de um .hz-card --
+    // pula a linha de <th> (cabeçalho da própria tabela, sempre visível).
+    activeSection.querySelectorAll('table').forEach(function (table) {
+      if (table.closest('.hz-card')) return;
+      table.querySelectorAll('tr').forEach(function (tr) {
+        if (tr.querySelector('th')) return;
+        if (!q) { tr.classList.remove('hz-search-hidden'); algumVisivel = true; return; }
+        var oculto = tr.textContent.toLowerCase().indexOf(q) === -1;
+        tr.classList.toggle('hz-search-hidden', oculto);
+        if (!oculto) algumVisivel = true;
+      });
+    });
+
+    if (emptyMsg) emptyMsg.classList.toggle('u-hidden', !q || algumVisivel);
   }
 
   // Guarda a seção pedida por último (K2 da auditoria) -- a conversão
