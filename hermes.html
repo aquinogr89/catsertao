@@ -15,12 +15,15 @@
 <!-- Oswald/Public Sans auto-hospedadas (ver fonts/fonts.css) -- offline as
      fontes não carregavam do CDN do Google e o layout se deslocava
      (métricas de fallback diferentes das da fonte real). JetBrains Mono
-     (só o <code> do painel) continua vindo do Google -- uso pontual, já
-     com fallback pra 'Fira Code'/monospace declarado no CSS abaixo. -->
+     (só o <code> do painel) vinha do mesmo jeito -- exatamente o mesmo
+     problema, só que mais grave: um <link rel="stylesheet"> BLOQUEIA a
+     renderização até responder, e o Service Worker ignora outras origens
+     de propósito (não pode cachear o CDN do Google). Sem sinal, a tela
+     inteira ficava em branco até a requisição falhar sozinha, em vez de só
+     o <code> cair pro fallback (K10 da auditoria). Removido -- 'Fira
+     Code', monospace já é o fallback declarado no CSS abaixo, e cobre o
+     uso pontual do <code> deste painel. -->
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
   /*
