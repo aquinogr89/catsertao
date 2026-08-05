@@ -1,22 +1,25 @@
 {
-  "_comentario": "Conteúdo do card 'MPPE / Termo de Ajustamento de Conduta (TAC)' da aba Controle de Eventos (eventos.html). Separado do HTML/JS de propósito -- para atualizar o texto, edite só este arquivo (sem mexer em eventos.html) e publique. Isso continua exigindo um novo deploy (git push), já que o site é estático no GitHub Pages e não tem banco de dados: uma edição sem deploy nenhum exigiria buscar este texto de uma fonte editável ao vivo (ex.: uma aba do Apps Script, como o Termo de Compromisso), o que não foi implementado agora porque o backend real do site vive no repositório oci-catsertao, fora deste repositório.",
+  "_comentario": "Conteúdo do card 'MPPE / Termo de Ajustamento de Conduta (TAC)' da aba Controle de Eventos (eventos.html). Este arquivo agora serve só como conteúdo padrão/semente e fallback: o conteúdo real e editável ao vivo vem do backend (ações obterConteudoEventos/salvarConteudoEventos no Apps Script, ver oci-catsertao/apps-script/Auth.gs), editável direto na aba por quem tem acesso a ela (admin_master/admin), sem precisar de deploy. Este arquivo só é usado como conteúdo inicial na primeira vez (antes de qualquer edição ter sido salva) ou como fallback se o backend estiver indisponível.",
   "titulo": "MPPE — Termo de Ajustamento de Conduta (TAC)",
-  "atualizadoEm": "2026-07-31",
+  "atualizadoEm": "2026-08-05",
   "secoes": [
     {
-      "titulo": "Compete à Prefeitura (ou organizador do evento)",
+      "titulo": "COMPETE AO ORGANIZADOR DO EVENTO",
       "paragrafos": [
-        "A Prefeitura (ou organizador do evento), em observância à Lei Estadual nº 14.133/2010 (Lei de Grandes Eventos de Pernambuco), deve solicitar a aprovação do Projeto de Segurança Contra Incêndio e Pânico (PSCIP) e o competente Auto de Vistoria do Corpo de Bombeiros (AVCB), com antecedência mínima de 15 dias úteis da data do evento, mediante protocolo através do site www.bombeiros.pe.gov.br.",
-        "Entregar as instalações do evento com os sistemas preventivos de segurança contra incêndio e pânico já instalados em até 24 horas antes do início do evento, conforme orientação do Corpo de Bombeiros Militar de Pernambuco (CBMPE), informando ao CBMPE e aos demais órgãos fiscalizadores sobre a conclusão das instalações.",
-        "Orientar as empresas contratadas que atuarão no evento (palco, som, iluminação, gerador, barracas, tendas, blimps, camarim, camarote, entre outras estruturas) para que sigam as normas e orientações de segurança do Corpo de Bombeiros, devendo observar se há autorização para uso de gases, fogos de artifício ou demais shows pirotécnicos dentro do local do evento.",
-        "Solicitar a vistoria do CREA-PE para fins de avaliação da montagem, desmontagem e estrutura do evento."
+        "1) O organizador do evento, em observância à Lei Estadual nº 14.133/2010 (Lei de Grandes Eventos de Pernambuco), deve solicitar a aprovação do Projeto Contra Incêndio e Pânico (PCI) e o competente Auto de Vistoria do Corpo de Bombeiros (AVCB), com antecedência mínima de 15 dias úteis da data do evento, mediante protocolo através do site www.bombeiros.pe.gov.br.",
+        "2) Entregar as instalações do evento com os sistemas preventivos de segurança contra incêndio e pânico já instalados em até 24 horas antes do início do evento, conforme orientação do Corpo de Bombeiros Militar de Pernambuco (CBMPE), informando ao CBMPE e aos demais órgãos fiscalizadores sobre a conclusão das instalações.",
+        "3) Orientar as empresas contratadas que atuarão no evento (palco, som, iluminação, gerador, barracas, tendas, blimps, camarim, camarote, entre outras estruturas) para que sigam as normas e orientações de segurança do Corpo de Bombeiros, devendo observar se há autorização para uso de gases (tais quais GLP, CO2, HÉLIO), fogos de artifício ou quaisquer outros artefatos utilizados para shows pirotécnicos dentro do local do evento.",
+        "4) Solicitar formalmente a vistoria do CREA-PE para fins de avaliação da montagem, desmontagem e estrutura presente em todo o evento.",
+        "5) Solicitar formalmente a participação da NEOENERGIA nas fiscalizações das instalações elétricas que fizerem uso da rede pública;",
+        "6) Fiscalizar e garantir que todo prestador de serviço que fizer uso do espaço destinado ao evento temporário (como exemplo os parques de diversões, circos, bar suspenso com uso de guindaste, etc.) esteja seguindo as normas do Corpo de Bombeiros, estando previsto em Projeto Contra Incêndio e Pânico o espaço destinado àquela atividade, bem como as competentes emissões de ART/RRT/TRT dos serviços e estruturas utilizadas, a fim de que constem nas documentações anexadas à solicitação de AVCB.",
+        "7) Realizar o controle de público"
       ]
     },
     {
-      "titulo": "Compete ao Corpo de Bombeiros",
+      "titulo": "COMPETE AO CORPO DE BOMBEIROS",
       "paragrafos": [
-        "Realizar a triagem da documentação protocolada pelo organizador do evento através do site www.bombeiros.pe.gov.br, verificando o atendimento aos requisitos técnicos de segurança contra incêndio e pânico exigidos para o tipo de evento.",
-        "Após a aprovação da triagem documental, realizar a vistoria técnica de toda a estrutura do evento, verificando a conformidade com o projeto aprovado e com as normas de segurança contra incêndio e pânico, comunicando ao Ministério Público eventuais irregularidades que não tenham sido sanadas em tempo hábil pela organização do evento."
+        "1) Realizar a triagem da documentação protocolada pelo organizador do evento através do site www.bombeiros.pe.gov.br, verificando o atendimento aos requisitos técnicos de segurança contra incêndio e pânico exigidos para o tipo de evento.",
+        "2) Após a aprovação da triagem documental, realizar a vistoria técnica de toda a estrutura do evento, verificando a conformidade com o projeto aprovado (se exigido) e com as normas de segurança contra incêndio e pânico, comunicando ao Ministério Público eventuais irregularidades que não tenham sido sanadas em tempo hábil pela organização do evento."
       ]
     }
   ]

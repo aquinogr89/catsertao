@@ -146,13 +146,23 @@
           <div class="evt-card-header" role="button" tabindex="0" aria-expanded="false">
             <div>
               <div class="evt-title">MPPE — Termo de Ajustamento de Conduta (TAC)</div>
-              <div class="evt-desc">Responsabilidades da Prefeitura/organizador do evento e do Corpo de Bombeiros.</div>
+              <div class="evt-desc">Responsabilidades do organizador do evento e do Corpo de Bombeiros.</div>
             </div>
             <span class="evt-toggle">▼</span>
           </div>
           <div class="evt-card-body">
-            <div class="evt-card-body-inner" id="evt-tac-body">
-              <p class="table-status">Carregando...</p>
+            <div class="evt-card-body-inner">
+              <button type="button" id="evt-tac-btn-editar" class="btn-outline-navy" style="margin-bottom:14px;">✏️ Editar texto</button>
+              <div id="evt-tac-body">
+                <p class="table-status">Carregando...</p>
+              </div>
+              <div id="evt-tac-form" class="u-hidden"></div>
+              <p id="evt-tac-form-msg" class="field-error u-hidden" role="alert"></p>
+              <div id="evt-tac-form-actions" class="u-hidden" style="display:flex; gap:10px; margin-top:14px;">
+                <button type="button" id="evt-tac-btn-salvar" class="btn-outline-navy">Salvar</button>
+                <button type="button" id="evt-tac-btn-cancelar" class="btn-outline-navy">Cancelar</button>
+                <button type="button" id="evt-tac-btn-add-secao" class="btn-outline-navy" style="margin-left:auto;">+ Adicionar seção</button>
+              </div>
             </div>
           </div>
         </div>
@@ -232,7 +242,15 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
     hide(sheetFallback);
   });
 
+  // dadosTacAtual guarda o conteúdo carregado (pra prefill/cancelar da
+  // edição); sessionTac guarda o token (o card carrega antes de qualquer
+  // clique em "Editar", então precisa estar disponível quando o botão for
+  // clicado, não só no momento do carregarTac).
+  var dadosTacAtual = null;
+  var sessionTac = null;
+
   function renderTac(dados) {
+    dadosTacAtual = dados;
     var tacBody = document.getElementById('evt-tac-body');
     var html = dados.secoes.map(function (secao) {
       var paragrafos = secao.paragrafos.map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; }).join('');
@@ -241,15 +259,136 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
     tacBody.innerHTML = html;
   }
 
-  function carregarTac() {
-    // Texto vem de content/tac-mppe.json (separado do HTML/JS) -- ver
-    // comentário no próprio arquivo sobre a limitação de ainda exigir um
-    // novo deploy (git push) pra atualizar, já que o site é estático.
-    fetch('content/tac-mppe.json').then(function (res) {
+  // content/tac-mppe.json é usado só como conteúdo padrão/semente e
+  // fallback -- o conteúdo real e editável ao vivo (ação
+  // obterConteudoEventos/salvarConteudoEventos no backend, sem precisar de
+  // deploy) vem primeiro; só cai pro arquivo estático se o backend ainda
+  // não tiver nada salvo (conteudo null, primeiro uso) ou estiver
+  // indisponível.
+  function carregarTacEstatico() {
+    return fetch('content/tac-mppe.json').then(function (res) {
       if (!res.ok) throw new Error('http_' + res.status);
       return res.json();
+    });
+  }
+
+  function carregarTac(token) {
+    CatAuth.api({ action: 'obterConteudoEventos', token: token }).then(function (res) {
+      if (res.ok && res.conteudo) return res.conteudo;
+      return carregarTacEstatico();
+    }).catch(function () {
+      return carregarTacEstatico();
     }).then(renderTac).catch(function () {
       document.getElementById('evt-tac-body').innerHTML = '<p class="evt-tac-error">Não foi possível carregar o texto do TAC agora. Tente novamente em instantes.</p>';
+    });
+  }
+
+  // ===================== Edição do texto do TAC (admin_master/admin) =====================
+  // A própria aba já é restrita a admin_master/admin (CatAuth.requireSession
+  // logo abaixo) -- não precisa de checagem de perfil extra aqui, só de
+  // sessão válida pra chamar o backend.
+  function montarHtmlSecaoEdit(secao) {
+    var paragrafosTexto = (secao.paragrafos || []).join('\n\n');
+    return '<div class="evt-tac-secao-edit" style="margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border-2);">' +
+      '<label class="field" style="margin-bottom:10px;">Título da seção<input type="text" class="evt-tac-input-titulo" value="' + escapeHtml(secao.titulo || '') + '"></label>' +
+      '<label class="field">Parágrafos (deixe uma linha em branco entre um parágrafo e outro)<textarea class="evt-tac-textarea-paragrafos" rows="8">' + escapeHtml(paragrafosTexto) + '</textarea></label>' +
+      '<button type="button" class="btn-outline-navy evt-tac-btn-remover-secao" style="margin-top:10px;">Remover esta seção</button>' +
+      '</div>';
+  }
+
+  function ligarBotaoRemoverSecao(bloco) {
+    bloco.querySelector('.evt-tac-btn-remover-secao').addEventListener('click', function () {
+      if (window.confirm('Remover esta seção inteira?')) bloco.remove();
+    });
+  }
+
+  function renderFormularioTac(dados) {
+    var form = document.getElementById('evt-tac-form');
+    form.innerHTML = (dados.secoes || []).map(montarHtmlSecaoEdit).join('');
+    Array.prototype.forEach.call(form.querySelectorAll('.evt-tac-secao-edit'), ligarBotaoRemoverSecao);
+  }
+
+  function coletarDadosFormularioTac() {
+    var blocos = document.querySelectorAll('#evt-tac-form .evt-tac-secao-edit');
+    var secoes = Array.prototype.map.call(blocos, function (bloco) {
+      var paragrafos = bloco.querySelector('.evt-tac-textarea-paragrafos').value
+        .split(/\n\s*\n/)
+        .map(function (p) { return p.trim(); })
+        .filter(function (p) { return p; });
+      return { titulo: bloco.querySelector('.evt-tac-input-titulo').value.trim(), paragrafos: paragrafos };
+    });
+    return { titulo: (dadosTacAtual && dadosTacAtual.titulo) || 'MPPE — Termo de Ajustamento de Conduta (TAC)', secoes: secoes };
+  }
+
+  function iniciarEdicaoTac() {
+    var btnEditar = document.getElementById('evt-tac-btn-editar');
+    var btnSalvar = document.getElementById('evt-tac-btn-salvar');
+    var btnCancelar = document.getElementById('evt-tac-btn-cancelar');
+    var btnAddSecao = document.getElementById('evt-tac-btn-add-secao');
+    var formMsg = document.getElementById('evt-tac-form-msg');
+    var formActions = document.getElementById('evt-tac-form-actions');
+    var formEl = document.getElementById('evt-tac-form');
+    var bodyEl = document.getElementById('evt-tac-body');
+
+    function abrirEdicao() {
+      if (!dadosTacAtual) return;
+      hide(formMsg);
+      renderFormularioTac(dadosTacAtual);
+      hide(bodyEl);
+      show(formEl);
+      show(formActions);
+      hide(btnEditar);
+    }
+
+    function fecharEdicao() {
+      hide(formEl);
+      hide(formActions);
+      hide(formMsg);
+      show(bodyEl);
+      show(btnEditar);
+    }
+
+    btnEditar.addEventListener('click', abrirEdicao);
+    btnCancelar.addEventListener('click', fecharEdicao);
+
+    btnAddSecao.addEventListener('click', function () {
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = montarHtmlSecaoEdit({ titulo: '', paragrafos: [] });
+      var bloco = wrapper.firstChild;
+      formEl.appendChild(bloco);
+      ligarBotaoRemoverSecao(bloco);
+      bloco.querySelector('.evt-tac-input-titulo').focus();
+      bloco.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    btnSalvar.addEventListener('click', function () {
+      var novoConteudo = coletarDadosFormularioTac();
+      if (novoConteudo.secoes.length === 0) {
+        formMsg.textContent = 'Informe ao menos uma seção antes de salvar.';
+        show(formMsg);
+        return;
+      }
+      var vazio = novoConteudo.secoes.some(function (s) { return !s.titulo || s.paragrafos.length === 0; });
+      if (vazio) {
+        formMsg.textContent = 'Toda seção precisa de título e ao menos um parágrafo.';
+        show(formMsg);
+        return;
+      }
+
+      hide(formMsg);
+      btnSalvar.disabled = true;
+      btnSalvar.textContent = 'Salvando...';
+      CatAuth.api({ action: 'salvarConteudoEventos', token: sessionTac.token, conteudo: novoConteudo }).then(function (res) {
+        if (!res.ok) throw new Error(res.error || 'Não foi possível salvar agora.');
+        renderTac(novoConteudo);
+        fecharEdicao();
+      }).catch(function (err) {
+        formMsg.textContent = (err && err.message) || 'Não foi possível salvar agora. Tente novamente.';
+        show(formMsg);
+      }).finally(function () {
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Salvar';
+      });
     });
   }
 
@@ -271,15 +410,12 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
     // tabela de Termos de Compromisso (lá, o próprio "obterTermo" já loga
     // "acesso_termo" no servidor). Fire-and-forget: não bloqueia a tela nem
     // repete em caso de falha -- consultar a aba não deve travar por causa
-    // do registro do acesso. IMPORTANTE: esta ação ("registrarAcessoEventos")
-    // ainda não existe no backend (Apps Script, repositório oci-catsertao,
-    // fora deste repositório) -- precisa ser adicionada lá espelhando o
-    // handler de obterTermo/acesso_termo antes desta chamada logar de
-    // verdade. Até lá, ela só recebe o "Ação inválida" padrão do backend e
-    // é ignorada, sem quebrar a página.
+    // do registro do acesso.
     CatAuth.api({ action: 'registrarAcessoEventos', token: session.token }).catch(function () {});
 
-    carregarTac();
+    sessionTac = session;
+    iniciarEdicaoTac();
+    carregarTac(session.token);
   }, function (err) {
     hide(document.getElementById('loading-msg'));
     var denied = document.getElementById('denied-box');

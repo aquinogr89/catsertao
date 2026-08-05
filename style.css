@@ -52,8 +52,9 @@ img{ display:block; max-width:100%; }
 .user-form-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
 .user-form-row .field{ flex:1; min-width:160px; }
 .user-form-row .field-perfil{ min-width:180px; flex:none; }
-.field input, .field select{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
-.field input:focus, .field select:focus{ border-color:var(--red); background:#fff; }
+.field input, .field select, .field textarea{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:400; text-transform:none; letter-spacing:normal; padding:12px 14px; border:1px solid var(--border-2); border-radius:10px; background:var(--field-bg); outline:none; color:var(--ink); }
+.field textarea{ resize:vertical; min-height:110px; line-height:1.5; }
+.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--red); background:#fff; }
 .cat-filter-row select, .cat-filter-row input[type=date]{ font-family:'Public Sans',sans-serif; font-size:14.5px; padding:10px 13px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
 /* outline:none acima tira o retângulo padrão do navegador, mas nada o
    substituía -- Tab pelo login, pelo cadastro de usuário e pelos filtros do
@@ -61,6 +62,7 @@ img{ display:block; max-width:100%; }
    (Tab), não no clique do mouse, então não conflita com o :focus acima. */
 .field input:focus-visible,
 .field select:focus-visible,
+.field textarea:focus-visible,
 .cat-filter-row input:focus-visible,
 .cat-filter-row select:focus-visible,
 .site-nav-item:focus-visible,
