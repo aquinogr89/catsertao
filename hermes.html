@@ -1297,9 +1297,19 @@ document.addEventListener('keydown', function (e) {
     });
   }
 
+  // Guarda a seção pedida por último (K2 da auditoria) -- a conversão
+  // "mais" -> "skills" só acontecia dentro de goTo, e nada rechamava goTo
+  // quando a LARGURA da janela mudava: abrir "Mais" no celular (#mais só
+  // existe <=720px) e girar pra paisagem, ou alargar a janela no desktop
+  // (regra CSS "@media (min-width:721px){ #mais{ display:none !important } }"),
+  // deixava o painel sem nenhuma seção ativa -- topbar, statusbar e área de
+  // conteúdo em branco, sem item marcado na sidebar.
+  var secaoAtual = 'skills';
+
   function goTo(id) {
     if (id === 'mais' && !isMobile()) id = 'skills';
     if (SECTIONS.indexOf(id) === -1 && id !== 'mais') id = 'skills';
+    secaoAtual = id;
 
     document.querySelectorAll('.hz-section').forEach(function (sec) {
       sec.classList.toggle('active', sec.id === id);
@@ -1347,6 +1357,12 @@ document.addEventListener('keydown', function (e) {
     var id = (location.hash || '').replace('#', '');
     if (SECTIONS.indexOf(id) !== -1 || id === 'mais') goTo(id);
   });
+
+  // Rechama goTo() com a MESMA seção ao redimensionar -- reprocessa a
+  // conversão "mais" -> "skills" (ou o inverso, não aplicável aqui) sempre
+  // que a largura atravessa o breakpoint dos 720px, em vez de deixar o
+  // painel preso na seção "mais" depois que ela sai de cena.
+  window.addEventListener('resize', debounce(function () { goTo(secaoAtual); }, 150), { passive: true });
 
   var initialId = (location.hash || '').replace('#', '');
   goTo(SECTIONS.indexOf(initialId) !== -1 ? initialId : 'skills');
