@@ -293,8 +293,13 @@
   </div>
 
   <div class="hz-statusbar">
-    <span class="hz-chip"><span class="hz-chip-dot"></span>4 cron jobs · todos ok</span>
-    <span class="hz-chip">⏱ próximo: hoje 14:38</span>
+    <!-- K9 da auditoria: o ponto verde + "próximo: hoje 14:38" eram texto
+         fixo apresentado como status ao vivo -- nada aqui consulta nada, e
+         a data real de hoje já passou bem dessas previsões. Chip vira um
+         rótulo de levantamento manual, sem o ponto de status (que mentiria
+         "confirmado agora"); "próximo: hoje 14:38" some -- não tem como
+         essa previsão continuar valendo com o tempo. -->
+    <span class="hz-chip">4 cron jobs · levantamento manual — 22/07/2026</span>
     <span class="hz-chip">57 normas monitoradas</span>
     <span class="hz-statusbar-spacer"></span>
     <a class="hz-back-link" href="index.html">← Voltar ao portal</a>
@@ -500,8 +505,7 @@
               <strong>Entrega:</strong> Telegram<br>
               <strong>O que faz:</strong> envia 5 opções de tema + link do Google Meet fixo para o Geraldo escolher o tema da instrução de segunda-feira.
               <hr>
-              <strong>Última execução:</strong> 19/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-              <strong>Próxima:</strong> 26/07/2026
+              <strong>Última execução:</strong> 19/07/2026 <span style="color:var(--hz-green);">✓ ok</span>
             </div>
           </div>
         </div>
@@ -525,8 +529,7 @@
               <strong>Entrega:</strong> Telegram<br>
               <strong>O que faz:</strong> envia a mensagem formatada para WhatsApp (texto limpo: saudação, tema, horário, link do Meet). <em>Sem links de Drive/Slides.</em>
               <hr>
-              <strong>Última execução:</strong> 20/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-              <strong>Próxima:</strong> 27/07/2026
+              <strong>Última execução:</strong> 20/07/2026 <span style="color:var(--hz-green);">✓ ok</span>
             </div>
           </div>
         </div>
@@ -553,8 +556,7 @@
               <hr>
               <strong>Lógica interna:</strong> só executa no 1º dia útil do mês (ignora sábados/domingos). Compara hash SHA-256.
               <hr>
-              <strong>Última execução:</strong> 18/07/2026 <span style="color:var(--hz-green);">✓ ok</span><br>
-              <strong>Próxima:</strong> 01/08/2026
+              <strong>Última execução:</strong> 18/07/2026 <span style="color:var(--hz-green);">✓ ok</span>
             </div>
           </div>
         </div>
@@ -578,8 +580,7 @@
               <strong>Entrega:</strong> Telegram<br>
               <strong>O que faz:</strong> monitora e-mails da Neoenergia (r2d2), baixa anexos PDF e encaminha para o Telegram.
               <hr>
-              <strong>Última execução:</strong> 22/07/2026 13:38 <span style="color:var(--hz-green);">✓ ok</span><br>
-              <strong>Próxima:</strong> 22/07/2026 14:38
+              <strong>Última execução:</strong> 22/07/2026 13:38 <span style="color:var(--hz-green);">✓ ok</span>
             </div>
           </div>
         </div>
