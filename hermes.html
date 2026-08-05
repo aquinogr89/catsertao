@@ -67,9 +67,16 @@
   .hz-card-header .hz-meta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
   .hz-card-header .hz-toggle{ color:var(--hz-muted-3); font-size:1.1em; transition:transform .2s; }
   .hz-card.open .hz-card-header .hz-toggle{ transform:rotate(180deg); }
-  .hz-card-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; border-top:0 solid var(--hz-border); }
-  .hz-card.open .hz-card-body{ max-height:2400px; border-top-width:1px; border-top-style:solid; }
-  .hz-card-body-inner{ padding:16px 18px; font-size:.9em; color:#c7cce0; }
+  /* max-height numérico (2400px) cortava cards com muito conteúdo (o de 35
+     arquivos da Neoenergia passava disso no celular, com nomes quebrando em
+     2-3 linhas) -- e o excedente não aparecia nem rolava (overflow:hidden).
+     grid-template-rows 0fr/1fr anima "auto" de verdade, sem número mágico
+     nenhum (K3 da auditoria). O filho (.hz-card-body-inner) precisa de
+     min-height:0 -- sem isso, um item de grid não encolhe abaixo do
+     tamanho do próprio conteúdo, e a linha nunca chegaria a 0fr. */
+  .hz-card-body{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; border-top:0 solid var(--hz-border); }
+  .hz-card.open .hz-card-body{ grid-template-rows:1fr; border-top-width:1px; border-top-style:solid; }
+  .hz-card-body-inner{ padding:16px 18px; font-size:.9em; color:#c7cce0; overflow:hidden; min-height:0; }
   .hz-card-body-inner ul{ padding-left:20px; margin:8px 0; }
   .hz-card-body-inner li{ margin-bottom:4px; }
   .hz-card-body-inner hr{ border:none; border-top:1px solid var(--hz-border); margin:14px 0; }
