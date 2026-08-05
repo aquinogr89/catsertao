@@ -127,6 +127,10 @@
     z-index:1000; transition:transform .15s ease; user-select:none; border:none;
   }
   .hz-chat-launcher:hover{ transform:scale(1.05); }
+  /* K6 da auditoria: sem isso, o launcher desabilitado via JS (offline)
+     ficava com a MESMA aparência de sempre -- só descobria que não
+     funcionava clicando. */
+  .hz-chat-launcher:disabled{ opacity:.5; cursor:not-allowed; }
 
   .hz-chat-panel{
     position:fixed; right:24px; bottom:92px; width:380px; height:520px; max-height:calc(100vh - 120px);
@@ -1441,6 +1445,25 @@ document.addEventListener('keydown', function (e) {
   // edição do Termo de Compromisso (index.html).
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && isOpen) hzChatToggle();
+  });
+
+  // K6 da auditoria: o painel carrega o mesmo chat.html de index.html, sob
+  // a mesma carga sob demanda -- mas as correções J2 (mensagem de fallback
+  // quando o widget não vem do CDN) e J3 (fechar a caixa quando a rede cai)
+  // da rodada 5 só tinham sido aplicadas em index.html. J2 já vale aqui de
+  // graça (o texto de fallback mora dentro do próprio chat.html, carregado
+  // pelos dois); J3 precisava ser replicado -- aqui não existe o sistema de
+  // "modo offline" inteiro de index.html (sessão degradada, banner etc.),
+  // só o essencial: desabilitar/fechar o launcher com a conexão caída.
+  var launcher = document.getElementById('hz-chat-launcher');
+  window.addEventListener('offline', function () {
+    launcher.disabled = true;
+    launcher.title = 'Indisponível offline — requer conexão.';
+    if (isOpen) hzChatToggle();
+  });
+  window.addEventListener('online', function () {
+    launcher.disabled = false;
+    launcher.title = 'Assistente CAT Sertão';
   });
 })();
 </script>
