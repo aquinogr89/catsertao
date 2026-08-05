@@ -17,7 +17,7 @@ index.html                login + Atendimento, Documentos, Termo, SATECs
 conta.html                  Minha Conta (troca de senha) — abre em nova aba
 usuarios.html               gestão de usuários — abre em nova aba
 log.html                    LOG de auditoria — abre em nova aba
-hermes.html                 painel de bastidores do agente Hermes (skills, cron jobs, wiki de normas) — abre em nova aba, só Admin Master
+hermes.html                 página-ponte pro painel do agente Hermes (o painel virou Web App do Apps Script, ver nota abaixo) — abre em nova aba
 eventos.html                Controle de Eventos (planilha + TAC/MPPE) — abre em nova aba, Admin Master e Admin
 common.js                   sessão, chamadas à API, helpers — compartilhado por todas as páginas
 style.css                    estilos compartilhados por todas as páginas
@@ -27,16 +27,17 @@ apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota aba
 CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
 ```
 
-`conta.html`, `usuarios.html`, `log.html`, `hermes.html` e `eventos.html` são
-páginas próprias (não seções da mesma página) para poderem abrir em **nova
-aba** a partir do menu — cada uma revalida a sessão e o perfil no servidor de
-forma independente (via `CatAuth.requireSession`, em `common.js`); se a
-sessão for inválida ou o perfil não tiver permissão, a página mostra uma
-mensagem de acesso negado em vez do conteúdo. `hermes.html` segue exatamente
-o mesmo modelo de `log.html` (`CatAuth.requireSession(['admin_master'])`),
-então só aparece na navegação e só carrega o conteúdo para quem está logado
-como `admin_master` (hoje, `geraldo.reis`). `eventos.html` segue o mesmo
-modelo, mas com `CatAuth.requireSession(['admin_master', 'admin'])`.
+`conta.html`, `usuarios.html`, `log.html` e `eventos.html` são páginas
+próprias (não seções da mesma página) para poderem abrir em **nova aba** a
+partir do menu — cada uma revalida a sessão e o perfil no servidor de forma
+independente (via `CatAuth.requireSession`, em `common.js`); se a sessão for
+inválida ou o perfil não tiver permissão, a página mostra uma mensagem de
+acesso negado em vez do conteúdo. `eventos.html` segue esse modelo com
+`CatAuth.requireSession(['admin_master', 'admin'])`.
+
+`hermes.html` é diferente das demais: não faz `CatAuth.requireSession`
+nenhum, porque não é mais o painel em si — é só uma página-ponte, sem
+conteúdo nenhum pra proteger. Ver a nota logo abaixo.
 
 > **Pendência de backend em `eventos.html`:** a página chama a ação
 > `registrarAcessoEventos` (via `CatAuth.api`) para registrar cada consulta
@@ -49,13 +50,21 @@ modelo, mas com `CatAuth.requireSession(['admin_master', 'admin'])`.
 > página). A opção `acesso_eventos` já foi adicionada ao filtro de ação em
 > `log.html`, pronta para quando o backend passar a gravar esse registro.
 
-> **Sobre `hermes.html`:** é o painel de bastidores gerado e mantido pelo
-> agente Hermes (skills carregadas, cron jobs, wiki de normas do CBMPE,
-> scripts) — conteúdo de interesse só do Admin Master, por isso o gate
-> extra. Como o GitHub Pages serve arquivos estáticos sem controle de acesso
-> no servidor, o gate de sessão só esconde o conteúdo na tela — **nenhuma
-> senha ou segredo pode ser escrito no HTML desta página**, mesmo estando
-> atrás do login (ver "Observações de segurança" abaixo).
+> **Sobre `hermes.html`:** até a rodada 6 de auditoria, este arquivo *era* o
+> painel de bastidores do agente Hermes (skills carregadas, cron jobs, wiki
+> de normas do CBMPE, scripts). Por ser servido estaticamente pelo GitHub
+> Pages, a verificação de perfil rodava no navegador — **depois** de o HTML
+> (e-mail da conta, caminhos internos do servidor, IDs de cron job, IDs do
+> Drive de dezenas de arquivos) já ter sido entregue a qualquer um com a URL,
+> sessão nenhuma exigida (achado **K1**). O painel virou um **Web App do
+> Apps Script**, num projeto separado do backend do site, implantado com
+> acesso **"Somente eu"**: o Google autentica antes de o servidor responder,
+> em vez de o front-end esconder o conteúdo depois de já tê-lo entregue.
+> `hermes.html` agora é só uma página-ponte — mostra um botão "Abrir o
+> painel" que leva pra lá, e continua existindo porque o link "Hermes Agent"
+> do menu lateral aponta pra cá e o endereço pode estar salvo em favorito. O
+> código-fonte do painel (`Codigo.gs` + `painel.html`) fica só no editor do
+> Apps Script — **fora deste repositório, de propósito**.
 
 > **Nota sobre `apps-script/Code.gs` deste repositório:** esse arquivo é o
 > backend **antigo**, autônomo, que só servia a "tabela de controle" do
@@ -76,7 +85,7 @@ pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
-| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, painel **Hermes Agent** (`hermes.html`), **Controle de Eventos** (`eventos.html`). |
+| `admin_master` | Tudo: Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (cria/desativa qualquer perfil, inclusive outros admins), LOG de auditoria, link no menu pro painel **Hermes Agent** (`hermes.html` → Web App do Apps Script), **Controle de Eventos** (`eventos.html`). O acesso *de fato* ao painel Hermes não depende mais desse perfil — é controlado à parte, pela lista `EMAILS_AUTORIZADOS` no projeto do Apps Script (ver nota sobre `hermes.html` acima). |
 | `admin`        | Atendimento, Documentos, Termo de Compromisso, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos, Usuários (só cria/desativa `user1`/`user2`), **Controle de Eventos**. Sem LOG, sem Hermes Agent. |
 | `user1`        | Atendimento, Documentos, SATECs, Mapa de OCI (com cadastro), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
 | `user2`        | Atendimento, Documentos, SATECs, Mapa de OCI (só visualização, sem cadastrar), Triagem de Riscos. Sem Termo, sem Usuários, sem LOG. |
@@ -149,11 +158,14 @@ atualiza o site automaticamente em alguns segundos.
 - O `meta name="robots" content="noindex, nofollow"` já presente no
   `index.html` evita que buscadores indexem o site, mas isso **não é**
   controle de acesso — só o login é.
-- `hermes.html` é conteúdo estático (texto fixo no HTML, diferente das
-  tabelas de Termo/LOG/Usuários que só chegam via API depois do login) —
-  por isso ele nunca deve conter senha, token ou segredo em texto puro:
-  quem tiver a URL pode ler o HTML bruto (Ctrl+U / `curl`) mesmo sem passar
-  pelo gate de sessão em JavaScript.
+- `hermes.html` **deixou de ser** o painel (achado **K1** da rodada 6 de
+  auditoria — ver nota na seção "Estrutura" acima). Hoje é só uma
+  página-ponte, sem dado sensível nenhum, que leva a um Web App do Apps
+  Script separado (implantação "Somente eu", autenticado pelo Google antes
+  de o servidor responder). O conteúdo que antes ficava exposto em texto
+  puro no HTML — e-mail da conta, caminhos internos, IDs de cron job, links
+  do Drive — agora só existe no editor do Apps Script, fora deste
+  repositório.
 - `eventos.html` é o mesmo caso: o gate de sessão só controla o que aparece
   na tela, não o HTML bruto. Por isso a página não embute nenhum dado de
   evento além do que já está na própria planilha do Google Sheets embutida
