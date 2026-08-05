@@ -85,7 +85,10 @@
           <p id="usuario-form-msg" class="field-error u-hidden" style="margin-top:12px;" role="alert"></p>
         </div>
 
-        <div class="table-wrap">
+        <!-- tabindex+role+aria-label (L3 da auditoria): região com rolagem
+             horizontal própria precisa ser focável pra o teclado alcançar
+             o conteúdo fora da tela -- WCAG 2.1.1. -->
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela de usuários">
           <p id="usuarios-status" class="table-status" aria-live="polite"></p>
           <table id="usuarios-table" class="termo-table u-hidden"></table>
         </div>

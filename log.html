@@ -105,7 +105,10 @@
           <button id="log-refresh" type="button" class="btn-ghost">Atualizar</button>
         </div>
         <p id="log-resumo" class="table-status u-hidden" aria-live="polite"></p>
-        <div class="table-wrap">
+        <!-- tabindex+role+aria-label (L3 da auditoria): região com rolagem
+             horizontal própria precisa ser focável pra o teclado alcançar
+             o conteúdo fora da tela -- WCAG 2.1.1. -->
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela do LOG de auditoria">
           <p id="log-status" class="table-status" aria-live="polite"></p>
           <table id="log-table" class="termo-table u-hidden"></table>
         </div>
