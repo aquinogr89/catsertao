@@ -132,9 +132,14 @@
     position:fixed; right:24px; bottom:92px; width:380px; height:520px; max-height:calc(100vh - 120px);
     background:#1a2040; border:1px solid var(--hz-border); border-radius:16px; box-shadow:0 24px 60px -20px rgba(0,0,0,.6);
     display:flex; flex-direction:column; overflow:hidden; z-index:1000;
-    opacity:0; transform:translateY(16px) scale(.98); pointer-events:none; transition:opacity .22s ease, transform .22s ease;
+    opacity:0; visibility:hidden; transform:translateY(16px) scale(.98); pointer-events:none;
+    transition:opacity .22s ease, visibility .22s ease, transform .22s ease;
   }
-  .hz-chat-panel.open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  /* visibility (mesmo padrão do .btn-float.top, I2/G3 da auditoria): fechado
+     com só opacity:0 + pointer-events:none barra o mouse, mas não o
+     teclado -- tabulando pela página o foco entrava no botão "×" e no
+     iframe mesmo invisíveis (K5 da auditoria). */
+  .hz-chat-panel.open{ opacity:1; visibility:visible; transform:translateY(0) scale(1); pointer-events:auto; }
 
   .hz-chat-header{ padding:14px 16px; background:#141a33; border-bottom:1px solid var(--hz-border); display:flex; align-items:center; justify-content:space-between; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; color:var(--hz-ink); }
   .hz-chat-close{ background:none; border:none; color:var(--hz-muted); font-size:20px; cursor:pointer; line-height:1; padding:0 4px; }
@@ -1431,6 +1436,12 @@ document.addEventListener('keydown', function (e) {
       document.getElementById('hz-chat-frame').src = 'chat.html';
     }
   };
+
+  // Fechar com Esc (K5 da auditoria) -- mesmo padrão já usado no modal de
+  // edição do Termo de Compromisso (index.html).
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isOpen) hzChatToggle();
+  });
 })();
 </script>
 </body>
