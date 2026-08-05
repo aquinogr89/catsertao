@@ -223,6 +223,18 @@ main.content{ padding-bottom:72px; }
 .cat-filter-row input{ flex:1; min-width:220px; max-width:440px; font-family:'Public Sans',sans-serif; font-size:14.5px; padding:11px 15px; border:1px solid var(--border-2); border-radius:10px; background:#fff; outline:none; color:var(--ink); }
 .count-badge{ font-size:13px; color:var(--muted-3); font-weight:500; }
 .table-wrap{ overflow-x:auto; }
+/* Declarar overflow-x (acima) faz o overflow-y, não declarado, deixar de
+   ser "visible" e virar "auto" -- .table-wrap vira o contexto de rolagem
+   pro "position:sticky; top:0" do th (table.termo-table th, abaixo). Como
+   esse contexto tem a altura do próprio conteúdo e nunca rola sozinho na
+   vertical, o cabeçalho nunca gruda: rolando o Termo/LOG com 100+ linhas,
+   os títulos de coluna somem junto com o resto (L1 da auditoria). Um
+   max-height fixo -- só no desktop, abaixo de 860px as tabelas viram
+   cards e o thead já é display:none -- dá ao wrapper uma rolagem vertical
+   de verdade, e o sticky passa a grudar nela. */
+@media (min-width: 861px){
+  .table-wrap{ max-height:70vh; overflow-y:auto; }
+}
 /* Paginação (Termo de Compromisso e LOG de auditoria): reaproveita
    .cat-filter-row (flex+wrap) como base, só ajustando o espaçamento entre
    "Por página" (esquerda) e o bloco Anterior/Página X de Y/Próxima
@@ -467,4 +479,20 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .termo-actions-cell, .cat-filter-row, footer.bottom{
     display:none !important;
   }
+  /* Navegadores não imprimem cor de fundo por padrão -- texto branco sobre
+     um fundo colorido que não sai simplesmente some no papel. header.top
+     saía só com o brasão e três linhas em branco invisíveis; os chips/tags
+     abaixo tinham o mesmo problema (L2 da auditoria). Tinta escura +
+     fundo transparente em vez de tentar preservar a cor de cada um --
+     mais legível no papel do que tentar imitar a tela. Não usamos
+     print-color-adjust:exact (depende do usuário marcar "gráficos de
+     plano de fundo" na caixa de impressão -- não dá pra contar com isso). */
+  header.top{ background:transparent; color:var(--ink); }
+  .chip-navy{ background:transparent; color:var(--ink); border:1px solid var(--ink); }
+  .doc-kind{ background:transparent; color:var(--ink); border:1px solid var(--ink); }
+  /* !important só aqui: .satec-tag recebe a cor de fundo por estilo INLINE
+     (por SATEC, ver index.html), que vence qualquer seletor de classe sem
+     !important. */
+  .satec-tag{ background:transparent !important; color:var(--ink); border:1px solid var(--ink); }
+  .satec-btn.wa{ background:transparent; color:var(--ink); border:1px solid var(--ink); }
 }
