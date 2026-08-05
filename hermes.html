@@ -226,6 +226,19 @@
   @media (min-width: 721px){
     #mais{ display:none !important; }
   }
+
+  /* O bloco global de prefers-reduced-motion (style.css) só conhece classes
+     do resto do site -- nada deste tema escuro. Faltavam aqui: o painel de
+     chat (translate + scale ao abrir), o launcher (scale no hover), a seta
+     do card (rotate 180°) e o corpo do card (a transição do
+     grid-template-rows do K3). O conteúdo continua aparecendo/sumindo
+     normalmente -- só sem deslizar (K8 da auditoria). */
+  @media (prefers-reduced-motion: reduce){
+    .hz-chat-launcher{ transition:none; }
+    .hz-chat-panel{ transition:none; }
+    .hz-card-header .hz-toggle{ transition:none; }
+    .hz-card-body{ transition:none; }
+  }
 </style>
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
