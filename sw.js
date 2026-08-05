@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v8';
+var CACHE_NAME = 'cat-sertao-v9';
 var CACHE_ASSETS = [
   './',
   './index.html',
