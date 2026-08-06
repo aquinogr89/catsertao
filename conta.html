@@ -21,7 +21,9 @@
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
-<a id="conta-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<a id="conta-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
 
 <header id="conta-outer-header" class="top pad-x">
   <div class="top-inner wrap">
@@ -37,7 +39,12 @@
   </div>
 </header>
 
-<main id="conta-outer-main" class="content pad-x wrap">
+<!-- Não é <main> de propósito (M6 da auditoria): é só a casca de
+     carregamento ("Verificando sessão...") -- o <main class="content"> de
+     verdade fica dentro de #site-shell, mais abaixo. Com os dois como
+     <main>, quem navega por marcos de acessibilidade via dois "conteúdo
+     principal" na mesma página, um deles sempre vazio. -->
+<div id="conta-outer-main" class="content pad-x wrap">
   <a id="conta-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
@@ -46,7 +53,7 @@
     <strong>Acesso não disponível</strong>
     <p id="denied-text"></p>
   </div>
-</main>
+</div>
 
 <div class="site-shell wrap pad-x u-hidden" id="site-shell">
   <nav class="site-sidebar" aria-label="Navegação do site">
