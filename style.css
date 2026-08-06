@@ -194,7 +194,7 @@ nav.quicknav{ background:#fff; border-bottom:1px solid var(--border); }
 .banner-warn-inner{ padding:9px 28px; font-size:12.5px; line-height:1.45; display:flex; gap:9px; align-items:center; }
 .banner-warn .sq{ width:8px; height:8px; border-radius:2px; background:var(--red); flex:0 0 auto; }
 
-main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
+.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px 8px; }
 /* Espaço reservado pro botão flutuante "voltar ao topo"/"voltar" não cobrir
    o último elemento da página (ex.: o botão de e-mail do último card de
    SATEC) quando o usuário rola até o fim -- o botão é position:fixed em
@@ -202,7 +202,7 @@ main.content{ flex:1; width:100%; max-width:100%; min-width:0; padding:34px 28px
    @media (max-width:860px) (I4 da auditoria). O bloco mobile abaixo
    continua com um valor um pouco maior (o botão lá é a mesma engrenagem,
    mas a tela é mais estreita). */
-main.content{ padding-bottom:72px; }
+.content{ padding-bottom:72px; }
 
 /* Assistente virtual (chat) — embutido na seção, não em painel flutuante
    (um painel position:fixed alternando visibilidade de um iframe travava a
@@ -320,7 +320,7 @@ table.termo-table th{ font-family:'Oswald',sans-serif; font-size:12.5px; letter-
 .empty-state{ text-align:center; padding:48px 20px; color:var(--muted-3); font-size:15px; background:#fff; border:1px dashed #DDD6CA; border-radius:14px; }
 
 /* Páginas utilitárias (Minha Conta, Usuários, LOG) abertas em nova aba */
-.util-page main.content{ padding-top:30px; }
+.util-page .content{ padding-top:30px; }
 .util-back{ display:inline-flex; align-items:center; gap:6px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); text-decoration:none; margin-bottom:18px; }
 @media (hover: hover) and (pointer: fine){
   .util-back:hover{ color:var(--red); }
@@ -441,7 +441,7 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
 
   /* Override do valor base (72px, fora desta media query -- ver I4) só um
      pouco maior aqui: mesmo botão, tela mais estreita. */
-  main.content{ padding-bottom:76px; }
+  .content{ padding-bottom:76px; }
 
   /* 1.1 - Campos com 16px no mobile (elimina zoom automático do iOS) */
   .field input, .field select,
@@ -449,6 +449,16 @@ footer.bottom{ background:var(--navy); color:#c8cde0; margin-top:20px; }
   .modal-fields input,
   input[type=search], input[type=text], input[type=password], input[type=date], select{
     font-size:16px;
+  }
+
+  /* O menu aberto ocupa a tela inteira no celular e o botão flutuante é
+     position:fixed por cima dele -- o item sob o círculo deixava de ser
+     tocável (M1 da auditoria). Mesma transição de visibility já usada em
+     .btn-float.top pra entrada/saída. Especificidade (0,3,1) pra vencer
+     .btn-float.top.visivel (0,3,0). */
+  body.menu-lateral-aberto .btn-float.top,
+  body.menu-lateral-aberto .btn-float.back{
+    opacity:0; visibility:hidden; pointer-events:none;
   }
 }
 
