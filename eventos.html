@@ -36,13 +36,17 @@
   .evt-card-header .evt-desc{ font-size:.85em; color:var(--muted); margin-top:3px; }
   .evt-card-header .evt-toggle{ color:var(--muted-3); font-size:1.1em; transition:transform .2s; flex:none; }
   .evt-card.open .evt-card-header .evt-toggle{ transform:rotate(180deg); }
-  .evt-card-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; border-top:0 solid var(--border); }
-  /* max-height:none não anima (CSS não interpola de/para "none" -- o efeito
-     seria um corte seco em vez de um deslizar suave); um valor fixo bem
-     acima do conteúdo real resolve, mesmo padrão usado no hz-card de
-     hermes.html. */
-  .evt-card.open .evt-card-body{ max-height:2400px; border-top-width:1px; border-top-style:solid; }
-  .evt-card-body-inner{ padding:18px 20px; font-size:.95em; color:var(--ink); }
+  /* grid-template-rows 0fr/1fr anima "auto" de verdade, sem número mágico
+     nenhum -- um max-height fixo (2400px) cortava conteúdo que passasse
+     disso sem nem rolar (overflow:hidden), e esta página tem risco real de
+     passar: o card do TAC é editável pelo admin, com "+ Adicionar seção"
+     sem limite (M3 da auditoria; mesma correção já aplicada no hz-card de
+     hermes.html no K3). O filho (.evt-card-body-inner) precisa de
+     min-height:0 -- sem isso, um item de grid não encolhe abaixo do
+     tamanho do próprio conteúdo, e a linha nunca chegaria a 0fr. */
+  .evt-card-body{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; border-top:0 solid var(--border); }
+  .evt-card.open .evt-card-body{ grid-template-rows:1fr; border-top-width:1px; border-top-style:solid; }
+  .evt-card-body-inner{ overflow:hidden; min-height:0; padding:18px 20px; font-size:.95em; color:var(--ink); }
   .evt-card-body-inner h4{ font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; margin:18px 0 8px; }
   .evt-card-body-inner h4:first-child{ margin-top:0; }
   .evt-card-body-inner p{ margin:0 0 12px; line-height:1.6; color:var(--muted); }
@@ -60,10 +64,14 @@
 </head>
 <body class="util-page" style="min-height:100vh; display:flex; flex-direction:column;">
 
-<a id="eventos-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">←</a>
+<a id="eventos-outer-back" class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
 <!-- I3 da auditoria: mesmo botão das demais páginas utilitárias com
      conteúdo longo. Lógica em CatAuth.iniciarBotaoTopo (common.js). -->
-<button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
+<button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao topo" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <header id="eventos-outer-header" class="top pad-x">
   <div class="top-inner wrap">
@@ -79,7 +87,12 @@
   </div>
 </header>
 
-<main id="eventos-outer-main" class="content pad-x wrap">
+<!-- Não é <main> de propósito (M6 da auditoria): é só a casca de
+     carregamento ("Verificando sessão...") -- o <main class="content"> de
+     verdade fica dentro de #site-shell, mais abaixo. Com os dois como
+     <main>, quem navega por marcos de acessibilidade via dois "conteúdo
+     principal" na mesma página, um deles sempre vazio. -->
+<div id="eventos-outer-main" class="content pad-x wrap">
   <a id="eventos-outer-utilback" class="util-back" href="index.html">← Voltar ao site principal</a>
 
   <div id="loading-msg" class="table-status">Verificando sessão...</div>
@@ -88,7 +101,7 @@
     <strong>Acesso não disponível</strong>
     <p id="denied-text"></p>
   </div>
-</main>
+</div>
 
 <div class="site-shell wrap pad-x u-hidden" id="site-shell">
   <nav class="site-sidebar" aria-label="Navegação do site">
@@ -107,7 +120,7 @@
         <h2>Controle de Eventos</h2>
         <p class="lead">Planilha oficial de controle de eventos e resumo do Termo de Ajustamento de Conduta (TAC) firmado com o MPPE. Visível apenas para Admin Master e Admin; cada consulta é registrada no LOG de auditoria.</p>
 
-        <div class="evt-card" id="evt-card-planilha">
+        <div class="evt-card open" id="evt-card-planilha">
           <div class="evt-card-header" role="button" tabindex="0" aria-expanded="true">
             <div>
               <div class="evt-title">Planilha de Controle de Eventos</div>
@@ -218,8 +231,11 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
   CatAuth.iniciarBotaoTopo();
 
   // Card da planilha abre expandido por padrão (é o conteúdo principal da
-  // aba); o card do TAC começa fechado -- consulta secundária.
-  document.getElementById('evt-card-planilha').classList.add('open');
+  // aba); o card do TAC começa fechado -- consulta secundária. Classe
+  // "open" já vem no HTML (M7 da auditoria) -- entre o parse e este script
+  // rodar (ou se o script falhar), aria-expanded="true" no cabeçalho batia
+  // com um card que ainda não tinha abrido de verdade; e o card piscava
+  // fechado até aqui rodar.
 
   // Timeout de fallback do iframe da planilha -- ver comentário junto do
   // <iframe> sobre o que este aviso cobre e o que não cobre.
@@ -235,7 +251,14 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
   // mostrando "Não foi possível carregar a planilha" -- e ela carregava
   // logo depois, contradizendo o aviso na tela (H2 da auditoria).
   function iniciarTimeoutPlanilha() {
-    sheetTimeout = setTimeout(function () { show(sheetFallback); }, 8000);
+    // Se o card foi fechado antes do iframe carregar (só o "load" cancela o
+    // timeout), o aviso era escrito dentro dele mesmo assim -- invisível na
+    // hora, e reaparecia desatualizado numa reabertura futura, mesmo que a
+    // planilha já tivesse carregado de verdade nesse meio tempo (M8 da
+    // auditoria). Confere se o card ainda está aberto antes de mostrar.
+    sheetTimeout = setTimeout(function () {
+      if (document.getElementById('evt-card-planilha').classList.contains('open')) show(sheetFallback);
+    }, 8000);
   }
   sheetFrame.addEventListener('load', function () {
     clearTimeout(sheetTimeout);
@@ -320,6 +343,23 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
     return { titulo: (dadosTacAtual && dadosTacAtual.titulo) || 'MPPE — Termo de Ajustamento de Conduta (TAC)', secoes: secoes };
   }
 
+  // dadosTacAtual pode ter vindo do JSON estático de fallback (content/
+  // tac-mppe.json), que carrega campos extras (_comentario, atualizadoEm)
+  // que coletarDadosFormularioTac() nunca produz -- comparar os objetos
+  // direto acusaria alteração sempre, mesmo sem nenhuma edição de verdade.
+  // Reconstrói os dois lados no mesmo formato mínimo antes de comparar.
+  function normalizarConteudoTac(dados) {
+    var secoes = ((dados && dados.secoes) || []).map(function (s) {
+      return { titulo: (s && s.titulo) || '', paragrafos: (s && s.paragrafos) || [] };
+    });
+    return JSON.stringify({ titulo: (dados && dados.titulo) || 'MPPE — Termo de Ajustamento de Conduta (TAC)', secoes: secoes });
+  }
+
+  function edicaoTemAlteracoes() {
+    if (!dadosTacAtual) return false;
+    return normalizarConteudoTac(coletarDadosFormularioTac()) !== normalizarConteudoTac(dadosTacAtual);
+  }
+
   function iniciarEdicaoTac() {
     var btnEditar = document.getElementById('evt-tac-btn-editar');
     var btnSalvar = document.getElementById('evt-tac-btn-salvar');
@@ -330,6 +370,14 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
     var formEl = document.getElementById('evt-tac-form');
     var bodyEl = document.getElementById('evt-tac-body');
 
+    // Só registrado enquanto a edição está aberta -- fora dela, navegar ou
+    // fechar a aba não tem nada a perder, não faz sentido avisar.
+    function avisarSaidaComEdicaoAberta(e) {
+      if (!edicaoTemAlteracoes()) return;
+      e.preventDefault();
+      e.returnValue = '';
+    }
+
     function abrirEdicao() {
       if (!dadosTacAtual) return;
       hide(formMsg);
@@ -338,6 +386,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
       show(formEl);
       show(formActions);
       hide(btnEditar);
+      window.addEventListener('beforeunload', avisarSaidaComEdicaoAberta);
     }
 
     function fecharEdicao() {
@@ -346,10 +395,14 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
       hide(formMsg);
       show(bodyEl);
       show(btnEditar);
+      window.removeEventListener('beforeunload', avisarSaidaComEdicaoAberta);
     }
 
     btnEditar.addEventListener('click', abrirEdicao);
-    btnCancelar.addEventListener('click', fecharEdicao);
+    btnCancelar.addEventListener('click', function () {
+      if (edicaoTemAlteracoes() && !window.confirm('Descartar as alterações não salvas?')) return;
+      fecharEdicao();
+    });
 
     btnAddSecao.addEventListener('click', function () {
       var wrapper = document.createElement('div');
@@ -358,7 +411,8 @@ Array.prototype.forEach.call(document.querySelectorAll('.evt-card-header'), func
       formEl.appendChild(bloco);
       ligarBotaoRemoverSecao(bloco);
       bloco.querySelector('.evt-tac-input-titulo').focus();
-      bloco.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      bloco.scrollIntoView({ behavior: semMovimento ? 'auto' : 'smooth', block: 'center' });
     });
 
     btnSalvar.addEventListener('click', function () {
