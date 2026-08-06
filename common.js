@@ -346,11 +346,15 @@ var CatAuth = (function () {
       }
 
       // tipo === 'pagina'
+      // Sem ↗ aqui (M2 parte 2 da auditoria): a seta ficava em 7 dos 11
+      // itens do menu (todo externo + quase toda página) e deixava de
+      // marcar coisa nenhuma. Mantida só no tipo "externo" -- ali sim
+      // significa algo específico: abre outro site (Mapa de OCI, Triagem),
+      // não outra página deste mesmo site.
       var ehAtual = item.key === paginaAtual;
       var classePagina = 'site-nav-item' + (ehAtual ? ' active' : '') + (item.hiddenByDefault ? ' u-hidden' : '');
       var targetAttr = ehAtual ? '' : ' target="cat-admin"';
-      var rotulo = item.label + (ehAtual ? '' : ' ↗');
-      return '<a' + idAttr + ' href="' + item.href + '"' + targetAttr + ' class="' + classePagina + '">' + rotulo + '</a>';
+      return '<a' + idAttr + ' href="' + item.href + '"' + targetAttr + ' class="' + classePagina + '">' + item.label + '</a>';
     }).join('');
   }
 
