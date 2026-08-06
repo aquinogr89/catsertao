@@ -367,6 +367,7 @@ var CatAuth = (function () {
     toggleEl.addEventListener('click', function () {
       var aberto = listEl.classList.toggle('open');
       toggleEl.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+      document.body.classList.toggle('menu-lateral-aberto', aberto);
     });
     listEl.addEventListener('click', function (e) {
       var item = e.target.closest('.site-nav-item');
@@ -383,6 +384,7 @@ var CatAuth = (function () {
           // rolagem ja calcula certo.
           listEl.classList.remove('open');
           toggleEl.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('menu-lateral-aberto');
         } else {
           // Link externo/outra pagina (target=cat-ferramenta/cat-admin, .html):
           // recolher na mesma tacada do toque faz o conteudo da pagina se
@@ -396,6 +398,7 @@ var CatAuth = (function () {
           setTimeout(function () {
             listEl.classList.remove('open');
             toggleEl.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('menu-lateral-aberto');
           }, 0);
         }
       }
