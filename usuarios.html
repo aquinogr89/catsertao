@@ -89,7 +89,10 @@
             <label class="field field-perfil">Perfil
               <select id="novo-usuario-perfil"></select>
             </label>
-            <button type="submit" class="btn-navy">Criar usuário</button>
+            <button type="submit" class="btn-navy" id="usuario-form-submit">
+              <span class="btn-spinner u-hidden" id="usuario-form-spinner" aria-hidden="true"></span>
+              <span id="usuario-form-submit-label">Criar usuário</span>
+            </button>
           </form>
           <p id="usuario-form-msg" class="field-error u-hidden" style="margin-top:12px;" role="alert"></p>
         </div>
@@ -241,6 +244,16 @@
       var senha = document.getElementById('novo-usuario-senha').value;
       var perfil = document.getElementById('novo-usuario-perfil').value;
 
+      // Mesmo padrão do gate de login (index.html: spinner + troca de label
+      // no botão) -- sem isso, um clique em rede lenta parecia não ter
+      // feito nada até a mensagem de sucesso/erro aparecer do nada.
+      var btn = document.getElementById('usuario-form-submit');
+      var spinnerEl = document.getElementById('usuario-form-spinner');
+      var labelEl = document.getElementById('usuario-form-submit-label');
+      btn.disabled = true;
+      show(spinnerEl);
+      labelEl.textContent = 'Criando…';
+
       api({ action: 'criarUsuario', token: session.token, login: login, senha: senha, perfil: perfil }).then(function (res) {
         if (res.ok) {
           // Em lista longa o usuário novo entra fora da área visível --
@@ -255,6 +268,10 @@
         }
       }).catch(function () {
         mostrarMsg(msgEl, 'Não foi possível conectar ao servidor agora.', false);
+      }).finally(function () {
+        btn.disabled = false;
+        hide(spinnerEl);
+        labelEl.textContent = 'Criar usuário';
       });
     });
 
