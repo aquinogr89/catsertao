@@ -204,7 +204,10 @@
             <p id="termo-modal-error" class="field-error u-hidden" role="alert"></p>
             <div class="modal-actions">
               <button type="button" class="btn-ghost" id="termo-modal-cancel">Cancelar</button>
-              <button type="submit" class="btn-red">Salvar</button>
+              <button type="submit" class="btn-red" id="termo-modal-submit">
+                <span class="btn-spinner u-hidden" id="termo-modal-spinner" aria-hidden="true"></span>
+                <span id="termo-modal-submit-label">Salvar</span>
+              </button>
             </div>
           </form>
         </div>
@@ -1060,8 +1063,13 @@
       return;
     }
 
-    var btnSalvar = termoModalForm.querySelector('button[type=submit]');
+    var btnSalvar = document.getElementById('termo-modal-submit');
+    var salvarSpinner = document.getElementById('termo-modal-spinner');
+    var salvarLabel = document.getElementById('termo-modal-submit-label');
+    var labelOriginal = salvarLabel.textContent;
     btnSalvar.disabled = true;
+    show(salvarSpinner);
+    salvarLabel.textContent = 'Salvando…';
     api({ action: 'editarTermo', token: session.token, linha: termoModalRow._row, fingerprint: fingerprintTermo(termoModalRow), dados: dados }).then(function (res) {
       if (!res.ok) {
         termoModalError.textContent = res.error || 'Não foi possível salvar agora.';
@@ -1073,7 +1081,11 @@
     }).catch(function () {
       termoModalError.textContent = 'Não foi possível conectar ao servidor agora.';
       show(termoModalError);
-    }).finally(function () { btnSalvar.disabled = false; });
+    }).finally(function () {
+      btnSalvar.disabled = false;
+      hide(salvarSpinner);
+      salvarLabel.textContent = labelOriginal;
+    });
   });
 
   function concluirTermoRow(row) {
