@@ -956,6 +956,13 @@
   var termoModalRow = null;
   var termoModalUltimoFoco = null; // pra devolver o foco a quem abriu, ao fechar
 
+  // Datas chegam do servidor já formatadas como dd/MM/yyyy (ver
+  // formatarCelula_ em oci-catsertao/apps-script/Auth.gs) -- mesmo regex
+  // usado lá pra reconhecer e validar esse formato aqui no front, antes de
+  // mandar pro servidor. Um campo que já chegou nesse formato é tratado como
+  // campo de data daqui pra frente (mesmo que a pessoa apague o valor).
+  var REGEX_DATA_TERMO = /^\d{2}\/\d{2}\/\d{4}(\s+\d{2}:\d{2})?$/;
+
   function abrirEdicaoTermo(row) {
     termoModalRow = row;
     var headers = Object.keys(row).filter(function (h) { return h !== '_row'; });
@@ -963,13 +970,19 @@
     termoModalFields.innerHTML = '';
     headers.forEach(function (h) {
       if (h === colSituacao) return;
+      var valorOriginal = row[h] == null ? '' : String(row[h]);
+      var ehCampoData = REGEX_DATA_TERMO.test(valorOriginal);
       var label = document.createElement('label');
       label.className = 'field';
-      label.textContent = h;
+      label.textContent = h + (ehCampoData ? ' (dd/mm/aaaa)' : '');
       var input = document.createElement('input');
       input.type = 'text';
       input.name = h;
-      input.value = row[h] == null ? '' : row[h];
+      input.value = valorOriginal;
+      if (ehCampoData) {
+        input.dataset.tipoData = '1';
+        input.placeholder = 'dd/mm/aaaa';
+      }
       label.appendChild(input);
       termoModalFields.appendChild(label);
     });
@@ -1017,16 +1030,39 @@
     }
   });
 
+  // Primeira coluna do registro (ex.: PROTOCOLO) tal como estava quando a
+  // tabela carregou -- vai junto na edição/conclusão pra o servidor
+  // confirmar que a linha não mudou de registro nesse meio tempo (ver
+  // comentário de handleEditarTermo_ em Auth.gs).
+  function fingerprintTermo(row) {
+    var headers = Object.keys(row).filter(function (h) { return h !== '_row'; });
+    return headers.length ? row[headers[0]] : null;
+  }
+
   termoModalForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!termoModalRow) return;
     hide(termoModalError);
     var dados = {};
-    termoModalFields.querySelectorAll('input').forEach(function (input) { dados[input.name] = input.value; });
+    var camposDataInvalidos = [];
+    termoModalFields.querySelectorAll('input').forEach(function (input) {
+      dados[input.name] = input.value;
+      // Validação no front é só feedback rápido -- quem realmente barra um
+      // formato inválido é o servidor (converterValorEdicaoTermo_), que não
+      // confia em nada que venha do navegador.
+      if (input.dataset.tipoData && input.value.trim() && !REGEX_DATA_TERMO.test(input.value.trim())) {
+        camposDataInvalidos.push(input.name);
+      }
+    });
+    if (camposDataInvalidos.length) {
+      termoModalError.textContent = 'Data em formato inválido em: ' + camposDataInvalidos.join(', ') + '. Use dd/mm/aaaa.';
+      show(termoModalError);
+      return;
+    }
 
     var btnSalvar = termoModalForm.querySelector('button[type=submit]');
     btnSalvar.disabled = true;
-    api({ action: 'editarTermo', token: session.token, linha: termoModalRow._row, dados: dados }).then(function (res) {
+    api({ action: 'editarTermo', token: session.token, linha: termoModalRow._row, fingerprint: fingerprintTermo(termoModalRow), dados: dados }).then(function (res) {
       if (!res.ok) {
         termoModalError.textContent = res.error || 'Não foi possível salvar agora.';
         show(termoModalError);
@@ -1042,7 +1078,7 @@
 
   function concluirTermoRow(row) {
     if (!window.confirm('Marcar este termo como CONCLUÍDO? A situação será substituída pelo valor fixo "CONCLUÍDO".')) return;
-    api({ action: 'concluirTermo', token: session.token, linha: row._row }).then(function (res) {
+    api({ action: 'concluirTermo', token: session.token, linha: row._row, fingerprint: fingerprintTermo(row) }).then(function (res) {
       if (!res.ok) {
         window.alert(res.error || 'Não foi possível concluir agora.');
         return;
