@@ -1,0 +1,1100 @@
+{
+    "meta":  {
+                 "titulo":  "Sistemas preventivos exigidos para edificacoes",
+                 "fonte":  "MAPA DE SISTEMAS 2025 - planilha fornecida pelo usuario",
+                 "norma":  "COSCIP-PE - Decreto 19.644/1997, texto atualizado",
+                 "consolidadoAte":  "Decreto 59.579/2025",
+                 "auditadoEm":  "2026-08-31",
+                 "fonteOficial":  "https://legis.alepe.pe.gov.br/texto.aspx?id=40641\u0026tipo=TEXTOATUALIZADO",
+                 "aviso":  "Sintese para consulta orientativa. A norma oficial, as NTs vigentes e a analise do caso concreto prevalecem."
+             },
+    "ocupacoes":  [
+                      {
+                          "tipo":  "A",
+                          "artigo":  "Art. 8º",
+                          "classificacao":  "Residencial Privativa Unifamiliar",
+                          "exemplos":  "Casas residenciais de uma só família (qualquer nº de pavimentos/área).",
+                          "observacoes":  "Isenção geral: Arts. 2º p.ú. e 8º §1º, ressalvadas vilas e situações definidas por NT do CBMPE. Vila com 100–1.000 unidades: 1 hidrante público; +1 por grupo/fração excedente de 1.000; distância ≤1.000 m; +1 junto a reservatório elevado; instalação regulada por NT."
+                      },
+                      {
+                          "tipo":  "B",
+                          "artigo":  "Art. 9º",
+                          "classificacao":  "Residencial Privativa Multifamiliar",
+                          "exemplos":  "Edifícios de apartamentos residenciais.",
+                          "observacoes":  "Garagem interna que não atenda ao caput do Art. 27 (isolamento, combate imediato e ventilação) exige chuveiros na garagem (Art. 132-A §4º). A mera ausência das aberturas dos §§1º-2º não deve ser apresentada isoladamente como gatilho."
+                      },
+                      {
+                          "tipo":  "C",
+                          "artigo":  "Art. 10",
+                          "classificacao":  "Residencial Coletiva",
+                          "exemplos":  "Pensionatos, internatos, estabelecimentos penais, conventos, seminários, orfanatos, reformatórios e congêneres.",
+                          "observacoes":  "O Art. 10 inclui orfanatos e reformatórios no Tipo C. Quando enquadrados nos cuidados especiais do Art. 179 §3º III, sem celas, o mínimo é 3 UP. Asilos, geriátricos e hospitais psiquiátricos pertencem ao Tipo I."
+                      },
+                      {
+                          "tipo":  "D",
+                          "artigo":  "Art. 11",
+                          "classificacao":  "Residencial Transitória",
+                          "exemplos":  "Hotéis, motéis, pousadas, apart-hotéis, pensões, hospedarias, albergues.",
+                          "observacoes":  "Hotéis, motéis, pousadas e congêneres. Central de GLP também pode ser exigida pelo Art. 241 II quando a área construída superar 500 m²."
+                      },
+                      {
+                          "tipo":  "E",
+                          "artigo":  "Art. 12",
+                          "classificacao":  "Comercial",
+                          "exemplos":  "Lojas, centros comerciais, supermercados, mercados, farmácias, açougues.",
+                          "observacoes":  "Art. 12: pequenas lanchonetes somente sem refeições e com área \u003c50 m²; padarias com produção permanecem comerciais quando a produção se destina exclusivamente à venda no próprio balcão."
+                      },
+                      {
+                          "tipo":  "F",
+                          "artigo":  "Art. 13",
+                          "classificacao":  "Escritório",
+                          "exemplos":  "Escritórios, consultórios, agências bancárias, laboratórios de análises clínicas.",
+                          "observacoes":  "Clínicas sem internamento são Tipo F. Art. 16 §5º: clínicas com leitos apenas para repouso recuperatório também são Tipo F, não Tipo I."
+                      },
+                      {
+                          "tipo":  "G",
+                          "artigo":  "Art. 14",
+                          "classificacao":  "Mista",
+                          "exemplos":  "Residencial privativa conjugada com comercial ou escritórios.",
+                          "observacoes":  "O risco deve ser analisado por setor e pela conjugação residencial/comercial/escritórios prevista no Art. 14."
+                      },
+                      {
+                          "tipo":  "H",
+                          "artigo":  "Art. 15",
+                          "classificacao":  "Reunião de Público",
+                          "exemplos":  "Cinemas, teatros, ginásios, clubes, restaurantes, bares, casas de show, salões de eventos.",
+                          "observacoes":  "Regime do Art. 15: §§4º-5º parâmetros e exigências reduzidas; §6º ART/RRT e inspeção para instalações temporárias; §7º aplicação possível de guias/NTs; §8º ampliação de público. A combinação com outros riscos observa o §3º."
+                      },
+                      {
+                          "tipo":  "I",
+                          "artigo":  "Art. 16",
+                          "classificacao":  "Hospitalar",
+                          "exemplos":  "Hospitais, centros médicos/pronto-socorros com internação, asilos, casas geriátricas, hospitais psiquiátricos e veterinários, conforme Art. 16.",
+                          "observacoes":  "Tipo I inclui hospitais, clínicas com internação, asilos, geriátricos, psiquiátricos e veterinários. UP: 4 em hospitalar geral; 3 nos cuidados especiais do Art. 179 §3º III; 2 em hospital veterinário/assemelhados. Clínicas só com repouso recuperatório são Tipo F (Art. 16 §5º)."
+                      },
+                      {
+                          "tipo":  "J",
+                          "artigo":  "Art. 17",
+                          "classificacao":  "Pública",
+                          "exemplos":  "Edificações governamentais administradas pelos poderes públicos.",
+                          "observacoes":  "Enquadrada conforme a natureza real da ocupação (Art. 17 p.ú.). Essa regra também alcança detecção, chuveiros, área de refúgio, escadas e demais sistemas."
+                      },
+                      {
+                          "tipo":  "K",
+                          "artigo":  "Art. 18",
+                          "classificacao":  "Escolar",
+                          "exemplos":  "Escolas de 1º/2º graus, faculdades, universidades, centros de ensino/formação, academias, natação e ensino de pessoas com deficiência.",
+                          "observacoes":  "Art. 18: escolas, faculdades, universidades, centros de formação/ensino, academias, natação e ensino de pessoas com deficiência. “Creche” não foi mantida sem indicação de NT específica."
+                      },
+                      {
+                          "tipo":  "L",
+                          "artigo":  "Art. 19",
+                          "classificacao":  "Industrial",
+                          "exemplos":  "Fábricas, oficinas de produção, indústrias em geral.",
+                          "observacoes":  "Atividades industriais e de produção; aplicar também normas específicas conforme processo e carga de incêndio."
+                      },
+                      {
+                          "tipo":  "M",
+                          "artigo":  "Art. 20",
+                          "classificacao":  "Garagem",
+                          "exemplos":  "Edifícios-garagem e garagens coletivas, ressalvada a exclusão do Art. 20 §1º II para áreas abertas/não edificadas exclusivamente térreas.",
+                          "observacoes":  "Art. 20 §1º II: não são Tipo M os estacionamentos/garagens coletivas em áreas abertas ou não edificadas, ainda que cobertas, quando exclusivamente térreos."
+                      },
+                      {
+                          "tipo":  "N",
+                          "artigo":  "Art. 21",
+                          "classificacao":  "Galpão ou Depósito",
+                          "exemplos":  "Construções de armazenamento, guarda, depósito ou estoque.",
+                          "observacoes":  "A classificação e as exigências dependem da natureza e do risco do material armazenado (Art. 21)."
+                      },
+                      {
+                          "tipo":  "O",
+                          "artigo":  "Art. 22",
+                          "classificacao":  "Produção/manipulação/armazenamento de derivados de petróleo, álcool e/ou produtos perigosos",
+                          "exemplos":  "Postos de combustíveis, destilarias, refinarias, parques de tancagem, armazenagem de inflamáveis/gases.",
+                          "observacoes":  "Produção, manipulação ou armazenamento de derivados de petróleo, álcool e produtos perigosos; observar normas específicas (Arts. 22, 132-A §7º e 141)."
+                      },
+                      {
+                          "tipo":  "P",
+                          "artigo":  "Art. 23",
+                          "classificacao":  "Templos Religiosos",
+                          "exemplos":  "Igrejas, templos, capelas, casas de oração.",
+                          "observacoes":  "Se houver auditório ou espaço com reunião de público, aplicar a classificação Tipo H nos termos do Art. 23 §4º."
+                      },
+                      {
+                          "tipo":  "Q",
+                          "artigo":  "Art. 24",
+                          "classificacao":  "Especiais",
+                          "exemplos":  "Arquivos públicos, bibliotecas, cartórios, museus, centrais telefônicas, empresas de comunicações, estações/subestações de energia e água, centrais de computação, explosivos/pirotécnicos, canteiros de obras.",
+                          "observacoes":  "Exigências reguladas pelo COSCIP e pelas NTs específicas aplicáveis. Não atribuir todo o Tipo Q à NT 1.06: chuveiros seguem Art. 133; detecção Art. 140 §1º; saídas/escadas seguem a NT pertinente."
+                      }
+                  ],
+    "criteriosDetalhados":  [
+                                {
+                                    "item":  1,
+                                    "sistema":  "Extintores de Incêndio",
+                                    "artigos":  "Arts. 31-44 (Art. 39 revogado; exigibilidade: Arts. 40-41)",
+                                    "criterios":  "Mínimo 2 UE por pavimento, mezanino, jirau ou risco isolado; admite-se 1 UE para cada unidade com área protegida ≤50 m² (Art. 31 §§7º-8º). Cobertura/caminhamento: Art. 32.",
+                                    "dimensionamento":  "Classe A: 1 UE/500 m² (alcance 20 m); Classes B/C: 1 UE/250 m² (alcance 15 m).",
+                                    "observacoes":  "Tipo A: isenção geral, ressalvados Art. 41 e situações definidas por NT (Art. 2º p.ú.). Não instalar em escadas nem nas antecâmaras de escadas PF (Art. 34 II). Art. 42: riscos especiais recebem proteção adicional. Art. 43: áreas internas privativas podem ser dispensadas se protegidas pelas circulações, salvo riscos especiais/isolados."
+                                },
+                                {
+                                    "item":  2,
+                                    "sistema":  "Hidrantes / Mangueiras Semirrígidas",
+                                    "artigos":  "Arts. 49-104: instalação/dimensionamento; Art. 105 revogado; Art. 105-A: exigibilidade; Art. 106: contagem de pavimentos",
+                                    "criterios":  "B, C, K: h \u003e14,0 m OU \u003e4 pavimentos. D, E, F, G, H, I, J, L, M, N, O, P, Q: h \u003e14,0 m OU \u003e4 pav. OU área \u003e930 m².",
+                                    "dimensionamento":  "Dimensionamento hidráulico conforme Arts. 49-106; RTI obrigatória.",
+                                    "observacoes":  "Salvo Tipo A. Q somente no Art. 24 §5º X. Art. 106: não computar coberturas técnicas sem permanência; jiraus/mezaninos/galerias até 200 m²; pavimentos isolados \u003c50 m², nas condições do dispositivo."
+                                },
+                                {
+                                    "item":  3,
+                                    "sistema":  "Chuveiros Automáticos (Sprinklers)",
+                                    "artigos":  "Arts. 107-131: instalação/dimensionamento; Art. 132 revogado; Art. 132-A: exigibilidade; Art. 133: Tipo Q",
+                                    "criterios":  "C/I: ≤930 m²/pav → \u003e8 pav; \u003e930 → \u003e4 pav. D/E/F/G/L/N: ≤930 → \u003e4 pav; \u003e930 → \u003e2 pav. H: \u003e2 pav. M: ≤930 → \u003e8 pav; \u003e930 → \u003e4 pav. O: normas específicas (§7º). Q: norma técnica específica do CBMPE (Art. 133; não atribuir automaticamente à NT 1.06).",
+                                    "dimensionamento":  "§5º: boates, casas de show, casas noturnas, danceterias, discotecas e assemelhados (ambientes fechados) \u003e3.000 pessoas exigem sprinklers. §6º: depósito/estocagem \u003e3.000 m² exige na área de armazenamento. §2º: varandas/corredores com ventilação permanente ≥0,70 m e sem material combustível → ISENTOS. §3º: vestiários \u003e100 m² em edificação com chuveiros → também protegidos. §4º: garagens internas que NÃO atenderem o caput do Art. 27 (isolamento + combate + ventilação) exigem sprinklers NAS GARAGENS — vale para TODA ocupação, inclusive B (não está na tabela). Não é garagem interna: pavimento aberto ao exterior (Art. 27 §1º/§2º: guarda-corpo ≤1,10m c/ abertura livre ≥50% do perímetro acima do nível; abertura ≥0,70m em ≥50% do perímetro no nível/abaixo). §1º: dispensado em sanitários/similares. §8º: pode ser substituído por sistema de gases (data centers, museus etc.).",
+                                    "observacoes":  "Art. 132 revogado pelo Dec. 58.690/2025. Garagens internas fechadas: Art. 132-A §4º (não existe \u0027Art. 27 §4º\u0027)."
+                                },
+                                {
+                                    "item":  4,
+                                    "sistema":  "Detecção e Alarme Automático",
+                                    "artigos":  "Art. 140 caput + tabela (Arts. 134-141)",
+                                    "criterios":  "D: \u003e1.500 m² OU \u003e12 m OU \u003e4 pav. E: área comercial \u003e1.000 m² OU \u003e12 m OU \u003e4 pav. F: \u003e1.500 OU \u003e12 OU \u003e4. G: parte comercial \u003e1.000 OU \u003e9 m OU \u003e3 pav. H: \u003e1.500 OU \u003e9 OU \u003e3. I: \u003e1.500 OU \u003e8 m. K: \u003e12 m OU \u003e4 pav. L: \u003e2.000 m². M: \u003e3.000 m².",
+                                    "dimensionamento":  "Art. 135: central, painel repetidor, detectores, acionadores, indicadores e circuitos. Arts. 136-137: instalação em rotas/locais definidos e central sob vigilância humana constante; fontes dos indicadores supervisionadas. A planilha não usa mais a expressão não comprovada “detectores pontuais + central supervisionada”.",
+                                    "observacoes":  "J: conforme ocupação correspondente (Art. 17 p.ú.). N e P não possuem linha própria no caput. O e outros riscos especiais podem receber exigências por normas próprias (Art. 141). Q: NT específica (Art. 140 §1º). A tabela do Art. 140 também define os locais a proteger."
+                                },
+                                {
+                                    "item":  5,
+                                    "sistema":  "Alarme de Incêndio Manual",
+                                    "artigos":  "Art. 140 §2º, §3º, §4º (não 133-141; Art. 177 = portas corta-fogo)",
+                                    "criterios":  "§2º: área construída \u003e2.000 m² (todas as ocupações, salvo multifamiliar B). §4º (por altura): B ≥51 m; C ≥8 m; E, G, H, K, P ≥7 m; L e O ≥9 m; M ≥20 m.",
+                                    "dimensionamento":  "Acionadores manuais nas rotas de fuga; avisadores sonoros e visuais. §3º: exigido de forma CONJUGADA sempre que houver hidrantes/mangotinhos ou chuveiros automáticos.",
+                                    "observacoes":  "Multifamiliar B isenta do critério de área (§2º)."
+                                },
+                                {
+                                    "item":  6,
+                                    "sistema":  "Escadas de Emergência (NE/EP/PF)",
+                                    "artigos":  "Arts. 149, 152-A, 153, 163-164 + Tabelas 1-3; Art. 231: contagem para evacuação",
+                                    "criterios":  "B: NE \u003c13 | EP 13≤H\u003c51 | PF ≥51. C/E/F/K: NE \u003c13 | EP 13≤H\u003c31 | PF ≥31. D/H/P: NE ≤6 | EP 6\u003cH≤30 | PF \u003e30. G: NE \u003c7 | EP 7≤H≤30 | PF \u003e30. I: NE ≤6 | EP 6\u003cH≤12 | PF \u003e12. L/N/O: NE ≤12 | EP 12\u003cH≤30 | PF \u003e30. M: NE \u003c20 | EP ≥20 (sem PF). J: conforme classe correspondente. Q: NT 1.06. Art. 153 p.ú. — mínimo 2 escadas: B \u003e120 m; D \u003e71 m; E/F/G \u003e61 m; H/K/P \u003e12 m; demais \u003e36 m.",
+                                    "dimensionamento":  "EP/PF conforme Arts. 152-A, 163-164 e Tabela 2. Pressurização pode substituir a antecâmara nos termos do Art. 149 p.ú. O número de escadas depende da população (Tabela 1) e das distâncias (Tabela 3).",
+                                    "observacoes":  "Art. 164: escadas separadas ≥10 m; se tecnicamente impossível, admite-se uma única escada com o maior grau de proteção exigido. Art. 231: aplicar as exclusões próprias de pavimentos do título de evacuação. Tipo M não possui PF na Tabela 2."
+                                },
+                                {
+                                    "item":  7,
+                                    "sistema":  "Iluminação de Emergência",
+                                    "artigos":  "Art. 205 + Art. 206 (faixa 189-206)",
+                                    "criterios":  "Art. 205: obrigatória SEMPRE que houver escada EP ou PF. Art. 206: nas demais, quando lotação \u003e100 pessoas OU área \u003e1.500 m².",
+                                    "dimensionamento":  "Autonomia mínima de 1 hora. Arts. 189-204: pontos nas circulações/rotas e locais definidos, sistemas centralizados ou portáteis e requisitos de circuitos. Não confundir a terminologia técnica de NBR com transcrição literal do Código.",
+                                    "observacoes":  "Art. 203: nas ocupações H, J e P, prever pontos nos ambientes de reunião/concentração e em suas saídas. Art. 231: aplicar as exclusões próprias do título. Faixa correta: Arts. 189-206."
+                                },
+                                {
+                                    "item":  8,
+                                    "sistema":  "Sinalização de Emergência",
+                                    "artigos":  "Arts. 144, 146 IV, 207-210 e 230 + Tabela 2",
+                                    "criterios":  "Sinalização das saídas e rotas de fuga nas edificações abrangidas pelo título de evacuação; Tipo Q conforme NT específica (Art. 144 p.ú.). A exigibilidade decorre do conjunto Arts. 144/146 IV/230 e Tabela 2, não de frase isolada dos Arts. 207-210.",
+                                    "dimensionamento":  "Arts. 207-210: indicação “SAÍDA” e setas; sinalização luminosa ou fosforescente; autonomia de 1 h se luminosa; setas em mudanças de direção e, em trechos retilíneos, a cada 20 m; indicação nas portas corta-fogo e rampas. Categorias adicionais dependem da NBR/NT aplicável.",
+                                    "observacoes":  "Isento apenas Tipo A. Exigibilidade: Art. 230 + Tabela 2 (os Arts. 207-210 definem o sistema, sem cláusula de exigência)."
+                                },
+                                {
+                                    "item":  9,
+                                    "sistema":  "Unidades de Passagem (UP) e Saídas",
+                                    "artigos":  "Art. 179 a 181",
+                                    "criterios":  "UP=0,55 m. Art. 179 §3º: 4 UP para hospitalar geral; 3 UP para cuidados especiais do inciso III; 2 UP para hospital veterinário/assemelhados e demais. Dimensionar pela população, nunca só pelo mínimo.",
+                                    "dimensionamento":  "Portas: 0,80=1 UP; 1,00=2; 1,50=3; 2,00=4. Acima de 1,20 m, mais de uma folha (Art. 180 §1º). Porta de descarga: vão mínimo 0,90 m (§2º). N=P÷C(d), arredondado para cima (Art. 181/Tabela 1).",
+                                    "observacoes":  "Aplicar Art. 231 à contagem de pavimentos do título. J conforme ocupação; Q conforme critérios do CBMPE. Consultar a aba “Tabela 1 - População”."
+                                },
+                                {
+                                    "item":  10,
+                                    "sistema":  "Elevador de Emergência",
+                                    "artigos":  "Art. 188",
+                                    "criterios":  "Obrigatório em edificações com mais de 20 pavimentos (todas as ocupações).",
+                                    "dimensionamento":  "Art. 187: caixa com paredes resistentes ao fogo por 4 h; portas metálicas abrindo para a antecâmara; circuito de alimentação independente e chave reversível que permita ligação a gerador externo. Art. 188: obrigatório em edificações com mais de 20 pavimentos.",
+                                    "observacoes":  "—"
+                                },
+                                {
+                                    "item":  11,
+                                    "sistema":  "Área de Refúgio",
+                                    "artigos":  "Art. 173 (só C, I, D, F)",
+                                    "criterios":  "≤750 m²/pav: C e I h \u003e20 m OU \u003e8 pav; D e F h \u003e120 m OU \u003e40 pav. \u003e750 m²/pav: C e I h \u003e12 m OU \u003e4 pav; D e F h \u003e60 m OU \u003e20 pav.",
+                                    "dimensionamento":  "Arts. 171-173: área de refúgio com acesso direto à escada. Nas ocupações do §1º, subdividir para cada área ≤2.000 m²; comunicação com as saídas em nível ou por rampa com declividade ≤10%.",
+                                    "observacoes":  "Exigência direta para C/I e D/F nos limites do Art. 173. J segue a ocupação correspondente (Art. 17 p.ú.); Q conforme NT específica. A frase não comprovada “dimensionada para a população do pavimento” foi removida."
+                                },
+                                {
+                                    "item":  12,
+                                    "sistema":  "SPDA (Para-raios)",
+                                    "artigos":  "Art. 251 (faixa 247-252)",
+                                    "criterios":  "Área total coberta \u003e1.500 m² OU altura \u003e20 m.",
+                                    "dimensionamento":  "Conforme ABNT NBR 5419 vigente. §2º: laudo de gerenciamento de risco pode ISENTAR o sistema. §3º: o profissional responsável assume integral responsabilidade pelo laudo do §2º.",
+                                    "observacoes":  "Art. 251 §1º: abaixo dos limiares, pode haver exigência por ocupação mediante resolução técnica. §§2º-3º: laudo de risco e responsabilidade do RT. Art. 252: permanecem exigências federais, estaduais e municipais. Tipo A: isenção geral, salvo NT."
+                                },
+                                {
+                                    "item":  13,
+                                    "sistema":  "Central de GLP",
+                                    "artigos":  "Arts. 232-242 (exigência: Arts. 234 p.ú., 241 e 242)",
+                                    "criterios":  "Central obrigatória se ocorrer QUALQUER gatilho: GLP utilizado ≥45 kg (Art. 234 p.ú.); salvo Tipo A, mais de 8 pavimentos OU altura \u003e20,0 m (Art. 241 I); hotéis, restaurantes, panificadoras e congêneres com área \u003e500 m² (Art. 241 II); hospitais, clínicas, escolas e congêneres com área \u003e750 m² (Art. 241 III).",
+                                    "dimensionamento":  "Art. 234: abrigo em alvenaria/concreto, pé-direito ≥1,90 m, teto de concreto e portas metálicas em tela/grade. Art. 235: área externa, térreo, acesso emergencial, afastamentos, ventilação, sinalização e piso. Arts. 238-240: declaração da instaladora/RT e proteção por hidrante/extintores conforme capacidade.",
+                                    "observacoes":  "Tipo A: isenção geral dos Arts. 2º p.ú./8º §1º, ressalvadas NTs; o Art. 241 I também o exclui do gatilho altura/pavimentos. Art. 241 p.ú.: fornos com outra alimentação isentam o capítulo. J/Q: Art. 242, sem aplicação automática dos Arts. 234/241. Recipientes \u003e90 kg: norma específica. O Art. 240 imprime “4,50 kg” acima de 1.350 kg; aparente erro material oficial — consultar CBMPE/ALEPE antes de aplicar."
+                                },
+                                {
+                                    "item":  14,
+                                    "sistema":  "Heliponto / Heliponto Elevado",
+                                    "artigos":  "Art. 211-A + NT do CBMPE (regime antigo dos Arts. 211-229 revogado)",
+                                    "criterios":  "Instalação facultativa — decisão EXCLUSIVA do construtor (§1º).",
+                                    "dimensionamento":  "§3º: optando pela instalação, atender a Norma Técnica do CBMPE (NT 3.05). §2º: não substitui dispositivos de evacuação.",
+                                    "observacoes":  "O regime antigo dos Arts. 211 a 229 foi revogado, ressalvado o novo Art. 211-A. O texto do COSCIP não identifica o número da NT; confirmar no catálogo vigente do CBMPE."
+                                },
+                                {
+                                    "item":  15,
+                                    "sistema":  "Portas e dispositivos antipânico",
+                                    "artigos":  "Arts. 174-180",
+                                    "criterios":  "Portas no sentido da saída para lotação \u003e50; salas \u003e200 pessoas: ferragem/dispositivo antipânico, barra a 0,90–1,10 m (Art. 178).",
+                                    "dimensionamento":  "Vãos e folhas conforme Arts. 175-180.",
+                                    "observacoes":  "Não substituir o dimensionamento por UP."
+                                },
+                                {
+                                    "item":  16,
+                                    "sistema":  "Distâncias máximas a percorrer",
+                                    "artigos":  "Art. 147 + Tabela 3",
+                                    "criterios":  "Valores variam por grupo de ocupação, pavimento, número de saídas, detecção e chuveiros.",
+                                    "dimensionamento":  "Consultar a aba “Tabela 3 - Distâncias”.",
+                                    "observacoes":  "Sem leiaute: reduzir 30%; controle de fumaça: +50%; duas saídas exigem separação ≥10 m."
+                                },
+                                {
+                                    "item":  17,
+                                    "sistema":  "Descargas, guarda-corpos e rampas",
+                                    "artigos":  "Arts. 165-170 e 182-186",
+                                    "criterios":  "Descargas, corredores/átrios, guarda-corpos e rampas integram as saídas de emergência.",
+                                    "dimensionamento":  "Rampa hospitalar: largura mínima 1,50 m e declividade ≤10%; demais: 1,10 m e ≤12%.",
+                                    "observacoes":  "Aplicar hipóteses de substituição de escada por rampa do Art. 186."
+                                },
+                                {
+                                    "item":  18,
+                                    "sistema":  "Armazenamento de recipientes transportáveis de GLP",
+                                    "artigos":  "Arts. 243-244",
+                                    "criterios":  "Regulado por normas específicas; aprovação depende de documento do órgão competente.",
+                                    "dimensionamento":  "Não confundir armazenamento de recipientes com Central de GLP.",
+                                    "observacoes":  "Linha separada para impedir mistura de regimes."
+                                },
+                                {
+                                    "item":  19,
+                                    "sistema":  "Gás Natural",
+                                    "artigos":  "Arts. 245-246",
+                                    "criterios":  "Regulado por NT específica do CBMPE.",
+                                    "dimensionamento":  "Exigência, instalação e dimensionamento conforme critérios dos órgãos competentes.",
+                                    "observacoes":  "Não misturar GN com Central de GLP."
+                                }
+                            ],
+    "matriz":  [
+                   {
+                       "sistema":  "Hidrante Público (Vilas)",
+                       "referencia":  "Art. 8º",
+                       "porTipo":  {
+                                       "A":  "Vilas: 1 hidrante de coluna por 100-1.000 unidades",
+                                       "B":  "—",
+                                       "C":  "—",
+                                       "D":  "—",
+                                       "E":  "—",
+                                       "F":  "—",
+                                       "G":  "—",
+                                       "H":  "—",
+                                       "I":  "—",
+                                       "J":  "—",
+                                       "K":  "—",
+                                       "L":  "—",
+                                       "M":  "—",
+                                       "N":  "—",
+                                       "O":  "—",
+                                       "P":  "—",
+                                       "Q":  "—"
+                                   }
+                   },
+                   {
+                       "sistema":  "Unidade de Passagem",
+                       "referencia":  "Art. 179-181 (UP=0,55m)",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "2 UP (mínimo)",
+                                       "C":  "2 UP (3 UP p/ cuidados especiais)",
+                                       "D":  "2 UP (mínimo)",
+                                       "E":  "2 UP (mínimo)",
+                                       "F":  "2 UP (mínimo)",
+                                       "G":  "2 UP (mínimo)",
+                                       "H":  "2 UP (mínimo)",
+                                       "I":  "4 UP hospitalar geral | 3 UP cuidados especiais | 2 UP veterinário/assemelhados",
+                                       "J":  "Conforme ocupação correspondente",
+                                       "K":  "2 UP (mínimo)",
+                                       "L":  "2 UP (mínimo)",
+                                       "M":  "2 UP (mínimo)",
+                                       "N":  "2 UP (mínimo)",
+                                       "O":  "2 UP (mínimo)",
+                                       "P":  "2 UP (mínimo)",
+                                       "Q":  "2 UP (mínimo)"
+                                   }
+                   },
+                   {
+                       "sistema":  "Escadas (NE/EP/PF)",
+                       "referencia":  "Arts. 152-A, 153 p.ú. e 164 + Tabela 2",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "NE \u003c13m | EP 13≤H\u003c51 | PF ≥51",
+                                       "C":  "NE \u003c13m | EP 13≤H\u003c31 | PF ≥31",
+                                       "D":  "NE ≤6m | EP 6\u003cH≤30 | PF \u003e30",
+                                       "E":  "NE \u003c13m | EP 13≤H\u003c31 | PF ≥31",
+                                       "F":  "NE \u003c13m | EP 13≤H\u003c31 | PF ≥31",
+                                       "G":  "NE \u003c7m | EP 7≤H≤30 | PF \u003e30",
+                                       "H":  "NE ≤6m | EP 6\u003cH≤30 | PF \u003e30",
+                                       "I":  "NE ≤6m | EP 6\u003cH≤12 | PF \u003e12",
+                                       "J":  "Conforme ocupação correspondente",
+                                       "K":  "NE \u003c13m | EP 13≤H\u003c31 | PF ≥31",
+                                       "L":  "NE ≤12m | EP 12\u003cH≤30 | PF \u003e30",
+                                       "M":  "NE \u003c20m | EP ≥20m (sem PF)",
+                                       "N":  "NE ≤12m | EP 12\u003cH≤30 | PF \u003e30",
+                                       "O":  "NE ≤12m | EP 12\u003cH≤30 | PF \u003e30",
+                                       "P":  "NE ≤6m | EP 6\u003cH≤30 | PF \u003e30",
+                                       "Q":  "NT 1.06"
+                                   }
+                   },
+                   {
+                       "sistema":  "Área de Refúgio",
+                       "referencia":  "Art. 173 (só C, I, D, F)",
+                       "porTipo":  {
+                                       "A":  "—",
+                                       "B":  "—",
+                                       "C":  "≤750m²: h\u003e20m OU Pav.\u003e8 | \u003e750m²: h\u003e12m OU Pav.\u003e4",
+                                       "D":  "≤750m²: h\u003e120m OU Pav.\u003e40 | \u003e750m²: h\u003e60m OU Pav.\u003e20",
+                                       "E":  "—",
+                                       "F":  "≤750m²: h\u003e120m OU Pav.\u003e40 | \u003e750m²: h\u003e60m OU Pav.\u003e20",
+                                       "G":  "—",
+                                       "H":  "—",
+                                       "I":  "≤750m²: h\u003e20m OU Pav.\u003e8 | \u003e750m²: h\u003e12m OU Pav.\u003e4",
+                                       "J":  "Conforme ocupação correspondente (Art. 17 p.ú.)",
+                                       "K":  "—",
+                                       "L":  "—",
+                                       "M":  "—",
+                                       "N":  "—",
+                                       "O":  "—",
+                                       "P":  "—",
+                                       "Q":  "Conforme NT específica (Art. 144 p.ú.)"
+                                   }
+                   },
+                   {
+                       "sistema":  "Elevador de Emergência",
+                       "referencia":  "Art. 188",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "Pav. \u003e 20",
+                                       "C":  "Pav. \u003e 20",
+                                       "D":  "Pav. \u003e 20",
+                                       "E":  "Pav. \u003e 20",
+                                       "F":  "Pav. \u003e 20",
+                                       "G":  "Pav. \u003e 20",
+                                       "H":  "Pav. \u003e 20",
+                                       "I":  "Pav. \u003e 20",
+                                       "J":  "Pav. \u003e 20",
+                                       "K":  "Pav. \u003e 20",
+                                       "L":  "Pav. \u003e 20",
+                                       "M":  "Pav. \u003e 20",
+                                       "N":  "Pav. \u003e 20",
+                                       "O":  "Pav. \u003e 20",
+                                       "P":  "Pav. \u003e 20",
+                                       "Q":  "Pav. \u003e 20"
+                                   }
+                   },
+                   {
+                       "sistema":  "Iluminação de Emergência",
+                       "referencia":  "Art. 189-206 (205/206)",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "C":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "D":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "E":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "F":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "G":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "H":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "I":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "J":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "K":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "L":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "M":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "N":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "O":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "P":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²",
+                                       "Q":  "Escada EP/PF OU lotação\u003e100 OU área\u003e1.500 m²"
+                                   }
+                   },
+                   {
+                       "sistema":  "Sinalização de Emergência",
+                       "referencia":  "Arts. 144, 146 IV, 207-210 e 230 + Tabela 2",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "Sempre",
+                                       "C":  "Sempre",
+                                       "D":  "Sempre",
+                                       "E":  "Sempre",
+                                       "F":  "Sempre",
+                                       "G":  "Sempre",
+                                       "H":  "Sempre",
+                                       "I":  "Sempre",
+                                       "J":  "Sempre",
+                                       "K":  "Sempre",
+                                       "L":  "Sempre",
+                                       "M":  "Sempre",
+                                       "N":  "Sempre",
+                                       "O":  "Sempre",
+                                       "P":  "Sempre",
+                                       "Q":  "Conforme NT específica"
+                                   }
+                   },
+                   {
+                       "sistema":  "Hidrante",
+                       "referencia":  "Arts. 105-A e 106 (Art. 105 revogado)",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "h\u003e14m OU Pav.\u003e4",
+                                       "C":  "h\u003e14m OU Pav.\u003e4",
+                                       "D":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "E":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "F":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "G":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "H":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "I":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "J":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "K":  "h\u003e14m OU Pav.\u003e4",
+                                       "L":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "M":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "N":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "O":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "P":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²",
+                                       "Q":  "h\u003e14m OU Pav.\u003e4 OU Área\u003e930m²*"
+                                   }
+                   },
+                   {
+                       "sistema":  "Chuveiros Automáticos",
+                       "referencia":  "Art. 132-A",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "Isento*",
+                                       "C":  "≤930m²: Pav.\u003e8 | \u003e930m²: Pav.\u003e4",
+                                       "D":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "E":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "F":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "G":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "H":  "\u003e2 pav (indep. área)",
+                                       "I":  "≤930m²: Pav.\u003e8 | \u003e930m²: Pav.\u003e4",
+                                       "J":  "Conforme ocupação",
+                                       "K":  "Isento",
+                                       "L":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "M":  "≤930m²: Pav.\u003e8 | \u003e930m²: Pav.\u003e4",
+                                       "N":  "≤930m²: Pav.\u003e4 | \u003e930m²: Pav.\u003e2",
+                                       "O":  "Norma específica (§7º)",
+                                       "P":  "Isento",
+                                       "Q":  "NT específica do CBMPE (Art. 133)"
+                                   }
+                   },
+                   {
+                       "sistema":  "Central de GLP",
+                       "referencia":  "Arts. 234 p.ú., 241 e 242 (GLP); GN: Arts. 245-246/NT",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "C":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "D":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | hotel/cong.: Área\u003e500m²",
+                                       "E":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | restaurante/panif./cong.: Área\u003e500m²",
+                                       "F":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "G":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | se restaurante/panif./cong.: Área\u003e500m²",
+                                       "H":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | restaurante/cong.: Área\u003e500m²",
+                                       "I":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | hospital/clínica/cong.: Área\u003e750m²",
+                                       "J":  "Art. 242: exigência regulada pelo CBMPE; confirmar critério no caso concreto",
+                                       "K":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8 | escola/cong.: Área\u003e750m²",
+                                       "L":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "M":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "N":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "O":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "P":  "GLP≥45kg OU h\u003e20m OU Pav.\u003e8",
+                                       "Q":  "Art. 242: exigência regulada pelo CBMPE; confirmar critério no caso concreto"
+                                   }
+                   },
+                   {
+                       "sistema":  "Alarme Manual",
+                       "referencia":  "Art. 140 §2º/§3º/§4º",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "h≥51m OU conjugado",
+                                       "C":  "Área\u003e2.000m² OU h≥8m OU conjugado",
+                                       "D":  "Área\u003e2.000m² OU conjugado",
+                                       "E":  "Área\u003e2.000m² OU h≥7m OU conjugado",
+                                       "F":  "Área\u003e2.000m² OU conjugado",
+                                       "G":  "Área\u003e2.000m² OU h≥7m OU conjugado",
+                                       "H":  "Área\u003e2.000m² OU h≥7m OU conjugado",
+                                       "I":  "Área\u003e2.000m² OU conjugado",
+                                       "J":  "Área\u003e2.000m² OU conjugado; altura conforme ocupação",
+                                       "K":  "Área\u003e2.000m² OU h≥7m OU conjugado",
+                                       "L":  "Área\u003e2.000m² OU h≥9m OU conjugado",
+                                       "M":  "Área\u003e2.000m² OU h≥20m OU conjugado",
+                                       "N":  "Área\u003e2.000m² OU conjugado",
+                                       "O":  "Área\u003e2.000m² OU h≥9m OU conjugado",
+                                       "P":  "Área\u003e2.000m² OU h≥7m OU conjugado",
+                                       "Q":  "Área\u003e2.000m² OU conjugado OU NT específica"
+                                   }
+                   },
+                   {
+                       "sistema":  "Detecção e Alarme",
+                       "referencia":  "Arts. 134-141 (Art. 140 caput)",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "—",
+                                       "C":  "—",
+                                       "D":  "\u003e1.500m² OU \u003e12m OU \u003e4pav",
+                                       "E":  "Com.\u003e1.000m² OU \u003e12m OU \u003e4pav",
+                                       "F":  "\u003e1.500m² OU \u003e12m OU \u003e4pav",
+                                       "G":  "Com.\u003e1.000m² OU \u003e9m OU \u003e3pav",
+                                       "H":  "\u003e1.500m² OU \u003e9m OU \u003e3pav",
+                                       "I":  "\u003e1.500m² OU \u003e8m",
+                                       "J":  "Conforme ocupação correspondente (Art. 17 p.ú.)",
+                                       "K":  "\u003e12m OU \u003e4pav",
+                                       "L":  "\u003e2.000m²",
+                                       "M":  "\u003e3.000m²",
+                                       "N":  "—",
+                                       "O":  "—",
+                                       "P":  "—",
+                                       "Q":  "NT (§1º)"
+                                   }
+                   },
+                   {
+                       "sistema":  "SPDA (Para-raios)",
+                       "referencia":  "Art. 251",
+                       "porTipo":  {
+                                       "A":  "Isento",
+                                       "B":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "C":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "D":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "E":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "F":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "G":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "H":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "I":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "J":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "K":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "L":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "M":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "N":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "O":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "P":  "Área coberta\u003e1.500m² OU h\u003e20m",
+                                       "Q":  "Área coberta\u003e1.500m² OU h\u003e20m"
+                                   }
+                   },
+                   {
+                       "sistema":  "Heliponto",
+                       "referencia":  "Art. 211-A + NT 3.05",
+                       "porTipo":  {
+                                       "A":  "Isento pela regra geral; se instalar, atender à NT",
+                                       "B":  "Facultativo (decisão exclusiva do construtor)",
+                                       "C":  "Facultativo (decisão exclusiva do construtor)",
+                                       "D":  "Facultativo (decisão exclusiva do construtor)",
+                                       "E":  "Facultativo (decisão exclusiva do construtor)",
+                                       "F":  "Facultativo (decisão exclusiva do construtor)",
+                                       "G":  "Facultativo (decisão exclusiva do construtor)",
+                                       "H":  "Facultativo (decisão exclusiva do construtor)",
+                                       "I":  "Facultativo (decisão exclusiva do construtor)",
+                                       "J":  "Facultativo (decisão exclusiva do construtor)",
+                                       "K":  "Facultativo (decisão exclusiva do construtor)",
+                                       "L":  "Facultativo (decisão exclusiva do construtor)",
+                                       "M":  "Facultativo (decisão exclusiva do construtor)",
+                                       "N":  "Facultativo (decisão exclusiva do construtor)",
+                                       "O":  "Facultativo (decisão exclusiva do construtor)",
+                                       "P":  "Facultativo (decisão exclusiva do construtor)",
+                                       "Q":  "Facultativo (decisão exclusiva do construtor)"
+                                   }
+                   },
+                   {
+                       "sistema":  "Extintor",
+                       "referencia":  "Arts. 31-44",
+                       "porTipo":  {
+                                       "A":  "Isento; salvo escritório/comércio (Art. 41)",
+                                       "B":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "C":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "D":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "E":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "F":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "G":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "H":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "I":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "J":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "K":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "L":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "M":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "N":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "O":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "P":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²",
+                                       "Q":  "Sempre: mín. 2 UE por pav./mezanino/jirau/risco; 1 UE se área≤50m²"
+                                   }
+                   }
+               ],
+    "notasMatriz":  [
+                        "TIPO A: isenção geral dos Arts. 2º p.ú./8º §1º, ressalvadas vilas, Art. 41 e situações definidas por NT do CBMPE.",
+                        "ALARME: aplicar cumulativamente Art. 140 §§2º-4º — área, altura e conjugação. Tipo J segue a ocupação correspondente.",
+                        "CHUVEIROS: Arts. 107-131 instalação; 132 revogado; 132-A exigibilidade; 133 Tipo Q. §4º garagem que não atende ao caput do Art. 27; §§5º-6º gatilhos especiais.",
+                        "UP: 0,55 m. Hospitalar geral=4; cuidados especiais=3; veterinário/assemelhados e demais=2. Dimensionar por população/Tabela 1.",
+                        "FONTE: Decreto nº 19.644/1997 — Texto Atualizado ALEPE, ID 40641, consolidado até o Decreto nº 59.579/2025. Auditoria: 31/08/2026.",
+                        "GLP: Arts. 234 p.ú., 241 e 242. Art. 241 p.ú.: edificações abrangidas que usam fornos com outra alimentação ficam isentas do capítulo. J/Q: decisão do CBMPE, sem aplicação automática dos gatilhos.",
+                        "CONTAGEM: Art. 106 contém exclusões próprias para hidrantes; Art. 231 contém exclusões próprias para evacuação. Não intercambiar os dois dispositivos.",
+                        "PARÂMETROS: Art. 25 define área total ocupada, área por pavimento e altura. Art. 27-A traz recomendações para recarga de veículos elétricos.",
+                        "ESCADAS/SAÍDAS: além da Tabela 2, aplicar população/Tabela 1, distâncias/Tabela 3, separação de escadas do Art. 164 e antipânico do Art. 178.",
+                        "SPDA: Art. 251 §1º pode exigir abaixo dos limites; §2º admite laudo; Art. 252 preserva exigências de outras esferas.",
+                        "VALIDAÇÃO: critérios “OU” são alternativos. Esta matriz é síntese; instalação e dimensionamento exigem a aba detalhada, tabelas anexas e NTs vigentes."
+                    ],
+    "populacao":  [
+                      {
+                          "grupo":  "B",
+                          "condicao":  "",
+                          "calculo":  "2 pessoas/dormitório",
+                          "acessos":  "60",
+                          "escadas":  "45",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "D",
+                          "condicao":  "",
+                          "calculo":  "1,5 pessoas/dormitório",
+                          "acessos":  "60",
+                          "escadas":  "45",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "C / I",
+                          "condicao":  "",
+                          "calculo":  "1,5 pessoas/leito",
+                          "acessos":  "30",
+                          "escadas":  "22",
+                          "portas":  "30"
+                      },
+                      {
+                          "grupo":  "F",
+                          "condicao":  "",
+                          "calculo":  "1 pessoa/9 m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "K",
+                          "condicao":  "",
+                          "calculo":  "1 aluno/m² de sala de aula ou atividades",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "H",
+                          "condicao":  "Estádios/ginásios",
+                          "calculo":  "2 pessoas/m² de área para assistência",
+                          "acessos":  "100",
+                          "escadas":  "75",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "H",
+                          "condicao":  "Demais edificações",
+                          "calculo":  "1 pessoa/m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "75",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "E / G",
+                          "condicao":  "Térreo e subsolo",
+                          "calculo":  "1 pessoa/3 m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "E / G",
+                          "condicao":  "Pavimentos superiores",
+                          "calculo":  "1 pessoa/5 m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "P",
+                          "condicao":  "",
+                          "calculo":  "1 pessoa/m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "75",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "L / O",
+                          "condicao":  "",
+                          "calculo":  "1 pessoa/20 m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "M",
+                          "condicao":  "",
+                          "calculo":  "1 pessoa/20 vagas",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "N",
+                          "condicao":  "",
+                          "calculo":  "1 pessoa/30 m² de área bruta",
+                          "acessos":  "100",
+                          "escadas":  "60",
+                          "portas":  "100"
+                      },
+                      {
+                          "grupo":  "J",
+                          "condicao":  "",
+                          "calculo":  "Conforme classificação da ocupação",
+                          "acessos":  "",
+                          "escadas":  "",
+                          "portas":  ""
+                      },
+                      {
+                          "grupo":  "Q",
+                          "condicao":  "",
+                          "calculo":  "A critério do CBMPE conforme ocupação específica",
+                          "acessos":  "",
+                          "escadas":  "",
+                          "portas":  ""
+                      },
+                      {
+                          "grupo":  "NOTA",
+                          "condicao":  "",
+                          "calculo":  "Transcrição conferida visualmente na página 111 do PDF oficial ALEPE. Aplicar Art. 181: N=P÷C(d), arredondando para cima.",
+                          "acessos":  "",
+                          "escadas":  "",
+                          "portas":  ""
+                      }
+                  ],
+    "distancias":  [
+                       {
+                           "grupo":  "A/B/C/D",
+                           "pavimento":  "Piso de descarga",
+                           "semCaUmaSemDet":  "45",
+                           "semCaUmaComDet":  "55",
+                           "semCaVariasSemDet":  "55",
+                           "semCaVariasComDet":  "65",
+                           "comCaUmaSemDet":  "60",
+                           "comCaUmaComDet":  "70",
+                           "comCaVariasSemDet":  "80",
+                           "comCaVariasComDet":  "95"
+                       },
+                       {
+                           "grupo":  "A/B/C/D",
+                           "pavimento":  "Demais pavimentos",
+                           "semCaUmaSemDet":  "40",
+                           "semCaUmaComDet":  "45",
+                           "semCaVariasSemDet":  "50",
+                           "semCaVariasComDet":  "60",
+                           "comCaUmaSemDet":  "55",
+                           "comCaUmaComDet":  "65",
+                           "comCaVariasSemDet":  "75",
+                           "comCaVariasComDet":  "90"
+                       },
+                       {
+                           "grupo":  "E/F/G/H/I/K/O",
+                           "pavimento":  "Piso de descarga",
+                           "semCaUmaSemDet":  "40",
+                           "semCaUmaComDet":  "45",
+                           "semCaVariasSemDet":  "50",
+                           "semCaVariasComDet":  "60",
+                           "comCaUmaSemDet":  "55",
+                           "comCaUmaComDet":  "65",
+                           "comCaVariasSemDet":  "75",
+                           "comCaVariasComDet":  "90"
+                       },
+                       {
+                           "grupo":  "E/F/G/H/I/K/O",
+                           "pavimento":  "Demais pavimentos",
+                           "semCaUmaSemDet":  "30",
+                           "semCaUmaComDet":  "35",
+                           "semCaVariasSemDet":  "40",
+                           "semCaVariasComDet":  "45",
+                           "comCaUmaSemDet":  "45",
+                           "comCaUmaComDet":  "55",
+                           "comCaVariasSemDet":  "65",
+                           "comCaVariasComDet":  "75"
+                       },
+                       {
+                           "grupo":  "M",
+                           "pavimento":  "Piso de descarga",
+                           "semCaUmaSemDet":  "50",
+                           "semCaUmaComDet":  "60",
+                           "semCaVariasSemDet":  "60",
+                           "semCaVariasComDet":  "70",
+                           "comCaUmaSemDet":  "80",
+                           "comCaUmaComDet":  "95",
+                           "comCaVariasSemDet":  "120",
+                           "comCaVariasComDet":  "140"
+                       },
+                       {
+                           "grupo":  "M",
+                           "pavimento":  "Demais pavimentos",
+                           "semCaUmaSemDet":  "45",
+                           "semCaUmaComDet":  "55",
+                           "semCaVariasSemDet":  "55",
+                           "semCaVariasComDet":  "65",
+                           "comCaUmaSemDet":  "70",
+                           "comCaUmaComDet":  "80",
+                           "comCaVariasSemDet":  "110",
+                           "comCaVariasComDet":  "130"
+                       },
+                       {
+                           "grupo":  "L/N",
+                           "pavimento":  "Piso de descarga",
+                           "semCaUmaSemDet":  "40",
+                           "semCaUmaComDet":  "45",
+                           "semCaVariasSemDet":  "50",
+                           "semCaVariasComDet":  "60",
+                           "comCaUmaSemDet":  "60",
+                           "comCaUmaComDet":  "70",
+                           "comCaVariasSemDet":  "100",
+                           "comCaVariasComDet":  "120"
+                       },
+                       {
+                           "grupo":  "L/N",
+                           "pavimento":  "Demais pavimentos",
+                           "semCaUmaSemDet":  "30",
+                           "semCaUmaComDet":  "35",
+                           "semCaVariasSemDet":  "40",
+                           "semCaVariasComDet":  "45",
+                           "comCaUmaSemDet":  "50",
+                           "comCaUmaComDet":  "65",
+                           "comCaVariasSemDet":  "80",
+                           "comCaVariasComDet":  "95"
+                       },
+                       {
+                           "grupo":  "J/Q",
+                           "pavimento":  "",
+                           "semCaUmaSemDet":  "Conforme ocupação correspondente e Art. 144 p.ú.",
+                           "semCaUmaComDet":  "",
+                           "semCaVariasSemDet":  "",
+                           "semCaVariasComDet":  "",
+                           "comCaUmaSemDet":  "",
+                           "comCaUmaComDet":  "",
+                           "comCaVariasSemDet":  "",
+                           "comCaVariasComDet":  ""
+                       }
+                   ],
+    "notasDistancias":  [
+                            "a) Sem leiaute definido em planta: reduzir distâncias em 30%.",
+                            "b) Controle de fumaça: admitir acréscimo de 50%.",
+                            "c) Para usar “mais de uma saída”, separação mínima de 10 m.",
+                            "d) Áreas técnicas sem permanência e de acesso restrito: 140 m.",
+                            "e) Tipo M: pode considerar deslocamento entre veículos.",
+                            "f) Para ampliar distância, detecção/controle de fumaça/chuveiros podem ficar na área compartimentada; sem compartimentação, prever em toda edificação. Ressalvas B/C/K conforme Tabela 3.",
+                            "g) CBMPE pode definir critérios diversos por NT específica."
+                        ],
+    "rastreabilidade":  [
+                            {
+                                "dispositivo":  "Art. 2º",
+                                "tema":  "Classificação Tipo A; matriz",
+                                "vereditoAnterior":  "INCOMPLETO",
+                                "resultado":  "Incluída ressalva de situações definidas por NT do CBMPE.",
+                                "prova":  "53-62"
+                            },
+                            {
+                                "dispositivo":  "Arts. 7º-24",
+                                "tema":  "Classificação A-Q",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Revisadas todas as classificações; corrigidos C/I, J, K, M e Q.",
+                                "prova":  "113-778"
+                            },
+                            {
+                                "dispositivo":  "Art. 25",
+                                "tema":  "Parâmetros gerais",
+                                "vereditoAnterior":  "OMISSO",
+                                "resultado":  "Incluída nota sobre área e altura.",
+                                "prova":  "779-849"
+                            },
+                            {
+                                "dispositivo":  "Arts. 27 e 27-A",
+                                "tema":  "Garagens/VE",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Corrigido gatilho da garagem; incluída recomendação para recarga VE.",
+                                "prova":  "850-900"
+                            },
+                            {
+                                "dispositivo":  "Arts. 31-44",
+                                "tema":  "Extintores",
+                                "vereditoAnterior":  "INCOMPLETO",
+                                "resultado":  "Incluídos mezanino/jirau/risco, escadas, riscos especiais, áreas internas e revogação do Art. 39.",
+                                "prova":  "975-1242"
+                            },
+                            {
+                                "dispositivo":  "Arts. 49-104",
+                                "tema":  "Hidrantes — instalação",
+                                "vereditoAnterior":  "REFERÊNCIA GENÉRICA",
+                                "resultado":  "Mantida como faixa de instalação/dimensionamento; Art. 105 separado.",
+                                "prova":  "1281-2104"
+                            },
+                            {
+                                "dispositivo":  "Art. 105",
+                                "tema":  "Hidrantes",
+                                "vereditoAnterior":  "OMISSO",
+                                "resultado":  "Revogação indicada.",
+                                "prova":  "2105-2240"
+                            },
+                            {
+                                "dispositivo":  "Art. 105-A",
+                                "tema":  "Hidrantes — exigibilidade",
+                                "vereditoAnterior":  "CORRETO",
+                                "resultado":  "Gatilhos mantidos.",
+                                "prova":  "2241-2268"
+                            },
+                            {
+                                "dispositivo":  "Art. 106",
+                                "tema":  "Hidrantes — pavimentos",
+                                "vereditoAnterior":  "OMISSO",
+                                "resultado":  "Incluídas exclusões de contagem.",
+                                "prova":  "2269-2322"
+                            },
+                            {
+                                "dispositivo":  "Arts. 107-131",
+                                "tema":  "Chuveiros — instalação",
+                                "vereditoAnterior":  "OMISSO NA REFERÊNCIA",
+                                "resultado":  "Faixa incluída como instalação/dimensionamento.",
+                                "prova":  "2323-2619"
+                            },
+                            {
+                                "dispositivo":  "Arts. 132, 132-A e 133",
+                                "tema":  "Chuveiros — exigibilidade",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Gatilhos mantidos; Q corrigido para NT específica, não NT 1.06.",
+                                "prova":  "2620-2873"
+                            },
+                            {
+                                "dispositivo":  "Arts. 134-141",
+                                "tema":  "Detecção/alarme",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Corrigido Tipo J; descrição técnica e locais protegidos; ressalva do Art. 141.",
+                                "prova":  "2874-3293"
+                            },
+                            {
+                                "dispositivo":  "Arts. 142-150",
+                                "tema":  "Evacuação/acessos",
+                                "vereditoAnterior":  "INCOMPLETO",
+                                "resultado":  "Incluídos Arts. 144, 146, 147 e 149 nas referências.",
+                                "prova":  "3294-3518"
+                            },
+                            {
+                                "dispositivo":  "Arts. 151-164",
+                                "tema":  "Escadas",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Faixas confirmadas; adicionados separação 10 m, exceção e pressurização.",
+                                "prova":  "3519-3773"
+                            },
+                            {
+                                "dispositivo":  "Arts. 165-173",
+                                "tema":  "Descarga/refúgio",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Incluída linha complementar; corrigida redação da área de refúgio e Tipo J.",
+                                "prova":  "3778-3889"
+                            },
+                            {
+                                "dispositivo":  "Arts. 174-181",
+                                "tema":  "Portas/UP",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Incluídos antipânico, folhas, descarga, UP por uso, arredondamento e Tabela 1.",
+                                "prova":  "3894-4008"
+                            },
+                            {
+                                "dispositivo":  "Arts. 182-188",
+                                "tema":  "Guardas/rampas/elevador",
+                                "vereditoAnterior":  "PARCIAL COM ERRO",
+                                "resultado":  "Criada linha complementar; corrigido gerador externo e portas metálicas.",
+                                "prova":  "4010-4122"
+                            },
+                            {
+                                "dispositivo":  "Arts. 189-206",
+                                "tema":  "Iluminação",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Reescrita conforme Código; incluído Art. 203.",
+                                "prova":  "4133-4280"
+                            },
+                            {
+                                "dispositivo":  "Arts. 207-210",
+                                "tema":  "Sinalização",
+                                "vereditoAnterior":  "EXTRAPOLADO",
+                                "resultado":  "Limitado a saídas/rotas; incluídos Art. 144/146 IV/230.",
+                                "prova":  "4285-4343"
+                            },
+                            {
+                                "dispositivo":  "Art. 211-A; Arts. 211-229 antigos",
+                                "tema":  "Heliponto",
+                                "vereditoAnterior":  "INCOMPLETO",
+                                "resultado":  "Indicada revogação integral do regime antigo; NT sem número não comprovado pelo Código.",
+                                "prova":  "4351-4717"
+                            },
+                            {
+                                "dispositivo":  "Arts. 230-231",
+                                "tema":  "Evacuação/contagem",
+                                "vereditoAnterior":  "OMISSO/PARCIAL",
+                                "resultado":  "Art. 230 contextualizado; Art. 231 incluído.",
+                                "prova":  "4722-4781"
+                            },
+                            {
+                                "dispositivo":  "Arts. 232-242",
+                                "tema":  "Central de GLP",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Gatilhos do 234/241/242 confirmados; completadas instalação, proteção, exceções e erro material do Art. 240.",
+                                "prova":  "4786-4975"
+                            },
+                            {
+                                "dispositivo":  "Arts. 243-244",
+                                "tema":  "Armazenamento GLP",
+                                "vereditoAnterior":  "OMISSO",
+                                "resultado":  "Criada linha própria.",
+                                "prova":  "4980-4985"
+                            },
+                            {
+                                "dispositivo":  "Arts. 245-246",
+                                "tema":  "Gás Natural",
+                                "vereditoAnterior":  "MISTURADO COM GLP",
+                                "resultado":  "Criada linha própria para GN.",
+                                "prova":  "4987-4993"
+                            },
+                            {
+                                "dispositivo":  "Arts. 247-252",
+                                "tema":  "SPDA",
+                                "vereditoAnterior":  "PARCIAL",
+                                "resultado":  "Incluídos instalação, §1º do 251 e Art. 252.",
+                                "prova":  "5003-5076"
+                            },
+                            {
+                                "dispositivo":  "Tabela 1",
+                                "tema":  "População/UP",
+                                "vereditoAnterior":  "SÓ CITADA",
+                                "resultado":  "Criada aba com transcrição visual conferida.",
+                                "prova":  "6789-6870"
+                            },
+                            {
+                                "dispositivo":  "Tabela 2 vigente",
+                                "tema":  "Escadas",
+                                "vereditoAnterior":  "CORRETO",
+                                "resultado":  "Todas as faixas NE/EP/PF confirmadas; notas a-g mantidas.",
+                                "prova":  "7335-7441"
+                            },
+                            {
+                                "dispositivo":  "Tabela 3",
+                                "tema":  "Distâncias",
+                                "vereditoAnterior":  "SÓ CITADA",
+                                "resultado":  "Criada aba com valores e notas a-g.",
+                                "prova":  "7443-7682"
+                            },
+                            {
+                                "dispositivo":  "FONTE OFICIAL",
+                                "tema":  "https://legis.alepe.pe.gov.br/texto.aspx?id=40641\u0026tipo=TEXTOATUALIZADO",
+                                "vereditoAnterior":  "ALEPE ID 40641 — Texto Atualizado",
+                                "resultado":  "PDF baixado novamente em 31/08/2026; 116 páginas.",
+                                "prova":  "/data/relatorios/ALEPE_Decreto_19644_Texto_Atualizado.pdf"
+                            }
+                        ]
+}

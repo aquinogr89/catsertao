@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistemas Preventivos — CAT Sertão</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14204A">
+<link rel="icon" type="image/png" href="CAT-SERTAO-SEM-FUNDO.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sp-intro{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start}
+  .sp-source{font-size:12px;color:var(--muted);background:var(--field-bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px}
+  .sp-form{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 10px 30px -18px rgba(20,32,74,.45)}
+  .sp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .sp-grid .wide{grid-column:span 2}.sp-field{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .sp-field input,.sp-field select{width:100%;border:1px solid var(--border-2);border-radius:8px;background:var(--field-bg);padding:11px 12px;color:var(--ink);font:inherit;font-size:14px;text-transform:none;letter-spacing:0}
+  .sp-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.sp-actions .btn-red{width:auto;padding:12px 22px}
+  .sp-occupation{margin-top:18px;padding:16px 18px;border-left:4px solid var(--gold);background:var(--warn-bg);border-radius:0 10px 10px 0}.sp-occupation h3{font-family:'Oswald',sans-serif;font-size:18px;margin-bottom:5px}.sp-occupation p{font-size:13px;line-height:1.55;color:var(--muted)}
+  .sp-summary{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 14px}.sp-count{padding:8px 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--border)}
+  .sp-count.required{color:#8f1018;background:#fff0f1;border-color:#efb6bb}.sp-count.check{color:#765800;background:#fff8dd;border-color:#ead38b}.sp-count.info{color:var(--navy);background:#eef1fb;border-color:#cbd3ef}
+  .sp-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sp-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:17px;display:flex;flex-direction:column;gap:9px}.sp-card.required{border-left:5px solid var(--red)}.sp-card.not-required{border-left:5px solid var(--green)}.sp-card.check{border-left:5px solid var(--gold)}.sp-card.info{border-left:5px solid var(--navy)}
+  .sp-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.sp-card h3{font-family:'Oswald',sans-serif;font-size:17px;line-height:1.25}.sp-status{white-space:nowrap;border-radius:999px;padding:5px 9px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.required .sp-status{color:#8f1018;background:#fff0f1}.not-required .sp-status{color:#126735;background:#eaf8ef}.check .sp-status{color:#765800;background:#fff8dd}.info .sp-status{color:var(--navy);background:#eef1fb}
+  .sp-card p{font-size:13px;line-height:1.5;color:var(--muted)}.sp-ref{font-size:11.5px!important;color:var(--navy)!important;font-weight:700}.sp-empty{text-align:center;padding:36px;border:1px dashed var(--border-2);border-radius:12px;color:var(--muted)}
+  .sp-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:24px 0 12px}.sp-toolbar input{max-width:320px;border:1px solid var(--border-2);border-radius:8px;padding:10px 12px;background:#fff}
+  @media(max-width:860px){.sp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sp-results{grid-template-columns:1fr}.sp-intro{grid-template-columns:1fr}}
+  @media(max-width:540px){.sp-grid{grid-template-columns:1fr}.sp-grid .wide{grid-column:auto}.sp-form{padding:16px}.sp-toolbar{align-items:stretch;flex-direction:column}.sp-toolbar input{max-width:none}}
+  @media print{.sp-form,.sp-toolbar input,.sp-source a{display:none}.sp-results{grid-template-columns:1fr 1fr}.sp-card{break-inside:avoid}}
+</style>
+</head>
+<body class="util-page" style="min-height:100vh;display:flex;flex-direction:column">
+<a class="btn-float back" href="index.html" title="Voltar ao site principal" aria-label="Voltar ao site principal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+<button id="btn-scroll-top" class="btn-float top" type="button" title="Voltar ao topo" aria-label="Voltar ao topo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<header class="top pad-x"><div class="top-inner wrap"><div class="top-logo"><img src="CAT-SERTAO-SEM-FUNDO.png" alt="Brasão do CAT Sertão"></div><div style="min-width:0"><div class="top-org">Corpo de Bombeiros Militar de Pernambuco</div><h1 class="top-title">Sistemas Preventivos</h1><div class="top-sub">Consulta orientativa · CAT Sertão</div></div><div class="top-actions"><span class="badge-live"><span class="dot"></span><span id="session-login">—</span> · <span id="session-perfil">—</span></span></div></div></header>
+<div id="loading-shell" class="content pad-x wrap"><div id="loading-msg" class="table-status">Verificando sessão e carregando a base…</div><div id="denied-box" class="access-denied u-hidden" role="alert"><strong>Acesso não disponível</strong><p id="denied-text"></p></div></div>
+<div class="site-shell wrap pad-x u-hidden" id="site-shell"><nav class="site-sidebar" aria-label="Navegação do site"><button type="button" id="site-nav-toggle" class="site-nav-toggle" aria-expanded="false" aria-controls="site-sidebar-list"><span>☰ Menu</span><span class="site-nav-toggle-caret">▾</span></button><div class="site-sidebar-list" id="site-sidebar-list"></div></nav>
+<div class="site-content"><main class="content"><section class="section"><div class="eyebrow"><span>Ferramentas</span><span class="rule"></span></div><div class="sp-intro"><div><h2>Consulta de sistemas exigidos</h2><p class="lead">Selecione a ocupação e informe os dados conhecidos. A ferramenta cruza os parâmetros com a matriz do COSCIP-PE e mostra o critério aplicável a cada sistema.</p></div><div class="sp-source">Base auditada em <strong>31/08/2026</strong><br><a href="content/mapa-sistemas-preventivos.xlsx" download>Baixar planilha-fonte (.xlsx)</a></div></div>
+<div class="banner-warn" style="margin:18px 0"><div class="banner-warn-inner"><span class="sq"></span><span><strong>Consulta orientativa.</strong> A norma oficial, as Normas Técnicas vigentes e a análise do caso concreto prevalecem. “Verificar” significa que faltam dados ou há regra específica.</span></div></div>
+<form id="sp-form" class="sp-form"><div class="sp-grid"><label class="sp-field wide">Ocupação<select id="sp-tipo" required><option value="">Selecione o tipo A–Q</option></select></label><label class="sp-field">Altura (m)<input id="sp-altura" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 12"></label><label class="sp-field">Pavimentos<input id="sp-pavimentos" type="number" min="1" step="1" inputmode="numeric" placeholder="Ex.: 3"></label><label class="sp-field">Área total (m²)<input id="sp-area" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 950"></label><label class="sp-field">Área por pavimento (m²)<input id="sp-area-pav" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 500"></label><label class="sp-field">Lotação (pessoas)<input id="sp-lotacao" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex.: 120"></label><label class="sp-field">GLP instalado (kg)<input id="sp-glp" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 45"></label></div><div class="sp-actions"><button class="btn-red" type="submit">Consultar sistemas</button><button class="btn-ghost" type="button" id="sp-limpar">Limpar</button><button class="btn-outline-navy" type="button" id="sp-imprimir">Imprimir resultado</button></div><div id="sp-occupation" class="sp-occupation u-hidden"></div></form>
+<div id="sp-output" class="u-hidden"><div class="sp-toolbar"><div id="sp-summary" class="sp-summary"></div><input id="sp-search" type="search" placeholder="Filtrar sistemas…" aria-label="Filtrar sistemas"></div><div id="sp-results" class="sp-results"></div></div>
+</section></main></div></div>
+<footer class="bottom pad-x"><div class="bottom-inner wrap"><img src="CAT-SERTAO-SEM-FUNDO.png" alt=""><div style="line-height:1.5"><strong>CAT Sertão — CBMPE</strong><br><span>Consulta baseada no COSCIP-PE · uso interno</span></div></div></footer>
+<script src="common.js"></script><script src="sistemas-preventivos.js"></script>
+</body></html>

@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v12';
+var CACHE_NAME = 'cat-sertao-v13';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -19,9 +19,12 @@ var CACHE_ASSETS = [
   './chat.html',
   './hermes.html',
   './eventos.html',
+  './sistemas-preventivos.html',
+  './sistemas-preventivos.js',
   './style.css',
   './common.js',
   './content/tac-mppe.json',
+  './content/sistemas-preventivos.json',
   './fonts/fonts.css',
   './fonts/oswald-latin.woff2',
   './fonts/oswald-latin-ext.woff2',

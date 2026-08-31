@@ -311,6 +311,7 @@ var CatAuth = (function () {
     { grupo: 'Ferramentas' },
     { tipo: 'externo', key: 'rti', id: 'nav-rti', label: 'Mapa de OCI', href: '#' },
     { tipo: 'externo', key: 'triagem', id: 'nav-triagem', label: 'Triagem de Riscos', href: '#' },
+    { tipo: 'pagina', key: 'sistemas', label: 'Sistemas Preventivos', href: 'sistemas-preventivos.html' },
     { grupo: 'Admin' },
     { tipo: 'pagina', key: 'usuarios', id: 'nav-usuarios', label: 'Usuários', href: 'usuarios.html', hiddenByDefault: true },
     { tipo: 'pagina', key: 'log', id: 'nav-log', label: 'LOG', href: 'log.html', hiddenByDefault: true },
