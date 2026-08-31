@@ -1,125 +1,44 @@
 'use strict';
+(function(){
+var base=null,$=function(id){return document.getElementById(id);},screen=1;
+function n(id){var v=$(id).value;return v===''?null:Number(v)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function go(step){screen=step;document.querySelectorAll('[data-screen]').forEach(function(x){x.classList.toggle('sp-hidden',Number(x.dataset.screen)!==step)});document.querySelectorAll('.sp-step').forEach(function(x){var s=Number(x.dataset.step);x.classList.toggle('active',s===step);x.classList.toggle('done',s<step)});window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
+function error(step,msg){var el=$('erro-'+step);el.textContent=msg;el.classList.remove('sp-hidden')}
+function clearError(step){$('erro-'+step).classList.add('sp-hidden')}
+function validate(step){clearError(step);if(step===1){if(!$('tipo').value){error(1,'Selecione a classificação da ocupação.');return false}if($('tipo').value==='J'&&!$('ocupacao-correspondente').value){error(1,'Para o Tipo J, selecione a ocupação correspondente ao uso real.');return false}}if(step===2){var ids=['altura','pavimentos','area','area-pav','populacao','glp','area-relevante'];for(var i=0;i<ids.length;i++){if(n(ids[i])===null||n(ids[i])<0){error(2,'Preencha todos os parâmetros numéricos. Informe zero quando não houver GLP ou população.');$(ids[i]).focus();return false}}if(n('pavimentos')<1){error(2,'O número de pavimentos deve ser pelo menos 1.');return false}}return true}
+document.querySelectorAll('[data-next]').forEach(function(b){b.addEventListener('click',function(){if(validate(screen))go(Number(b.dataset.next))})});document.querySelectorAll('[data-back]').forEach(function(b){b.addEventListener('click',function(){go(Number(b.dataset.back))})});
 
-(function () {
-  var dados = null;
-  var ultimoResultado = [];
-  var $ = function (id) { return document.getElementById(id); };
-  var num = function (id) { var v = $(id).value; return v === '' ? null : Number(v); };
-  var tem = function (v) { return v !== null && Number.isFinite(v); };
-
-  $('site-sidebar-list').innerHTML = CatAuth.montarSidebarItens({ paginaAtual: 'sistemas', paginaBase: 'index.html' });
-  CatAuth.iniciarMenuLateral();
-  CatAuth.iniciarBotaoTopo();
-
-  function matrizPorSistema(nome) {
-    return dados.matriz.find(function (m) { return m.sistema === nome; });
-  }
-
-  function resultado(matriz, status, motivo) {
-    return { sistema: matriz.sistema, referencia: matriz.referencia, criterio: matriz.porTipo[$('sp-tipo').value] || '—', status: status, motivo: motivo };
-  }
-
-  function limiteOuPendente(valores, testes) {
-    var disparou = false, informou = false;
-    testes.forEach(function (teste, i) {
-      if (tem(valores[i])) { informou = true; if (teste(valores[i])) disparou = true; }
-    });
-    return disparou ? 'required' : (informou ? 'not-required' : 'check');
-  }
-
-  function avaliar(m, e) {
-    var t = e.tipo, h = e.altura, p = e.pavimentos, a = e.area, ap = e.areaPav, l = e.lotacao, glp = e.glp;
-    var s = m.sistema;
-    if (s === 'Hidrante Público (Vilas)') return resultado(m, t === 'A' ? 'check' : 'info', t === 'A' ? 'Aplicável a vilas; informe/verifique a quantidade de unidades.' : 'Regra específica para vilas do Tipo A.');
-    if (s === 'Extintor') return resultado(m, t === 'A' ? 'check' : 'required', t === 'A' ? 'Tipo A tem isenção geral, ressalvados o Art. 41 e as NTs.' : 'Exigência geral para a ocupação selecionada.');
-    if (s === 'Sinalização de Emergência') return resultado(m, t === 'A' ? 'not-required' : (t === 'Q' ? 'check' : 'required'), t === 'Q' ? 'Aplicar a NT específica.' : 'Critério direto da matriz.');
-    if (s === 'Elevador de Emergência') {
-      var se = limiteOuPendente([p], [function(v){return v > 20;}]);
-      if (t === 'A') se = 'not-required';
-      return resultado(m, se, se === 'required' ? 'Mais de 20 pavimentos.' : 'Depende do número de pavimentos.');
-    }
-    if (s === 'SPDA (Para-raios)') {
-      var ss = t === 'A' ? 'check' : limiteOuPendente([a,h],[function(v){return v>1500;},function(v){return v>20;}]);
-      return resultado(m, ss, ss === 'required' ? 'Área coberta acima de 1.500 m² ou altura acima de 20 m.' : 'O laudo de gerenciamento de risco e outras normas podem alterar a conclusão.');
-    }
-    if (s === 'Hidrante') {
-      if (t === 'A') return resultado(m,'not-required','Isenção geral do Tipo A.');
-      var usaArea = ['D','E','F','G','H','I','J','L','M','N','O','P','Q'].indexOf(t) >= 0;
-      var sh = limiteOuPendente(usaArea?[h,p,a]:[h,p], usaArea?[function(v){return v>14;},function(v){return v>4;},function(v){return v>930;}]:[function(v){return v>14;},function(v){return v>4;}]);
-      if (t === 'J' || t === 'Q') sh = sh === 'required' ? sh : 'check';
-      return resultado(m,sh,sh==='required'?'Um ou mais gatilhos de altura, pavimentos ou área foram atingidos.':'Compare todos os parâmetros do critério.');
-    }
-    if (s === 'Chuveiros Automáticos') {
-      if (['A','B','K','P'].indexOf(t)>=0) return resultado(m,t==='A'?'not-required':'check',t==='B'?'Pode ser exigido em garagem interna que não atenda ao Art. 27.':'Há exceções e gatilhos especiais no Art. 132-A.');
-      if (['J','O','Q'].indexOf(t)>=0) return resultado(m,'check','A ocupação exige análise por regra ou NT específica.');
-      var limite = (['C','I','M'].indexOf(t)>=0) ? ((tem(ap)&&ap>930)?4:8) : (t==='H'?2:((tem(ap)&&ap>930)?2:4));
-      var sc = tem(p) ? (p>limite?'required':'not-required') : 'check';
-      return resultado(m,sc,sc==='required'?'Número de pavimentos ultrapassa o limite para a área por pavimento informada.':'Verifique também garagem interna, público e armazenamento previstos nos §§4º–6º.');
-    }
-    if (s === 'Alarme Manual') {
-      if (t === 'A') return resultado(m,'not-required','Isenção geral do Tipo A.');
-      var alturas={B:51,C:8,E:7,G:7,H:7,K:7,L:9,M:20,O:9,P:7};
-      var gatilho=(t!=='B'&&tem(a)&&a>2000)||(alturas[t]&&tem(h)&&h>=alturas[t]);
-      var faltam=!tem(a)&&!tem(h);
-      return resultado(m,gatilho?'required':(faltam?'check':'not-required'),gatilho?'Gatilho de área ou altura atingido. Também é conjugado a hidrantes/chuveiros.':'Também é exigido de forma conjugada quando houver hidrantes ou chuveiros.');
-    }
-    if (s === 'Detecção e Alarme') {
-      var regras={D:[1500,12,4],E:[1000,12,4],F:[1500,12,4],G:[1000,9,3],H:[1500,9,3],I:[1500,8,null],K:[null,12,4],L:[2000,null,null],M:[3000,null,null]};
-      if (!regras[t]) return resultado(m,['J','O','Q'].indexOf(t)>=0?'check':'not-required',['J','O','Q'].indexOf(t)>=0?'Aplicar ocupação correspondente ou norma específica.':'A matriz não traz gatilho próprio para este tipo.');
-      var r=regras[t], sd=((r[0]&&tem(a)&&a>r[0])||(r[1]&&tem(h)&&h>r[1])||(r[2]&&tem(p)&&p>r[2]))?'required':((tem(a)||tem(h)||tem(p))?'not-required':'check');
-      return resultado(m,sd,sd==='required'?'Um dos gatilhos de área, altura ou pavimentos foi atingido.':'Confira todos os parâmetros aplicáveis.');
-    }
-    if (s === 'Central de GLP') {
-      if (t === 'A') return resultado(m,'check','Isenção geral, ressalvadas as NTs aplicáveis.');
-      if (['J','Q'].indexOf(t)>=0) return resultado(m,'check','Critério definido pelo CBMPE no caso concreto.');
-      var sg=(tem(glp)&&glp>=45)||(tem(h)&&h>20)||(tem(p)&&p>8);
-      return resultado(m,sg?'required':((tem(glp)||tem(h)||tem(p))?'not-required':'check'),sg?'Ao menos um gatilho geral foi atingido.':'Hotéis/restaurantes/panificadoras e hospitais/clínicas/escolas têm gatilhos adicionais por área.');
-    }
-    if (s === 'Iluminação de Emergência') {
-      if (t === 'A') return resultado(m,'not-required','Isenção geral do Tipo A.');
-      var si=(tem(l)&&l>100)||(tem(a)&&a>1500);
-      return resultado(m,si?'required':'check',si?'Gatilho de lotação ou área atingido.':'Também é obrigatória sempre que houver escada EP ou PF.');
-    }
-    if (s === 'Área de Refúgio') {
-      if (['C','D','F','I'].indexOf(t)<0) return resultado(m,['J','Q'].indexOf(t)>=0?'check':'not-required','Exigência direta apenas para C, D, F e I; J/Q dependem do enquadramento.');
-      if (!tem(ap)||(!tem(h)&&!tem(p))) return resultado(m,'check','Informe área por pavimento e altura ou pavimentos.');
-      var baixo=ap<=750, grupoCI=['C','I'].indexOf(t)>=0, req=grupoCI?(baixo?((h||0)>20||(p||0)>8):((h||0)>12||(p||0)>4)):(baixo?((h||0)>120||(p||0)>40):((h||0)>60||(p||0)>20));
-      return resultado(m,req?'required':'not-required',req?'Gatilho do Art. 173 atingido.':'Parâmetros informados abaixo dos gatilhos diretos do Art. 173.');
-    }
-    if (s === 'Escadas (NE/EP/PF)') return resultado(m,t==='A'?'not-required':(t==='Q'?'check':'info'),t==='Q'?'Aplicar NT específica.':'A matriz indica o tipo de escada pela altura; confira também população, distâncias e quantidade de saídas.');
-    if (s === 'Unidade de Passagem') return resultado(m,t==='A'?'not-required':'info','Dimensionar pela população conforme a Tabela 1; o valor exibido é apenas o mínimo.');
-    if (s === 'Heliponto') return resultado(m,'info','Instalação facultativa; se adotada, deve atender à NT aplicável.');
-    return resultado(m,'info','Consulte o critério da matriz e o detalhamento normativo.');
-  }
-
-  function rotulo(status) { return {required:'Exigido', 'not-required':'Não indicado', check:'Verificar', info:'Dimensionar'}[status]; }
-  function render(lista) {
-    var busca = CatAuth.normalizar($('sp-search').value);
-    var filtrada = lista.filter(function (r) { return CatAuth.normalizar(r.sistema+' '+r.criterio+' '+r.referencia).indexOf(busca)>=0; });
-    $('sp-results').innerHTML = filtrada.length ? filtrada.map(function(r){return '<article class="sp-card '+r.status+'"><div class="sp-card-head"><h3>'+CatAuth.escapeHtml(r.sistema)+'</h3><span class="sp-status">'+rotulo(r.status)+'</span></div><p>'+CatAuth.escapeHtml(r.motivo)+'</p><p><strong>Critério da ocupação:</strong> '+CatAuth.escapeHtml(r.criterio)+'</p><p class="sp-ref">'+CatAuth.escapeHtml(r.referencia)+'</p></article>';}).join('') : '<div class="sp-empty">Nenhum sistema corresponde ao filtro.</div>';
-  }
-
-  function consultar(e) {
-    if (e) e.preventDefault();
-    var tipo=$('sp-tipo').value;if(!tipo){$('sp-tipo').focus();return;}
-    var entrada={tipo:tipo,altura:num('sp-altura'),pavimentos:num('sp-pavimentos'),area:num('sp-area'),areaPav:num('sp-area-pav'),lotacao:num('sp-lotacao'),glp:num('sp-glp')};
-    ultimoResultado=dados.matriz.map(function(m){return avaliar(m,entrada);});
-    var counts={required:0,check:0,info:0,'not-required':0};ultimoResultado.forEach(function(r){counts[r.status]++;});
-    $('sp-summary').innerHTML='<span class="sp-count required">'+counts.required+' exigidos</span><span class="sp-count check">'+counts.check+' a verificar</span><span class="sp-count info">'+counts.info+' para dimensionar</span><span class="sp-count">'+counts['not-required']+' não indicados</span>';
-    var oc=dados.ocupacoes.find(function(o){return o.tipo===tipo;});
-    $('sp-occupation').innerHTML='<h3>Tipo '+oc.tipo+' — '+CatAuth.escapeHtml(oc.classificacao)+'</h3><p>'+CatAuth.escapeHtml(oc.exemplos)+'</p><p><strong>Atenção:</strong> '+CatAuth.escapeHtml(oc.observacoes)+'</p>';
-    CatAuth.show($('sp-occupation'));CatAuth.show($('sp-output'));render(ultimoResultado);
-  }
-
-  function iniciar(base, session) {
-    dados=base;
-    base.ocupacoes.forEach(function(o){var op=document.createElement('option');op.value=o.tipo;op.textContent=o.tipo+' — '+o.classificacao;$('sp-tipo').appendChild(op);});
-    CatAuth.aplicarPerfil(session);CatAuth.hide($('loading-shell'));CatAuth.show($('site-shell'));
-    CatAuth.iniciarMonitorInatividade(function(){location.reload();});
-    $('sp-form').addEventListener('submit',consultar);$('sp-search').addEventListener('input',function(){render(ultimoResultado);});
-    $('sp-limpar').addEventListener('click',function(){$('sp-form').reset();CatAuth.hide($('sp-output'));CatAuth.hide($('sp-occupation'));ultimoResultado=[];});
-    $('sp-imprimir').addEventListener('click',function(){if(!ultimoResultado.length)consultar();if(ultimoResultado.length)window.print();});
-  }
-
-  Promise.all([CatAuth.requireSession(),fetch('content/sistemas-preventivos.json').then(function(r){if(!r.ok)throw new Error('base');return r.json();})]).then(function(v){iniciar(v[1],v[0]);}).catch(function(err){CatAuth.hide($('loading-msg'));var txt=$('denied-text');txt.textContent=err&&err.code==='network_error'?'Sem conexão — não foi possível validar a sessão.':(err&&['no_session','invalid_session'].indexOf(err.code)>=0?'Faça login no site principal antes de acessar esta página.':'Não foi possível carregar a base de sistemas preventivos.');CatAuth.show($('denied-box'));});
+function popular(d){base=d;d.ocupacoes.forEach(function(o){var op=document.createElement('option');op.value=o.tipo;op.textContent=o.tipo+' — '+o.classificacao;$('tipo').appendChild(op);if(o.tipo!=='A'&&o.tipo!=='J'&&o.tipo!=='Q'){var cp=op.cloneNode(true);$('ocupacao-correspondente').appendChild(cp)}});$('tipo').addEventListener('change',function(){var o=d.ocupacoes.find(function(x){return x.tipo===$('tipo').value});$('ocupacao-ajuda').innerHTML=o?'<strong>'+esc(o.artigo)+':</strong> '+esc(o.exemplos)+'<br>'+esc(o.observacoes):'A classificação correta é essencial para o resultado.';$('ocupacao-correspondente-wrap').classList.toggle('sp-hidden',$('tipo').value!=='J')})}
+function matrix(name){return base.matriz.find(function(x){return x.sistema===name})}
+function item(name,status,motivo,ref,criterio){var mm=matrix(name);return{name:name,status:status,motivo:motivo,ref:ref||(mm?mm.referencia:''),criterio:criterio||(mm?mm.porTipo[effectiveType()]:'')}}
+function effectiveType(){return $('tipo').value==='J'?$('ocupacao-correspondente').value:$('tipo').value}
+function yes(id){return $(id).checked}
+function garage(){return document.querySelector('input[name="garagem"]:checked').value}
+function inputs(){return{original:$('tipo').value,t:effectiveType(),h:n('altura'),p:n('pavimentos'),a:n('area'),ap:n('area-pav'),pop:n('populacao'),glp:n('glp'),ar:n('area-relevante'),show:n('capacidade-show')||0,store:n('area-armazenamento')||0,vila:n('unidades-vila')||0}}
+function stair(t,h){if(t==='A')return{type:'Isento',protected:false};if(t==='Q')return{type:'Conforme NT específica',protected:null};if(t==='M')return h<20?{type:'NE — escada não enclausurada',protected:false}:{type:'EP — escada protegida',protected:true};var pf,epMin,neInclusive=false;if(['B'].includes(t)){epMin=13;pf=51}else if(['C','E','F','K'].includes(t)){epMin=13;pf=31}else if(['D','H','P'].includes(t)){epMin=6;pf=30;neInclusive=true}else if(t==='G'){epMin=7;pf=30}else if(t==='I'){epMin=6;pf=12;neInclusive=true}else if(['L','N','O'].includes(t)){epMin=12;pf=30;neInclusive=true}else{return{type:'Conforme ocupação correspondente',protected:null}}if(h>pf||(t==='B'&&h>=pf)||(['C','E','F','K'].includes(t)&&h>=pf))return{type:'PF — escada à prova de fumaça',protected:true};if(neInclusive?h<=epMin:h<epMin)return{type:'NE — escada não enclausurada',protected:false};return{type:'EP — escada protegida',protected:true}}
+function assess(){var e=inputs(),t=e.t,out=[];
+var hydrant=t!=='A'&&(e.h>14||e.p>4||(['D','E','F','G','H','I','L','M','N','O','P','Q'].includes(t)&&e.a>930));
+var sprinkler=false,sprCheck=false,sprWhy='';if(garage()==='nao-conforme'){sprinkler=true;sprWhy='Garagem interna sem atendimento integral ao isolamento, combate imediato e ventilação.'}if(yes('casa-noturna')&&e.show>3000){sprinkler=true;sprWhy='Ambiente fechado de boate/casa noturna com capacidade superior a 3.000 pessoas.'}if(yes('armazenamento')&&e.store>3000){sprinkler=true;sprWhy='Área de armazenamento/depósito superior a 3.000 m².'}if(['C','I','M'].includes(t)&&e.p>(e.ap>930?4:8)){sprinkler=true;sprWhy='Número de pavimentos acima do limite aplicável à área do maior pavimento.'}if(['D','E','F','G','L','N'].includes(t)&&e.p>(e.ap>930?2:4)){sprinkler=true;sprWhy='Número de pavimentos acima do limite aplicável à área do maior pavimento.'}if(t==='H'&&e.p>2){sprinkler=true;sprWhy='Ocupação H com mais de 2 pavimentos.'}if(['O','Q'].includes(t)){sprCheck=true;sprWhy='Exigência definida por norma técnica específica.'}
+if(t==='A'&&e.vila>=100)out.push(item('Hidrante Público (Vilas)','required','Vila com 100 a 1.000 unidades exige 1 hidrante público; acrescentar conforme os grupos/frações excedentes.','Arts. 2º p.ú. e 8º §1º'));
+out.push(item('Extintor',t==='A'?'check':'required',t==='A'?'Tipo A possui isenção geral, mas é necessário confirmar a ressalva do Art. 41 e as NTs aplicáveis.':'Mínimo de 2 unidades extintoras por pavimento, mezanino, jirau ou risco isolado; admite-se 1 UE quando a área protegida for até 50 m².','Arts. 31–44 (exigibilidade: Arts. 40–41)'));
+out.push(item('Sinalização de Emergência',t==='A'?'no':(t==='Q'?'check':'required'),t==='A'?'Tipo A isento pela regra geral.':t==='Q'?'Aplicar a NT específica do risco especial.':'Obrigatória nas saídas e rotas de fuga abrangidas pelo título de evacuação.','Arts. 144, 146 IV, 207–210 e 230 + Tabela 2'));
+out.push(item('Hidrante',hydrant?'required':(t==='Q'?'check':'no'),hydrant?'Atingido ao menos um critério alternativo: altura >14 m, mais de 4 pavimentos ou, quando aplicável, área >930 m².':t==='Q'?'O Tipo Q também depende do Art. 24 §5º X e da análise específica.':'Nenhum gatilho de altura, pavimentos ou área foi atingido.','Arts. 105-A e 106'));
+out.push(item('Chuveiros Automáticos',t==='A'&&sprinkler?'check':(sprinkler?'required':(sprCheck?'check':'no')),t==='A'&&sprinkler?'O Tipo A possui isenção geral; a situação especial informada deve ser confirmada pela NT aplicável.':(sprWhy||'Nenhum gatilho geral ou especial informado foi atingido.'),'Arts. 107–131; exigibilidade: Arts. 132-A e 133'));
+var manual=t!=='A'&&((t!=='B'&&e.a>2000)||({B:51,C:8,E:7,G:7,H:7,K:7,L:9,M:20,O:9,P:7}[t]!=null&&e.h>={B:51,C:8,E:7,G:7,H:7,K:7,L:9,M:20,O:9,P:7}[t])||hydrant||sprinkler);out.push(item('Alarme Manual',manual?'required':'no',manual?(hydrant||sprinkler?'Exigido de forma conjugada com hidrantes ou chuveiros, além dos possíveis gatilhos próprios.':'Gatilho próprio de área ou altura atingido.'):'Nenhum gatilho próprio ou conjugado foi atingido.','Art. 140 §§2º–4º'));
+var detect=false,detectCheck=false,dr={D:[1500,12,4],E:[1000,12,4],F:[1500,12,4],G:[1000,9,3],H:[1500,9,3],I:[1500,8,null],K:[null,12,4],L:[2000,null,null],M:[3000,null,null]}[t];if(dr)detect=(dr[0]!=null&&e.ar>dr[0])||(dr[1]!=null&&e.h>dr[1])||(dr[2]!=null&&e.p>dr[2]);if(['J','O','Q'].includes(e.original==='J'?'J':t))detectCheck=true;out.push(item('Detecção e Alarme',detect?'required':(detectCheck?'check':'no'),detect?'Atingido ao menos um gatilho alternativo de área, altura ou pavimentos.':detectCheck?'Aplicar ocupação correspondente ou norma específica ao risco.':'Nenhum gatilho da tabela do Art. 140 foi atingido.','Art. 140 caput + tabela'));
+var st=stair(t,e.h);out.push(item('Escadas (NE/EP/PF)',t==='A'?'no':(st.protected===null?'check':'required'),'Classificação calculada: '+st.type+'. O número de escadas ainda depende da população, das distâncias e da separação entre saídas.','Arts. 149, 152-A, 153, 163–164 + Tabelas 1–3'));
+var illum=t!=='A'&&(st.protected===true||e.pop>100||e.a>1500);out.push(item('Iluminação de Emergência',illum?'required':(st.protected===null?'check':'no'),illum?(st.protected?'A edificação requer escada EP/PF.':'População superior a 100 pessoas ou área superior a 1.500 m².'):(st.protected===null?'Depende da definição da escada pela NT específica.':'Nenhum gatilho do Art. 205/206 foi atingido.'),'Arts. 189–206 (Arts. 205–206)'));
+out.push(item('Unidade de Passagem',t==='A'?'no':'info',t==='A'?'Isenção geral.':'Dimensionar pela população de '+e.pop+' pessoas, capacidades da Tabela 1 e fórmula N=P÷C(d), arredondando para cima. O mínimo não substitui o cálculo.','Arts. 179–181 + Tabela 1'));
+var elev=t!=='A'&&e.p>20;out.push(item('Elevador de Emergência',elev?'required':'no',elev?'Edificação com mais de 20 pavimentos.':'A edificação não ultrapassa 20 pavimentos.','Arts. 187–188'));
+var refuge=false,refCheck=false;if(['C','D','F','I'].includes(t)){var ci=['C','I'].includes(t);refuge=e.ap<=750?(ci?(e.h>20||e.p>8):(e.h>120||e.p>40)):(ci?(e.h>12||e.p>4):(e.h>60||e.p>20))}else if(['J','Q'].includes(e.original))refCheck=true;out.push(item('Área de Refúgio',refuge?'required':(refCheck?'check':'no'),refuge?'Gatilho de altura/pavimentos do Art. 173 atingido para a área do maior pavimento.':refCheck?'Aplicar ocupação correspondente ou NT específica.':'Nenhum gatilho direto do Art. 173 foi atingido.','Arts. 171–173'));
+var spda=t!=='A'&&(e.a>1500||e.h>20);out.push(item('SPDA (Para-raios)',spda?'required':(t==='A'?'check':'no'),spda?'Área coberta superior a 1.500 m² ou altura superior a 20 m.':t==='A'?'Tipo A tem isenção geral, ressalvadas NTs.':'Abaixo dos limiares; o §1º ainda permite exigência por ocupação e o §2º admite laudo de risco.','Art. 251 (faixa Arts. 247–252)'));
+var glpReq=false,glpCheck=false,glpWhy='';if(t!=='A'&&e.glp>=45){glpReq=true;glpWhy='Quantidade de GLP igual ou superior a 45 kg.'}if(t!=='A'&&(e.h>20||e.p>8)){glpReq=true;glpWhy='Altura superior a 20 m ou mais de 8 pavimentos.'}if(yes('hotel-restaurante')&&e.a>500){glpReq=true;glpWhy='Hotel, restaurante, panificadora ou congênere com área superior a 500 m².'}if(yes('hospital-escola')&&e.a>750){glpReq=true;glpWhy='Hospital, clínica, escola ou congênere com área superior a 750 m².'}if(['J','Q'].includes(e.original)){glpCheck=true;glpReq=false}out.push(item('Central de GLP',glpReq?'required':(glpCheck?'check':'no'),glpReq?glpWhy:glpCheck?'Exigência regulada pelo CBMPE no caso concreto, sem aplicação automática dos gatilhos gerais.':'Nenhum gatilho informado foi atingido.','Arts. 232–242 (exigência: Arts. 234 p.ú., 241 e 242)'));
+out.push(item('Heliponto',yes('heliponto')?'required':'no',yes('heliponto')?'A instalação é facultativa, mas, uma vez escolhida, deve atender à NT do CBMPE.':'O heliponto é facultativo e não foi selecionado.','Art. 211-A + NT aplicável'));
+var dist='Consultar Tabela 3. ';if(yes('layout-indefinido'))dist+='Reduzir as distâncias em 30%. ';if(yes('controle-fumaca'))dist+='O controle de fumaça pode admitir acréscimo de 50%. ';if(yes('mais-saida'))dist+='Pode ser usada a coluna de mais de uma saída, pois foi declarada separação mínima de 10 m.';out.push(item('Distâncias máximas a percorrer','info',dist,'Art. 147 + Tabela 3','Parâmetro de dimensionamento das saídas'));
+return out}
+function card(x){var tag={required:'Exigido',check:'Verificar',no:'Não acionado',info:'Dimensionar'}[x.status];return'<article class="sp-result '+(x.status==='required'?'':x.status)+'"><div class="sp-result-head"><h3>'+esc(x.name)+'</h3><span class="sp-tag">'+tag+'</span></div><p>'+esc(x.motivo)+'</p><p><strong>Critério da matriz:</strong> '+esc(x.criterio||'Consultar detalhamento')+'</p><p class="ref">'+esc(x.ref)+'</p></article>'}
+function calculate(){if(!validate(2))return;var e=inputs(),o=base.ocupacoes.find(function(x){return x.tipo===e.original}),list=assess(),req=list.filter(function(x){return x.status==='required'||x.status==='info'}),check=list.filter(function(x){return x.status==='check'}),no=list.filter(function(x){return x.status==='no'});$('perfil').innerHTML='<strong>Tipo '+esc(e.original)+' — '+esc(o.classificacao)+'</strong><br>'+(e.original==='J'?'Analisado como ocupação correspondente '+esc(e.t)+'. ':'')+esc(e.h)+' m · '+esc(e.p)+' pavimento(s) · '+esc(e.a)+' m² · população '+esc(e.pop)+' pessoas · GLP '+esc(e.glp)+' kg';$('resumo').innerHTML='<span class="sp-pill req">'+req.filter(function(x){return x.status==='required'}).length+' sistemas exigidos</span><span class="sp-pill check">'+check.length+' verificações complementares</span><span class="sp-pill no">'+no.length+' não acionados</span>';$('exigidos').innerHTML=req.length?req.map(card).join(''):'<p>Nenhum sistema foi acionado.</p>';$('verificar').innerHTML=check.map(card).join('');$('verificar-wrap').classList.toggle('sp-hidden',!check.length);$('nao-exigidos').innerHTML=no.map(card).join('');go(4)}
+$('calcular').addEventListener('click',calculate);$('reiniciar').addEventListener('click',function(){location.reload()});
+fetch('content/sistemas-preventivos.json').then(function(r){if(!r.ok)throw new Error();return r.json()}).then(popular).catch(function(){document.querySelector('[data-screen="1"]').innerHTML='<h2>Base temporariamente indisponível</h2><p>Tente novamente em instantes.</p>'});
 })();
