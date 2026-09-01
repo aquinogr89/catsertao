@@ -4,13 +4,14 @@
     "fonte": "Norma Técnica nº 17 do CBMPE — Prevenção contra incêndio em ocupações destinadas a garagens e locais com Sistemas de Alimentação de Veículos Elétricos (SAVE)",
     "homologacao": "Homologada pelo CSAT (Ata nº 104, de 23/12/2025); aprovada pela Portaria do Comando Geral nº 315/2025 (publicada em 09/01/2026). Atualização nº 01, vigente desde 15/06/2026 (Portaria do Comando Geral nº 317/2026).",
     "vigencia": "Em vigor desde 1º de julho de 2026 (item 6.1) — já vigente para todas as edificações novas ou existentes.",
+    "vigenciaISO": "2026-07-01",
     "fonteOficial": "https://www.bombeiros.pe.gov.br/images/legislacoes/2026/NT_17_ATUALIZACAO_N__01.pdf",
     "auditadoEm": "2026-09-01",
     "aviso": "Síntese para consulta orientativa da NT 17/CBMPE (SAVE). A norma oficial, outras NTs aplicáveis (ex.: NT 1.04, NT 1.02), o COSCIP-PE e a análise do caso concreto pelo CBMPE prevalecem."
   },
   "situacoes": [
-    { "valor": "nova", "rotulo": "Edificação nova (construção, reforma ou mudança de uso aprovada após a NT 17)" },
-    { "valor": "existente", "rotulo": "Edificação existente (já tinha habite-se/alvará antes da NT 17)" }
+    { "valor": "nova", "rotulo": "Edificação nova — construção, reforma ou mudança de uso aprovada a partir de 01/07/2026" },
+    { "valor": "existente", "rotulo": "Edificação existente — habite-se ou alvará de construção anterior a 01/07/2026" }
   ],
   "tiposLocal": [
     {
@@ -118,6 +119,18 @@
     }
   },
   "ajuda": {
+    "situacao": {
+      "titulo": "Edificação nova ou existente",
+      "texto": "O corte é a data em que a NT 17 entrou em vigor: 1º de julho de 2026. É EXISTENTE a edificação que já tinha o habite-se — ou, no mínimo, o alvará/licença de construção emitido pela prefeitura — antes dessa data; repare que basta o alvará, mesmo que a obra ainda não tenha habite-se. É NOVA aquela cuja construção, reforma ou mudança de uso foi aprovada a partir da vigência, e ela precisa atender integralmente a todos os requisitos da norma. A diferença muda o resultado: a edificação nova com garagem interna segue o item 5.3 (detecção, chuveiros, RTI, extração mecânica e TRRF de 120 min) mesmo sem SAVE nenhum, enquanto a existente só é alcançada pelo item 5.4 quando tem ou vai instalar SAVE.",
+      "artigo": "Itens 4.1, 4.2 e 6.1, NT 17/CBMPE",
+      "excerto": "4.1 Edificações Existentes: aquelas que possuírem o habite-se, ou ao menos o alvará (licença) para construção, emitido pelo respectivo município, anteriormente à vigência desta norma, podendo ser sujeita a adequações conforme regras específicas. 4.2 Edificações Novas: aquelas cujas construções, reformas ou mudanças de uso tenham sido aprovadas após a vigência desta Norma Técnica, devendo atender integralmente a todos os requisitos nela estabelecidos. [...] 6.1 Esta normativa técnica entra em vigor a partir de 1º de julho de 2026."
+    },
+    "avcb-vigente": {
+      "titulo": "AVCB vigente iniciado antes de 01/07/2026",
+      "texto": "Marque se a edificação tem Atestado de Vistoria do Corpo de Bombeiros (AVCB) válido cuja validade começou antes de 1º de julho de 2026. Nesse caso a norma concede prazo: a adequação pode ser feita até o término da validade desse atestado, em vez de ser exigida de imediato. As exigências continuam exatamente as mesmas — muda só o prazo para cumpri-las. Sem esse AVCB, vale a regra geral do item 6.2: aplicação imediata desde a entrada em vigor.",
+      "artigo": "Itens 6.2 e 6.3, NT 17/CBMPE",
+      "excerto": "Todos os procedimentos previstos no item 5 desta Norma Técnica possuem aplicação imediata para todas as edificações, novas ou existentes, e serão exigidos a partir do prazo estipulado no item 6.1. [...] caso a edificação possua Atestado de Vistoria do Corpo de Bombeiros (AVCB) vigente, cuja validade tenha iniciado antes da entrada em vigor desta norma, o prazo para sua adequação estender-se-á até o término da validade do referido atestado."
+    },
     "tipo-local": {
       "titulo": "Onde ficam as vagas / o ponto de recarga",
       "texto": "Esta é a pergunta que mais muda o resultado, porque a NT 17 trata garagem interna e área externa em capítulos diferentes. É INTERNA quando o espaço fica dentro do volume construído do prédio (subsolo, pavimento de garagem, térreo fechado) — mesmo que tenha o perímetro aberto, caso em que a norma dispensa a extração mecânica de fumaça. É EXTERNA quando fica fora do volume principal da edificação, seja a céu aberto, seja com uma cobertura só para proteger de sol e chuva (ex.: estrutura metálica sobre as vagas em frente a uma loja). Para as áreas externas valem as regras do item 5.2, e não as exigências de detecção, chuveiros, extração e TRRF dos itens 5.3/5.4, que a norma dirige expressamente às garagens internas.",

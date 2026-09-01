@@ -30,6 +30,7 @@ function applyVisibility(){
     switch(el.dataset.showIf){
       case 'save': show=s; break;
       case 'interna': show=int_; break;
+      case 'existente': show=situacao()==='existente'; break;
       case 'interna-existente': show=int_&&situacao()==='existente'; break;
       case 'interna-existente-save': show=condInternaExistenteSave(); break;
       case 'compartilha-sim': show=condInternaExistenteSave()&&compartilhaSim; break;
@@ -43,6 +44,20 @@ function applyVisibility(){
 document.querySelectorAll('input[name="situacao"]').forEach(function(el){el.addEventListener('change',applyVisibility)});
 $('tem-save').addEventListener('change',applyVisibility);
 $('tipo-local').addEventListener('change',function(){aplicarRotaPadrao();applyVisibility()});
+
+// Item 4.1 x 4.2: o que separa "existente" de "nova" e a data de vigencia da
+// NT 17 (item 6.1). Basta o alvara de construcao anterior a essa data para a
+// edificacao contar como existente -- nao e preciso ja ter o habite-se.
+$('data-habite').addEventListener('change',function(){
+  var eco=$('data-habite-eco');
+  if(!this.value){eco.textContent='Se preferir, informe a data e a triagem marca sozinha a opção correta. 01/07/2026 é a data em que a NT 17 entrou em vigor (item 6.1).';return}
+  var vig=(base&&base.meta&&base.meta.vigenciaISO)||'2026-07-01';
+  var nova=this.value>=vig;
+  var alvo=document.querySelector('input[name="situacao"][value="'+(nova?'nova':'existente')+'"]');
+  if(alvo)alvo.checked=true;
+  eco.textContent=nova?'A partir de 01/07/2026 — enquadrada como edificação NOVA (item 4.2 da NT 17).':'Anterior a 01/07/2026 — enquadrada como edificação EXISTENTE (item 4.1 da NT 17).';
+  applyVisibility();
+});
 
 function aplicarRotaPadrao(){
   var d=localDef();if(!d)return;
@@ -151,6 +166,15 @@ function assess(){
     out.push(item('Documento de responsabilidade técnica (vistoria)','required','A instalação do SAVE deve ser executada por profissional habilitado, que emitirá documento de responsabilidade técnica registrado no conselho de classe contendo, no campo "Observações", exatamente: "As instalações e serviços realizados para o Sistema de Alimentação de Veículos Elétricos (SAVE) atendem integralmente ao previsto na NT 17 do CBMPE".','Itens 5.7.1 e 5.7.2, NT 17/CBMPE'));
     out.push(item('Execução parcial das estações no AVCB','info','Para emitir o AVCB, o CBMPE não exige que todas as estações de SAVE previstas no projeto já estejam executadas no ato da vistoria técnica.','Item 5.7.3, NT 17/CBMPE'));
     out.push(item('Recarga de micromobilidade','info','É expressamente proibido recarregar bicicletas elétricas, patinetes e equipamentos similares de micromobilidade dentro de rotas de fuga, escadas de emergência e antecâmaras. Nesses equipamentos, a recarga deve seguir as instruções do fabricante, observadas tensão e corrente.','Item 7.3, NT 17/CBMPE'));
+  }
+
+  // ---- Item 6: prazo para cumprir o que ficou exigido ----
+  if(sit==='existente'&&out.some(function(x){return x.status==='required'})){
+    if(yes('avcb-vigente')){
+      out.push(item('Prazo de adequação','info','A edificação tem AVCB vigente cuja validade começou antes de 1º de julho de 2026: o prazo para executar as adequações desta lista estende-se até o término da validade desse atestado. As exigências são as mesmas — muda apenas o prazo para cumpri-las.','Item 6.3, NT 17/CBMPE'));
+    }else{
+      out.push(item('Prazo de adequação','info','A NT 17 está em vigor desde 1º de julho de 2026 e os procedimentos do item 5 têm aplicação imediata, para edificações novas e existentes. Sem AVCB vigente iniciado antes dessa data, não há prazo adicional: as exigências desta lista já são exigíveis.','Itens 6.1 e 6.2, NT 17/CBMPE'));
+    }
   }
 
   return out;
