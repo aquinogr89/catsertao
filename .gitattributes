@@ -1,0 +1,11 @@
+# Código de terceiro vendorizado (vendor/n8n-chat/): nunca converter fim de
+# linha. Os hashes SHA-256 registrados no comentário de chat.html servem para
+# conferir que os arquivos continuam sendo exatamente o que o npm publicou --
+# e só conferem se os bytes forem preservados. Sem esta regra, o autocrlf do
+# Git reescreve LF como CRLF no checkout em Windows e o sha256sum local passa
+# a divergir do valor documentado, sem que nada de fato tenha sido adulterado.
+vendor/** -text
+
+# As figuras da NT 17 são binárias; marcar explicitamente evita qualquer
+# heurística de texto sobre elas.
+content/*.jpg binary
