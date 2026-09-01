@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; img-src 'self' data: blob:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://sternplatypus-n8n.cloudfy.live; frame-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Assistente CAT Sertão</title>
 <meta name="robots" content="noindex, nofollow">
@@ -20,12 +21,28 @@
      Oswald, sem uso aqui -- @font-face não baixado sem elemento que peça
      essa fonte, então não pesa nada a mais. -->
 <link rel="stylesheet" href="fonts/fonts.css">
-<!-- Versao do @n8n/chat fixada em 1.30.2 (tag "stable" do pacote) propositalmente: sem essa
-     trava o CDN sempre serve a versao "latest", e uma atualizacao upstream ja quebrou o
-     tamanho/padding do campo de digitar mensagem (var --chat--input--font-size ficando
-     "inherit" de um contexto minusculo). Ao atualizar, teste visualmente antes de trocar o
-     numero da versao aqui E no import do <script> abaixo (os dois precisam bater). -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat@1.30.2/dist/style.css">
+<!-- @n8n/chat 1.30.2 AUTO-HOSPEDADO em vendor/n8n-chat/ (auditoria de seguranca).
+     Antes vinha do cdn.jsdelivr.net. O problema nao era a versao (ja estava fixada em
+     1.30.2 de proposito, porque "latest" ja quebrou o padding do campo de mensagem uma
+     vez): e que esta pagina roda no MESMO ORIGIN do site, sem sandbox no iframe, entao
+     qualquer codigo carregado aqui enxerga localStorage['cat_session'] -- o token de 8h
+     de todo usuario logado. Um comprometimento do CDN ou do pacote publicado virava
+     roubo de sessao. Servindo do proprio repositorio, o unico jeito de trocar esse
+     codigo e um commit aqui.
+
+     Arquivos vendorizados (baixados do jsDelivr, conferidos byte a byte contra o unpkg):
+       chat.bundle.es.js         sha256 4cf6c312a7986abaf80588abd7d757830e9ad20d02d06e37f2be17ecc08ab441
+       node-icons--8EUtRWq.mjs   sha256 33d7dd491bd3924e08381d5858a50eb13951433ca030269556c328a342dcb8ce
+       style.css                 sha256 6559919c89717ef666992df6a6035dcbbff7194e0ef81d20d0079550882b48a2
+
+     node-icons--8EUtRWq.mjs NAO e opcional: o bundle faz import() dinamico dele em
+     tempo de execucao, relativo a propria URL do modulo -- sem esse arquivo ao lado,
+     a chamada 404 em producao e so quebra quando alguem usa a funcionalidade.
+
+     Ao ATUALIZAR de versao: baixe os tres arquivos da nova versao, confira os hashes em
+     duas fontes, confirme se o nome do chunk node-icons mudou (o hash faz parte do
+     nome), atualize os hashes deste comentario e teste visualmente antes de publicar. -->
+<link rel="stylesheet" href="vendor/n8n-chat/style.css">
 <style>
   *{ margin:0; padding:0; box-sizing:border-box; }
   html,body{ height:100%; }
@@ -64,16 +81,17 @@
 </head>
 <body>
 <div id="n8n-chat">
-  <!-- Substituído por createChat() quando o widget carrega. O Service Worker
-       ignora origens externas de propósito (não pode cachear o CDN nem o
-       webhook do Apps Script) -- offline, o shell desta página carrega do
-       cache, mas o import do CDN falha, então sem este texto o usuário via
-       um retângulo em branco dentro da seção Atendimento, sem explicação
-       nenhuma (J2 da auditoria). -->
+  <!-- Substituído por createChat() quando o widget carrega. Desde que o widget
+       passou a ser servido do próprio site (vendor/n8n-chat/), o bundle é
+       cacheável pelo Service Worker e carrega offline -- mas o webhook do n8n
+       continua sendo origem externa, que o SW ignora de propósito. Ou seja: o
+       widget agora até monta sem rede, e falha só ao enviar a mensagem. Este
+       texto continua necessário como estado inicial e para o caso de o import
+       falhar (J2 da auditoria). -->
   <p id="chat-offline-msg" style="padding:24px; font-size:14.5px; line-height:1.6; color:#6B6F7D;">O assistente virtual precisa de conexão com a internet. Verifique a rede e recarregue a página.</p>
 </div>
 <script type="module">
-  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat@1.30.2/dist/chat.bundle.es.js';
+  import { createChat } from './vendor/n8n-chat/chat.bundle.es.js';
 
   // O widget chama scrollIntoView() nas mensagens para rolar ate a mais recente.
   // Por padrao essa API atravessa a fronteira do iframe e rola a pagina pai

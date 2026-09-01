@@ -41,7 +41,7 @@ content/sistemas-preventivos.json   base do COSCIP: ocupações A–Q, matriz, t
 content/mapa-sistemas-preventivos.xlsx   planilha-fonte oferecida para download na triagem
 content/save.json           base da NT 17: tipologias, quadros de RTI, figuras e textos de ajuda
 content/nt17-fig1..5.jpg    Figuras 1 a 5 da NT 17, extraídas do PDF oficial do CBMPE
-apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota abaixo)
+vendor/n8n-chat/            @n8n/chat 1.30.2 auto-hospedado (ver nota de segurança abaixo)
 CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
 icon-512.png                ícone do PWA
 ```
@@ -90,15 +90,28 @@ conteúdo nenhum pra proteger. Ver a nota logo abaixo.
 > código-fonte do painel (`Codigo.gs` + `painel.html`) fica só no editor do
 > Apps Script — **fora deste repositório, de propósito**.
 
-> **Nota sobre `apps-script/Code.gs` deste repositório:** esse arquivo é o
-> backend **antigo**, autônomo, que só servia a "tabela de controle" do
-> Termo de Compromisso com senha própria. Ele foi **substituído** pelo
-> backend unificado (`Auth.gs` + `Code.gs`) que vive no repositório
-> [oci-catsertao](https://github.com/aquinogr89/oci-catsertao/tree/main/apps-script),
-> que agora cuida de login, perfis, OCI, Termo de Compromisso e LOG — tudo
-> em um só lugar. O front-end deste site (`index.html`) não chama mais essa
-> implantação antiga. Se quiser, você pode desativar aquela implantação
-> separada no Apps Script depois de migrar (passo manual, opcional).
+> **`apps-script/Code.gs` e `design_handoff_hermes/` foram REMOVIDOS** na
+> auditoria de segurança de 01/09/2026, por estarem sendo servidos como
+> arquivos estáticos pelo GitHub Pages:
+>
+> - `apps-script/Code.gs` era o backend **antigo** do Termo de Compromisso
+>   (senha própria, autônomo), já substituído pelo backend unificado do
+>   repositório [oci-catsertao](https://github.com/aquinogr89/oci-catsertao/tree/main/apps-script).
+>   Além de não ser mais chamado por ninguém, publicava o ID da planilha do
+>   Termo e tinha um contador de tentativas de login **global** (um errante
+>   trancava todo mundo). **Passo manual pendente:** desativar aquela
+>   implantação antiga no editor do Apps Script — remover o arquivo daqui não
+>   desliga o Web App que já está no ar.
+> - `design_handoff_hermes/` eram os mockups de design do painel Hermes.
+>   Publicavam caminhos internos do servidor (`/data/workspace/`,
+>   `/data/scripts/`), nomes de scripts de automação, agendamentos de cron e
+>   um link fixo de Google Meet — exatamente a classe de conteúdo que o
+>   achado **K1** tinha tirado do ar ao mover o painel para o Apps Script. O
+>   material de design não precisa ser publicado junto com o site; se for
+>   preciso guardá-lo, o lugar é um repositório privado.
+>
+> Nenhum dos dois era credencial, mas os dois davam reconhecimento gratuito da
+> infraestrutura a qualquer visitante.
 
 ## Ferramentas de triagem públicas
 
@@ -232,6 +245,35 @@ atualiza o site automaticamente em alguns segundos.
   Apps Script, não leem sessão e só carregam JSON de conteúdo normativo
   (texto de norma pública) — se um dia precisarem de dado interno, o caminho
   é criar outra página atrás do gate, não afrouxar estas.
+
+### Medidas aplicadas na auditoria de 01/09/2026
+
+- **Assistente virtual auto-hospedado.** O widget `@n8n/chat` vinha do
+  `cdn.jsdelivr.net`. Como `chat.html` roda no **mesmo origin** do site e o
+  iframe não tem `sandbox`, qualquer código carregado ali enxerga o token de
+  sessão no `localStorage` — um comprometimento do CDN ou do pacote virava
+  roubo de sessão de todos os usuários logados. Os arquivos foram
+  vendorizados em `vendor/n8n-chat/` (conferidos byte a byte contra um
+  segundo CDN; hashes registrados no comentário de `chat.html`). O chunk
+  `node-icons--*.mjs` **não é opcional**: o bundle o carrega por `import()`
+  dinâmico em operação normal.
+- **Anti-clickjacking.** O GitHub Pages não permite cabeçalho
+  `X-Frame-Options`, e `frame-ancestors` é ignorado quando vem em `<meta>`.
+  O frame-buster fica no topo de `common.js`, que é carregado por todas as
+  páginas com sessão. `chat.html` **não** carrega `common.js` de propósito —
+  ele é enquadrado pelo `index.html` e o frame-buster quebraria o assistente.
+- **CSP por página** (`<meta http-equiv="Content-Security-Policy">`), cada
+  uma com o mínimo que precisa: `connect-src` só para o Apps Script nas
+  páginas com sessão, só para o webhook do n8n em `chat.html` e só `'self'`
+  nas triagens públicas; `frame-src` liberando `docs.google.com` apenas em
+  `eventos.html`; `object-src 'none'` e `base-uri 'self'` em todas.
+  > **Limitação conhecida:** as páginas têm blocos `<script>` inline e o
+  > GitHub Pages não permite gerar nonce por requisição, então `script-src`
+  > precisa de `'unsafe-inline'`. Ou seja, a CSP **não** bloqueia XSS inline
+  > — o que ela dá aqui é impedir carregamento de script externo e,
+  > principalmente, limitar o `connect-src`, que é por onde um token
+  > roubado sairia. Para fechar essa lacuna seria preciso extrair todo o JS
+  > inline para arquivos `.js` e então remover o `'unsafe-inline'`.
 - `hermes.html` **deixou de ser** o painel (achado **K1** da rodada 6 de
   auditoria — ver nota na seção "Estrutura" acima). Hoje é só uma
   página-ponte, sem dado sensível nenhum, que leva a um Web App do Apps

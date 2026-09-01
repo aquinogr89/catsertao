@@ -1,5 +1,32 @@
 'use strict';
 
+// ===================== Anti-clickjacking =====================
+// O GitHub Pages não deixa mandar cabeçalho HTTP (X-Frame-Options ou CSP
+// frame-ancestors), e frame-ancestors é IGNORADO quando vem em <meta> -- por
+// especificação, não por limitação de navegador. Sobra o JS.
+//
+// Sem isto, qualquer site podia enquadrar usuarios.html num iframe invisível e
+// induzir cliques em "Desativar"/"Excluir". A sessão vai junto: o token está
+// no localStorage da origem, então o navegador não tem como tratá-lo como
+// cookie de terceiro e bloquear sozinho.
+//
+// Roda antes de qualquer coisa deste arquivo, e as páginas com sessão mantêm o
+// conteúdo escondido (#app.u-hidden) até requireSession resolver -- ou seja, a
+// UI clicável só existe depois desta verificação.
+//
+// chat.html NÃO carrega common.js de propósito: ele é enquadrado pelo
+// index.html, e um frame-buster ali quebraria o assistente virtual.
+if (window.top !== window.self) {
+  try {
+    window.top.location = window.self.location;
+  } catch (e) {
+    // Iframe com sandbox sem allow-top-navigation impede a navegação acima.
+    // Não dá pra escapar; resta não deixar nada clicável dentro do quadro.
+    document.documentElement.innerHTML =
+      '<body style="font:16px system-ui;padding:24px">Esta página não pode ser exibida dentro de outro site.</body>';
+  }
+}
+
 /**
  * Compartilhado por index.html, conta.html, usuarios.html e log.html.
  * Guarda a configuração do backend e a sessão de login (localStorage),

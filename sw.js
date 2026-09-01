@@ -9,7 +9,7 @@
 // site instalado fica preso na versão antiga (foi o que aconteceu com o CSS
 // cache-first anterior: uma correção publicada não chegava a quem já tinha
 // o Service Worker instalado).
-var CACHE_NAME = 'cat-sertao-v17';
+var CACHE_NAME = 'cat-sertao-v18';
 var CACHE_ASSETS = [
   './',
   './index.html',
@@ -109,7 +109,11 @@ self.addEventListener('fetch', function (e) {
   // prender alguém numa versão desatualizada do site (ou, no caso do JSON,
   // com texto de conteúdo desatualizado). mode==='navigate' cobre a raiz do
   // site e qualquer navegação direta, sem depender de comparar a URL exata.
-  if (isNavegacao || p.endsWith('.html') || p.endsWith('.css') || p.endsWith('.js') || p.endsWith('.json')) {
+  // .mjs entra junto com .js: o bundle do assistente (vendor/n8n-chat/) faz
+  // import() dinâmico de um chunk .mjs, e "x.mjs".endsWith('.js') é FALSO --
+  // sem citar a extensão aqui, esse arquivo escapava dos dois ramos e ficava
+  // sem estratégia nenhuma.
+  if (isNavegacao || p.endsWith('.html') || p.endsWith('.css') || p.endsWith('.js') || p.endsWith('.mjs') || p.endsWith('.json')) {
     e.respondWith(
       fetch(e.request)
         .then(function (res) {
