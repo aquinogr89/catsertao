@@ -8,24 +8,48 @@ AVCB, caldeira etc., no site irmão
 [oci-catsertao](https://github.com/aquinogr89/oci-catsertao)), gestão de
 usuários e LOG de auditoria.
 
+Além da parte interna, o site publica duas **ferramentas de triagem abertas
+ao público**, sem login — ver a seção "Ferramentas de triagem públicas"
+abaixo.
+
 Publicado em: https://aquinogr89.github.io/catsertao/
 
 ## Estrutura
 
 ```
-index.html                login + Atendimento, Documentos, Termo, SATECs
+index.html                  login + Atendimento, Documentos, Termo, SATECs
 conta.html                  Minha Conta (troca de senha) — abre em nova aba
 usuarios.html               gestão de usuários — abre em nova aba
 log.html                    LOG de auditoria — abre em nova aba
 hermes.html                 página-ponte pro painel do agente Hermes (o painel virou Web App do Apps Script, ver nota abaixo) — abre em nova aba
 eventos.html                Controle de Eventos (planilha + TAC/MPPE) — abre em nova aba, Admin Master e Admin
+
+  ferramentas de triagem PÚBLICAS (sem login) — ver seção própria abaixo
+sistemas-preventivos.html   Triagem de Sistemas Preventivos (COSCIP-PE)
+sistemas-preventivos.js       lógica e regras da triagem do COSCIP
+save.html                   Triagem SAVE — Sistema de Alimentação de Veículos Elétricos (NT 17)
+save.js                       lógica e regras da triagem da NT 17
+
 common.js                   sessão, chamadas à API, helpers — compartilhado por todas as páginas
-style.css                    estilos compartilhados por todas as páginas
+style.css                   estilos compartilhados por todas as páginas
 chat.html                   iframe isolado do widget de chat (n8n)
+sw.js                       Service Worker (cache offline) — subir CACHE_NAME a cada publicação
+manifest.webmanifest        manifesto PWA
+fonts/                      Oswald e Public Sans em .woff2, servidas localmente
 content/tac-mppe.json       texto do TAC/MPPE exibido em eventos.html, separado do HTML/JS
+content/sistemas-preventivos.json   base do COSCIP: ocupações A–Q, matriz, tabelas e textos de ajuda
+content/mapa-sistemas-preventivos.xlsx   planilha-fonte oferecida para download na triagem
+content/save.json           base da NT 17: tipologias, quadros de RTI, figuras e textos de ajuda
+content/nt17-fig1..5.jpg    Figuras 1 a 5 da NT 17, extraídas do PDF oficial do CBMPE
 apps-script/Code.gs         backend LEGADO do Termo de Compromisso (ver nota abaixo)
 CAT-SERTAO-SEM-FUNDO.png    logo usado no cabeçalho/rodapé
+icon-512.png                ícone do PWA
 ```
+
+> **Ao publicar qualquer alteração, suba o `CACHE_NAME` em `sw.js`.** O
+> Service Worker é network-first para HTML/CSS/JS/JSON, mas o navegador só
+> reinstala o worker quando o arquivo muda — sem subir a versão, quem já tem
+> o site instalado pode ficar preso na versão antiga (já aconteceu com o CSS).
 
 `conta.html`, `usuarios.html`, `log.html` e `eventos.html` são páginas
 próprias (não seções da mesma página) para poderem abrir em **nova aba** a
@@ -76,12 +100,54 @@ conteúdo nenhum pra proteger. Ver a nota logo abaixo.
 > implantação antiga. Se quiser, você pode desativar aquela implantação
 > separada no Apps Script depois de migrar (passo manual, opcional).
 
+## Ferramentas de triagem públicas
+
+Duas páginas ficam **fora do gate de login**, acessíveis por qualquer
+cidadão: são linkadas na própria tela de login (bloco "Acesso público, sem
+necessidade de login") e também no menu lateral de quem está logado. Nenhuma
+delas chama `CatAuth.requireSession` nem a API do Apps Script — são
+estáticas, rodam inteiramente no navegador e não têm dado sensível a
+proteger.
+
+| Página | O que responde | Norma-fonte |
+|--------|----------------|-------------|
+| `sistemas-preventivos.html` | Quais sistemas preventivos a edificação precisa instalar, a partir da ocupação (Art. 7º, tipos A–Q) e dos parâmetros do imóvel | COSCIP-PE — Decreto 19.644/1997, texto atualizado (consolidado até o Decreto 59.579/2025) |
+| `save.html` | O que instalar em garagens e locais com Sistema de Alimentação de Veículos Elétricos (SAVE) | NT 17 do CBMPE (atualização nº 01, em vigor desde 01/07/2026) |
+
+Cada página tem um trio `*.html` + `*.js` + `content/*.json`: **toda regra,
+texto de ajuda e citação normativa fica no JSON**, não no código. Para
+corrigir um limiar, um texto ou um artigo citado, edite o JSON — o `.js` só
+implementa a lógica de decisão.
+
+Os campos que dependem de saber onde buscar o dado no projeto têm um botão
+**"?"** que abre um balão com explicação em linguagem corrente, o artigo/item
+aplicável e, quando existe, o **excerto literal da norma**. O trecho literal
+sempre vem do campo `excerto`; quando a explicação combina mais de um
+dispositivo e não é citação direta, usa-se `resumo`, para não apresentar
+como texto oficial algo que não é.
+
+> **Origem dos textos normativos.** Nenhum excerto foi redigitado de memória:
+> todos foram conferidos artigo por artigo contra a fonte oficial usando o
+> `Get-Norma.ps1` do repositório de apresentações do CBMPE, que baixa e faz
+> cache do texto consolidado da ALEPE (COSCIP) e do PDF da NT 17 publicado em
+> `bombeiros.pe.gov.br`. As Figuras 1 a 5 exibidas na triagem SAVE foram
+> extraídas do próprio PDF oficial da NT 17 (Fontes: CBPMESP, 2025; CBMES,
+> 2026).
+
+> **As duas ferramentas são orientativas.** Cada resultado diz isso na tela e
+> classifica os itens em *Exigido*, *Verificar* (depende de NT específica, do
+> responsável técnico ou de dado adicional) e *Dispensado*. Onde a leitura da
+> norma é interpretativa — por exemplo, o afastamento do item 5.1.6 da NT 17
+> em estacionamento aberto para a via pública, que não tem rota de saída de
+> emergência a preservar — o card diz expressamente que é interpretação e que
+> prevalece a análise do CBMPE no caso concreto.
+
 ## Login obrigatório e perfis
 
-Todo o conteúdo do site (inclusive SATECs e o assistente virtual) fica atrás
-de um login obrigatório. Não há usuário/senha fixos no código — cada login
-é validado no Apps Script (servidor), que também decide o que cada perfil
-pode ver:
+Fora as duas triagens públicas acima, todo o conteúdo do site (inclusive
+SATECs e o assistente virtual) fica atrás de um login obrigatório. Não há
+usuário/senha fixos no código — cada login é validado no Apps Script
+(servidor), que também decide o que cada perfil pode ver:
 
 | Perfil         | Vê/faz |
 |----------------|--------|
@@ -92,8 +158,11 @@ pode ver:
 
 Qualquer perfil pode trocar a própria senha em **Minha Conta**.
 
-Os links **"Mapa de OCI"** e **"Triagem de Riscos"** do menu são visíveis
-para **todos** os perfis logados e abrem em **nova aba**: o mapa de OCI
+No grupo "Ferramentas" do menu lateral, os links **"Mapa de OCI"**,
+**"Triagem de Riscos"**, **"Sistemas Preventivos"** e **"Triagem SAVE (VE)"**
+são visíveis para **todos** os perfis logados e abrem em **nova aba** (os
+dois últimos são as páginas públicas descritas acima — aparecem no menu por
+conveniência, não porque exijam sessão). O mapa de OCI
 ([oci-catsertao](https://aquinogr89.github.io/oci-catsertao/)) é público
 para consulta, mas só cadastra ponto quem tem perfil autorizado — o site
 oci-catsertao revalida isso no próprio Apps Script a cada cadastro. Como
@@ -158,6 +227,11 @@ atualiza o site automaticamente em alguns segundos.
 - O `meta name="robots" content="noindex, nofollow"` já presente no
   `index.html` evita que buscadores indexem o site, mas isso **não é**
   controle de acesso — só o login é.
+- `sistemas-preventivos.html` e `save.html` são **públicas de propósito** e,
+  por isso, não podem ganhar nenhum dado interno. Elas não chamam a API do
+  Apps Script, não leem sessão e só carregam JSON de conteúdo normativo
+  (texto de norma pública) — se um dia precisarem de dado interno, o caminho
+  é criar outra página atrás do gate, não afrouxar estas.
 - `hermes.html` **deixou de ser** o painel (achado **K1** da rodada 6 de
   auditoria — ver nota na seção "Estrutura" acima). Hoje é só uma
   página-ponte, sem dado sensível nenhum, que leva a um Web App do Apps
