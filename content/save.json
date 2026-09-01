@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "titulo": "Triagem SAVE — Sistema de Alimentação de Veículos Elétricos",
+    "fonte": "Norma Técnica nº 17 do CBMPE — Prevenção contra incêndio em ocupações destinadas a garagens e locais com Sistemas de Alimentação de Veículos Elétricos (SAVE)",
+    "homologacao": "Homologada pelo CSAT (Ata nº 104, de 23/12/2025); aprovada pela Portaria do Comando Geral nº 315/2025 (publicada em 09/01/2026). Atualização nº 01, vigente desde 15/06/2026 (Portaria do Comando Geral nº 317/2026).",
+    "vigencia": "Em vigor desde 1º de julho de 2026 (item 6.1) — já vigente para todas as edificações novas ou existentes.",
+    "fonteOficial": "https://www.bombeiros.pe.gov.br/images/legislacoes/2026/NT_17_ATUALIZACAO_N__01.pdf",
+    "auditadoEm": "2026-09-01",
+    "aviso": "Síntese para consulta orientativa da NT 17/CBMPE (SAVE). A norma oficial, outras NTs aplicáveis (ex.: NT 1.04, NT 1.02), o COSCIP-PE e a análise do caso concreto pelo CBMPE prevalecem."
+  },
+  "situacoes": [
+    { "valor": "nova", "rotulo": "Edificação nova (construção, reforma ou mudança de uso aprovada após a NT 17)" },
+    { "valor": "existente", "rotulo": "Edificação existente (já tinha habite-se/alvará antes da NT 17)" }
+  ],
+  "tiposGaragem": [
+    { "valor": "principal", "rotulo": "Garagem como ocupação principal (edifício-garagem)" },
+    { "valor": "subsidiaria", "rotulo": "Garagem dentro de outra edificação (residencial, comercial, industrial, serviços)" },
+    { "valor": "sem-garagem", "rotulo": "Sem garagem — só ponto(s) de recarga em área de risco (ex.: eletroposto isolado)" }
+  ],
+  "temSaveOpcoes": [
+    { "valor": "existente", "rotulo": "Já possui SAVE instalado" },
+    { "valor": "instalar", "rotulo": "Vai instalar SAVE (em projeto)" },
+    { "valor": "nao", "rotulo": "Não tem SAVE nem planeja instalar" }
+  ],
+  "ajuda": {
+    "tipo-garagem": {
+      "titulo": "Tipo de garagem/SAVE",
+      "texto": "A NT 17 se aplica em três situações diferentes: (a) o prédio inteiro é uma garagem (edifício-garagem); (b) o prédio tem outra finalidade principal (morar, vender, trabalhar) e a garagem é só uma parte dele; (c) não há garagem nenhuma, mas existe um ponto de recarga em alguma área de risco (ex.: um eletroposto isolado, sem vagas cobertas). Escolha a que descreve o caso — isso muda quais itens da norma se aplicam.",
+      "artigo": "Item 2, NT 17/CBMPE",
+      "excerto": "Esta Norma Técnica (NT) aplica-se: a) Às garagens caracterizadas como ocupação principal (edifícios-garagem); b) Às garagens inseridas em outras edificações como atividade subsidiária [...]; c) Às edificações ou áreas de risco que possuam Sistemas de Alimentação de Veículos Elétricos (SAVE)."
+    },
+    "unifamiliar": {
+      "titulo": "Residência unifamiliar",
+      "texto": "Se a edificação é uma casa (residência de uma só família), o cumprimento desta Norma Técnica não é obrigatório para o licenciamento — é recomendado como boa prática, não uma exigência que o CBMPE cobra na vistoria. Prédios residenciais multifamiliares (apartamentos) não entram nessa exceção: seguem a norma normalmente.",
+      "artigo": "Itens 2, alínea b, e 7.1, NT 17/CBMPE",
+      "excerto": "excetuando-se do licenciamento compulsório as edificações residenciais unifamiliares, para as quais o cumprimento desta norma reveste-se de caráter orientativo [...] Os parâmetros elencados nesta Normativa Técnica aplicam-se a todas as edificações, com exceção das edificações residenciais unifamiliares, para as quais a aplicação é recomendada, sem prejuízo das demais medidas exigidas para cada ocupação."
+    },
+    "tem-save": {
+      "titulo": "Situação do SAVE",
+      "texto": "\"Já possui\" considera a estação de recarga já instalada e funcionando. \"Vai instalar\" cobre quem está projetando agora. \"Não tem e não planeja\" importa principalmente para edificação existente com garagem: sem SAVE, a NT 17 não obriga nada de novo — a edificação continua seguindo só o projeto de segurança contra incêndio já aprovado antes.",
+      "artigo": "Item 5.4.1, NT 17/CBMPE",
+      "excerto": "As exigências das medidas de segurança contra incêndio e pânico listadas neste item são compulsórias para as garagens que possuam, ou que venham a instalar, o Sistema de Alimentação de Veículos Elétricos (SAVE). Caso o SAVE não seja instalado, a edificação deve seguir as medidas de segurança previstas no projeto de segurança contra incêndio e pânico originalmente aprovado."
+    },
+    "localizacao": {
+      "titulo": "Garagem/SAVE interna ou externa",
+      "texto": "É externa quando o espaço fica fora do volume principal do prédio — pode ser descoberta ou só ter uma cobertura contra chuva/sol, sem fazer parte da construção fechada. Se o espaço tem paredes e integra o volume construído do prédio, é interna, mesmo que tenha aberturas grandes.",
+      "artigo": "Item 4.4, NT 17/CBMPE",
+      "excerto": "Garagens em áreas externas: espaço situado fora do volume principal da edificação. Esse espaço pode ser descoberto ou possuir estrutura de sombreamento destinada apenas à proteção contra intempéries."
+    },
+    "rotas-saida": {
+      "titulo": "Rotas de saída de emergência do pavimento",
+      "texto": "Conte quantos caminhos independentes de fuga (escadas/saídas separadas entre si) o pavimento da garagem tem. Isso decide se as vagas com SAVE precisam ficar afastadas das saídas: com só uma rota, sim; com duas ou mais, o afastamento deixa de ser exigido e qualquer vaga pode ter SAVE.",
+      "artigo": "Itens 5.1.6 e 5.1.6.1, NT 17/CBMPE",
+      "excerto": "Em edificações que possuem apenas uma rota de saída de emergência, as estações de recarga devem manter afastamento de, no mínimo, 5 m destas [...] Quando a edificação possuir duas ou mais rotas de saída de emergência no pavimento, não será exigido o afastamento mínimo [...] entre a saída de emergência e o perímetro da vaga de estacionamento que possua estação de recarga, podendo todas as vagas do pavimento receber [SAVE]."
+    },
+    "compartilha-uso": {
+      "titulo": "Pavimento compartilhado com outras ocupações",
+      "texto": "Só perguntamos isso para edificação existente com SAVE. Se o pavimento onde fica a garagem/SAVE é usado só para estacionar (sem gente morando, trabalhando ou circulando ali por outro motivo), as medidas de detecção e chuveiros podem ficar restritas a esse pavimento. Se o mesmo andar também tem apartamentos, lojas ou escritórios, entra a pergunta seguinte sobre compartimentação.",
+      "artigo": "Itens 5.4.7 e 5.4.8, NT 17/CBMPE",
+      "resumo": "Quando a garagem/SAVE está num pavimento que não compartilha uso com outras ocupações de permanência humana, a detecção e os chuveiros podem se limitar a esse pavimento (item 5.4.7); quando compartilha, a resposta depende de haver ou não compartimentação horizontal resistente ao fogo (item 5.4.8)."
+    },
+    "compartimentacao": {
+      "titulo": "Compartimentação horizontal (NT 1.04)",
+      "texto": "É a separação física por elementos construtivos resistentes ao fogo (paredes, portas corta-fogo) entre a área da garagem e os demais ambientes do mesmo pavimento, conforme a NT 1.04 do CBMPE — não é a mesma coisa que só ter uma parede comum. Com essa compartimentação, as medidas de detecção e chuveiros podem ficar restritas à garagem; sem ela, precisam cobrir o pavimento inteiro.",
+      "artigo": "Item 5.4.8, NT 17/CBMPE",
+      "excerto": "Havendo compartimentação horizontal entre a garagem e os demais ambientes do pavimento, executada por elementos construtivos resistentes ao fogo, conforme a NT 1.04 ou norma que venha substituí-la, as medidas de detecção de incêndio e de chuveiros automáticos poderão ser restritas à área da garagem; [...] Não havendo compartimentação [...], as medidas de detecção de incêndio e de chuveiros automáticos deverão abranger todo o pavimento."
+    },
+    "multifamiliar": {
+      "titulo": "Residencial multifamiliar",
+      "texto": "Marque se é um prédio de apartamentos (várias unidades residenciais autônomas). Isso soma uma exigência de sinalização de alarme (repetidoras visuais e sonoras) no hall social de todos os pavimentos, além da cobertura normal de detecção da garagem.",
+      "artigo": "Itens 5.3.2.1 (edificação nova) e 5.4.6.1 (existente), NT 17/CBMPE",
+      "excerto": "Para as ocupações residenciais multifamiliares, com relação ao sistema de detecção de incêndio, além da cobertura prevista [...], deverão ser instaladas repetidoras do alarme (visual e sonoro) no hall social de todos os pavimentos."
+    },
+    "eletroposto": {
+      "titulo": "Eletroposto comercial",
+      "texto": "Marque só se a edificação vende recarga ao público em geral — funciona como um posto de combustível, só que fornecendo eletricidade em vez de derivados de petróleo. Não marque para uma garagem de uso privativo (residencial, comercial ou industrial) que carrega apenas os próprios veículos ou de funcionários/moradores.",
+      "artigo": "Item 5.5.1, NT 17/CBMPE",
+      "excerto": "As exigências das medidas de segurança contra incêndio e pânico previstas neste item são obrigatórias para edificações que disponibilizem, de forma comercial, estação de carregamento (SAVE) para veículos elétricos ou híbridos plug-in. Essas instalações funcionam de maneira análoga a um posto de combustível convencional, porém fornecem eletricidade em vez de derivados de petróleo."
+    },
+    "ja-hidrante": {
+      "titulo": "Hidrantes já exigidos/instalados",
+      "texto": "Informe se a edificação já tem (ou já é obrigada a ter, pelo Art. 105-A do COSCIP) sistema de hidrantes. Isso muda o volume de água exigido para a Reserva Técnica de Incêndio (RTI) dos chuveiros da garagem — com hidrante, o volume dos dois sistemas se soma.",
+      "artigo": "Itens 5.3.3.1–5.3.3.2 (edificação nova) e 5.4.3 (existente), NT 17/CBMPE",
+      "resumo": "Sem hidrante exigido, a RTI da garagem usa só 50% do volume da classe C do Art. 57 do COSCIP; com hidrante também exigido, soma-se o volume do sistema de hidrantes conforme a classe de ocupação da edificação."
+    },
+    "ja-chuveiro": {
+      "titulo": "Já possui chuveiros automáticos na garagem",
+      "texto": "Só perguntamos para edificação existente. Se a garagem já tem chuveiros automáticos instalados, não é preciso adaptar nada por causa da NT 17 — o sistema existente já cobre a exigência.",
+      "artigo": "Item 5.4.4, NT 17/CBMPE",
+      "excerto": "Para as edificações existentes que já possuam o sistema de chuveiros automáticos nas áreas de garagem, não haverá necessidade de adaptação."
+    },
+    "ventilacao-natural": {
+      "titulo": "Ventilação natural (Art. 27 §2º do COSCIP)",
+      "texto": "É o mesmo critério do COSCIP para pavimento de garagem não ser considerado \"interno\": guarda-corpo de até 1,10 m com abertura livre em pelo menos 50% do perímetro (pavimentos acima do nível de acesso), ou abertura de pelo menos 0,70 m em 50% do perímetro (no nível de acesso ou abaixo). Com essa ventilação natural, a garagem fica dispensada do sistema de extração mecânica de fumaça.",
+      "artigo": "Item 5.3.4.1, NT 17/CBMPE, e Art. 27 §2º, COSCIP-PE",
+      "excerto": "Caso o pavimento da edificação onde houver ocupações com garagens seja dotado de ventilação natural, nos moldes do § 2º do art. 27 do COSCIP, o sistema de extração mecânica é dispensado."
+    },
+    "modo-recarga": {
+      "titulo": "Modo de recarga previsto",
+      "texto": "É a forma de transferência de energia definida pela NBR IEC 61851-1. Modo 1: recarga simples de baixa potência, em corrente alternada, sem controle inteligente, uso restrito a áreas externas/baixo risco. Modo 2: corrente alternada de potência intermediária — a norma só admite seu uso em garagens externas, com proteção adicional contra intempéries. Modo 3: estação de recarga com proteção elétrica e de segurança integradas, para áreas internas ou externas. Modo 4: recarga ultrarrápida em corrente contínua, também para áreas internas ou externas. Isso importa principalmente para garagem externa: modos 1 e 2 aí só entram com Gerenciamento de Risco do responsável técnico.",
+      "artigo": "Itens 4.7.1 a 4.7.4 e 5.2.3, NT 17/CBMPE",
+      "resumo": "4.7.1 Modo 1: recarga simples/baixa potência, AC, sem controle inteligente, uso restrito a áreas externas ou de baixo risco. 4.7.2 Modo 2: AC, potência intermediária, uso restrito a garagens externas com proteção adicional. 4.7.3 Modo 3: estação com proteção elétrica/segurança integradas, áreas internas e externas. 4.7.4 Modo 4: recarga ultrarrápida em corrente contínua, áreas internas e externas."
+    }
+  }
+}
