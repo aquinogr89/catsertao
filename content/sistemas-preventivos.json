@@ -1096,5 +1096,91 @@
                                 "resultado":  "PDF baixado novamente em 31/08/2026; 116 páginas.",
                                 "prova":  "/data/relatorios/ALEPE_Decreto_19644_Texto_Atualizado.pdf"
                             }
-                        ]
+                        ],
+    "ajuda": {
+        "altura": {
+            "titulo": "Altura da edificação",
+            "texto": "Meça em metros, do ponto de acesso ao prédio (junto à fachada) até o ponto mais alto do piso do último pavimento computável — não é a altura do telhado nem inclui a caixa d'água/reservatório superior. Pegue o valor no corte/elevação do projeto arquitetônico aprovado.",
+            "artigo": "Art. 25, §§6º–7º, COSCIP-PE",
+            "excerto": "Altura da edificação [...] é o comprimento, em metros, do segmento de vertical medida do meio da fachada e compreendido entre o nível de acesso do prédio, junto a fachada, e a linha horizontal passando pelo ponto mais alto do edifício, excetuando-se o reservatório superior. [...] será medida [...] entre o ponto que caracterize o ingresso ao nível de acesso [...] ao ponto mais alto do piso do último pavimento computável."
+        },
+        "pavimentos": {
+            "titulo": "Número de pavimentos",
+            "texto": "Informe o total de pavimentos do projeto aprovado. Alguns sistemas descontam certos pavimentos da contagem (cobertura técnica sem permanência, jiraus/mezaninos com até 200 m² e circulação privativa, pavimentos com menos de 50 m²) — os critérios de desconto variam por sistema, então informe aqui o total do projeto; a triagem aplica os ajustes necessários.",
+            "artigo": "Arts. 106 (hidrantes) e 231 (evacuação), COSCIP-PE",
+            "resumo": "Não são contados: coberturas técnicas sem permanência (casa de máquinas, reservatório, hall de escada etc.), jiraus/mezaninos/galerias privativos até 200 m² e pavimentos com menos de 50 m² de área construída — nas condições de cada artigo."
+        },
+        "area": {
+            "titulo": "Área total construída/coberta",
+            "texto": "Some toda a área construída e/ou coberta da edificação (todos os pavimentos), pelo quadro de áreas do projeto aprovado. Se a edificação fizer parte de um agrupamento com acessos comuns diretos no mesmo terreno (sem 8 m de afastamento livre entre os prédios), pode ser necessário somar a área do conjunto, não só da unidade isolada.",
+            "artigo": "Art. 25, I e §§1º–4º, COSCIP-PE",
+            "excerto": "I - área total construída e/ou coberta; [...] § 1º Considera-se área total ocupada, a área correspondente ao somatório das áreas edificadas, abertas ou não, dentro de um mesmo perímetro de terreno (agrupamento de edificações), e cujas edificações tenham ligações ou acessos comuns e diretos entre si."
+        },
+        "area-pav": {
+            "titulo": "Área do maior pavimento",
+            "texto": "É a área do pavimento de maior superfície dentro da classificação de ocupação escolhida (geralmente o pavimento tipo ou o térreo). Pegue no quadro de áreas por pavimento do projeto aprovado.",
+            "artigo": "Art. 25, §5º, COSCIP-PE",
+            "excerto": "A área por pavimentos será a do maior pavimento cuja ocupação a edificação foi classificada."
+        },
+        "populacao": {
+            "titulo": "População máxima",
+            "texto": "Não é uma estimativa livre: a norma manda calcular pela Tabela 1 (Cálculo da População), no Anexo A do COSCIP-PE, que fixa pessoas/m² conforme o uso de cada ambiente. Aplique os índices da Tabela 1 sobre as áreas do projeto e informe aqui a população do pavimento de maior lotação.",
+            "artigo": "Art. 179, §2º, e Art. 206, COSCIP-PE — Tabela 1 (Anexo A)",
+            "excerto": "Os valores do número de pessoas do pavimento de maior população e da capacidade do dispositivo respectivo deverão ser obtidos através da TABELA 1. CÁLCULO DA POPULAÇÃO, constante do Anexo A ao presente Código."
+        },
+        "glp": {
+            "titulo": "Quantidade total de GLP",
+            "texto": "Some a capacidade nominal de todos os botijões/cilindros de GLP efetivamente utilizados na edificação, mesmo que ainda não estejam em uma central própria. A partir de 45 kg já existe obrigação de central de GLP.",
+            "artigo": "Art. 234, parágrafo único, COSCIP-PE",
+            "excerto": "Sempre que a quantidade de GLP utilizado for igual ou superior a 45 Kg, haverá necessidade de se instalar central de GLP."
+        },
+        "area-relevante": {
+            "titulo": "Área para Detecção e Alarme (Art. 140)",
+            "texto": "O Art. 140 usa um recorte de área diferente por tipo: no Tipo E é a \"área comercial\"; no Tipo G é só a \"parte comercial\" do prédio — nos dois casos, acima de 1.000 m² já exige o sistema. O próprio artigo exclui circulações e áreas abertas da proteção, então essa área é a parte privativa realmente destinada ao comércio (lojas/salas comerciais), somada pelo quadro de áreas do projeto aprovado — sem contar corredores, halls e áreas descobertas. Nos demais tipos (D, F, H, I, K, L, M), o artigo usa a área construída normal: repita aqui o mesmo valor de \"Área total construída/coberta\". Atenção: o COSCIP-PE não define separadamente o termo \"área comercial\" — esta é a leitura literal do Art. 140 combinada com a exclusão de circulações/áreas abertas prevista no mesmo artigo; em caso de dúvida sobre o enquadramento de um setor específico, confirme com o CBMPE.",
+            "artigo": "Art. 140, caput e tabela, COSCIP-PE",
+            "excerto": "E [...] Acima 1.000 m2 de área comercial [...] Toda área privativa - Não será exigida a instalação em circulações e áreas abertas. [...] G [...] Parte comercial com área construída acima de 1.000 m2 [...] Toda área privativa (Exceto em áreas residenciais) - Não será exigida a instalação em circulações e áreas abertas."
+        },
+        "garagem": {
+            "titulo": "Garagem interna",
+            "texto": "Só existe \"garagem interna\", para o Código, quando o pavimento de estacionamento NÃO tem o perímetro aberto para o exterior. Um pavimento com guarda-corpo de até 1,10 m e abertura livre em pelo menos 50% do perímetro (acima do nível de acesso) — ou abertura de pelo menos 0,70 m em 50% do perímetro (no nível de acesso ou abaixo) — não conta como garagem interna. \"Atende ao Art. 27\" significa que o espaço tem isolamento do resto do prédio, combate imediato ao princípio de incêndio e ventilação adequada.",
+            "artigo": "Art. 27, COSCIP-PE",
+            "excerto": "§ 1º Não serão consideradas garagens internas [...] as áreas destinadas a estacionamentos de veículos localizadas em pavimentos que mantenham os seus limites de perímetro abertos ao exterior e em contato direto com o mesmo. § 2º [...] I - [...] guarda-corpo de proteção, com altura máxima de 1,10 m e abertura livre [...] ao menos em 50% do perímetro [...]; e II - [...] abertura superior mínima de 0,70 m, ao menos em 50% do perímetro [...]."
+        },
+        "capacidade-show": {
+            "titulo": "Capacidade do ambiente fechado",
+            "texto": "Informe a capacidade de público (lotação de projeto) do ambiente fechado, não a área. Acima de 3.000 pessoas em ambiente fechado, chuveiros automáticos passam a ser exigidos nesse ambiente.",
+            "artigo": "Art. 132-A, §5º, COSCIP-PE",
+            "excerto": "Para boates, casas de show, casas noturnas, danceterias, discotecas e assemelhados, em ambientes fechados, será exigida a proteção pelo sistema de chuveiros automáticos, quando possuir capacidade de público superior a 3.000 (três mil) pessoas."
+        },
+        "area-armazenamento": {
+            "titulo": "Área de armazenamento/depósito",
+            "texto": "Informe só a área efetivamente usada para armazenamento/depósito, não o total do prédio. O Art. 132-A §6º não restringe o tipo de material guardado — vale para depósito/armazenamento de qualquer natureza (estoque, arquivo, mercadoria etc.); acima de 3.000 m², essa área precisa de chuveiros automáticos, qualquer que seja o tipo de ocupação. Materiais perigosos/inflamáveis (Tipo O) podem ter exigências adicionais próprias, fora desta triagem.",
+            "artigo": "Art. 132-A, §6º, COSCIP-PE",
+            "excerto": "As edificações, independente da classificação prevista no art. 7º deste Código, quando possuírem área de armazenamento ou depósito superior a 3.000 m² deverão ser contempladas com o sistema de chuveiros automáticos na referida área de armazenamento, independente do número de pavimentos."
+        },
+        "layout-indefinido": {
+            "titulo": "Planta sem leiaute definido",
+            "texto": "Marque quando o projeto aprovado ainda não define o arranjo interno definitivo do ambiente — o exemplo clássico é escritório de plano aberto ou galpão sem a divisão de salas/corredores desenhada. Como as rotas reais de fuga ainda não estão fixadas, a norma manda comparar a distância em linha reta (não o percurso) com os limites da Tabela 3, e ainda reduzir esse limite em 30%, para cobrir o pior caso possível de arranjo futuro.",
+            "artigo": "Art. 147, §2º, COSCIP-PE",
+            "excerto": "No caso das distâncias máximas a serem percorridas para as rotas de fuga que não foram definidas no projeto arquitetônico, como, por exemplo, escritórios de plano espacial aberto e galpões sem o arranjo físico interno (leiaute), devem ser consideradas as distâncias diretas comparadas aos limites da Tabela 3 – Distâncias Máximas a Serem Percorridas [...] reduzidas em 30%."
+        },
+        "controle-fumaca": {
+            "titulo": "Possui controle de fumaça",
+            "texto": "Marque só se houver um sistema de controle de fumaça de fato projetado nas rotas de fuga (exaustão mecânica, pressurização de escada/antecâmara etc.) — não conte uma ventilação natural qualquer do ambiente. Havendo esse sistema, a Nota b da Tabela 3 (Anexo A) admite um acréscimo de até 50% na distância máxima permitida, porque a fumaça controlada reduz o risco durante a evacuação.",
+            "artigo": "Art. 147, II, COSCIP-PE — Nota b da Tabela 3 (Anexo A)",
+            "resumo": "Art. 147, II, autoriza reduzir o risco considerado quando há proteção por chuveiros automáticos, detectores ou controle de fumaça; a Nota b da Tabela 3 do Anexo A converte isso, para o controle de fumaça, num acréscimo de até 50% na distância máxima a percorrer."
+        },
+        "mais-saida": {
+            "titulo": "Mais de uma saída separada ≥10 m",
+            "texto": "A Tabela 3 (Anexo A) tem uma coluna de distância maior para quando o pavimento/setor tem mais de uma saída utilizável, em vez de só uma — mas esse valor maior só vale se as duas saídas forem realmente alternativas entre si, não duas portas praticamente coladas. O parâmetro de separação usado é o mesmo que o Código exige explicitamente para escadas no Art. 164, §1º (10,0 m). A norma não detalha o método exato de medição; a prática de projeto é medir a distância direta entre os pontos de acesso de uma saída e da outra. Marque esta opção só se as saídas atendem a essa separação; em caso de dúvida sobre o enquadramento, confirme com o CBMPE.",
+            "artigo": "Art. 164, §1º, COSCIP-PE — Nota c da Tabela 3 (Anexo A)",
+            "excerto": "Nos casos em que forem exigidas mais de uma escada para uma mesma edificação, a distância entre elas não poderá ser inferior a 10,0 m."
+        },
+        "unidades-vila": {
+            "titulo": "Unidades habitacionais da vila",
+            "texto": "Só se aplica quando várias casas (Tipo A) formam um agrupamento/vila — não confundir com prédio de apartamentos, que é Tipo B. Informe o número total de casas do agrupamento; entre 100 e 1.000 unidades já exige 1 hidrante público de coluna, mais 1 para cada grupo/fração excedente de 1.000.",
+            "artigo": "Art. 8º, §§1º–2º, COSCIP-PE",
+            "excerto": "salvo os casos de agrupamentos (vilas) [...] I - entre 100 (cem) e 1.000 (mil) unidades habitacionais deverá ser instalado [...] 01 (um) hidrante público de coluna; II - para cada grupo excedente de 1.000 (mil) unidades habitacionais ou fração, deverá ser instalado, no mínimo, 01 (um) hidrante público de coluna [...] § 2º Não serão incluídos na definição de vilas [...] as Edificações Residenciais Privativas Multifamiliares."
+        }
+    }
 }
