@@ -89,6 +89,12 @@ conteúdo nenhum pra proteger. Ver a nota logo abaixo.
 > do menu lateral aponta pra cá e o endereço pode estar salvo em favorito. O
 > código-fonte do painel (`Codigo.gs` + `painel.html`) fica só no editor do
 > Apps Script — **fora deste repositório, de propósito**.
+>
+> Como essa configuração vive fora do repositório (e pode ser trocada sem
+> deixar rastro aqui), ela precisa ser reconferida de tempos em tempos no
+> console. **Última conferência: 09/09/2026** — projeto "Hermes Agent — CAT
+> Sertão", implantação ativa com "Executar como: Eu" e "Quem pode acessar:
+> Somente eu". Conforme o esperado.
 
 > **`apps-script/Code.gs` e `design_handoff_hermes/` foram REMOVIDOS** na
 > auditoria de segurança de 01/09/2026, por estarem sendo servidos como
@@ -99,9 +105,31 @@ conteúdo nenhum pra proteger. Ver a nota logo abaixo.
 >   repositório [oci-catsertao](https://github.com/aquinogr89/oci-catsertao/tree/main/apps-script).
 >   Além de não ser mais chamado por ninguém, publicava o ID da planilha do
 >   Termo e tinha um contador de tentativas de login **global** (um errante
->   trancava todo mundo). **Passo manual pendente:** desativar aquela
->   implantação antiga no editor do Apps Script — remover o arquivo daqui não
->   desliga o Web App que já está no ar.
+>   trancava todo mundo).
+>
+>   **RESOLVIDO em 09/09/2026** — a implantação foi arquivada no editor do
+>   Apps Script (remover o arquivo do repositório não desligava o Web App que
+>   já estava no ar). A inspeção do console mostrou que a situação era pior do
+>   que a auditoria supunha: a implantação estava **ativa e com acesso
+>   "Qualquer pessoa"**, sua URL `/exec` **constava do histórico público deste
+>   repositório** (commits `2b156d6` e `c2d90c2`), e o `SHEET_ID` dela é o
+>   mesmo `TERMO_SHEET_ID` que o backend de produção usa hoje — ou seja, era
+>   uma porta paralela viva para os dados atuais do Termo, sem passar por
+>   perfil, sem LOG e sem expiração de token, protegida só pela senha
+>   compartilhada `TERMO_PASSWORD`.
+>
+>   Dois fatos limitam o alcance: o endpoint era **estritamente somente
+>   leitura** (única operação de planilha: `openById` + `getDataRange()
+>   .getValues()`; nenhum `setValue`/`appendRow`), então não havia como
+>   adulterar dado; e o histórico de execuções não acusou nenhuma chamada.
+>   Ressalva honesta: a tela de Execuções do Apps Script só mostra os últimos
+>   7 dias, e a conta é Gmail pessoal (sem log de auditoria de Workspace) —
+>   **não há como saber o que aconteceu entre julho e agosto de 2026**.
+>
+>   Verificado depois de arquivar: a URL antiga responde 404 ("Não foi
+>   possível abrir o arquivo") e o backend de produção segue respondendo
+>   normalmente a `POST` (`{"ok":false,"error":"Ação inválida."}` para ação
+>   inexistente).
 > - `design_handoff_hermes/` eram os mockups de design do painel Hermes.
 >   Publicavam caminhos internos do servidor (`/data/workspace/`,
 >   `/data/scripts/`), nomes de scripts de automação, agendamentos de cron e
