@@ -233,6 +233,18 @@ Também em `common.js`, a constante `TRIAGEM_URL` aponta para
 [triagem-catsertao](https://github.com/aquinogr89/triagem-catsertao)) —
 ajuste se a URL publicada for outra.
 
+> **Os dados de CNAE não moram neste repositório.** A classificação de risco
+> por CNAE usada pela Triagem vem de `fonte/CNAE_CBMPE_referencia.xlsx`, no
+> repositório `triagem-catsertao`, versionada junto das demais fontes (Anexos
+> do Decreto 52.005/2021, com a redação do Decreto 61.082/2026, e a estrutura
+> CNAE 2.3 do CONCLA/IBGE). O `js/cnae-data.js` de lá é **gerado** a partir
+> dessas fontes e declara `fonte/` como fonte de verdade.
+>
+> Não guarde cópias da planilha aqui. Uma cópia solta em `CNAES atualizados/`
+> foi removida em 11/09/2026 justamente por isso: atualizar a cópia errada
+> deixaria a Triagem publicando classificação de risco desatualizada sem
+> ninguém perceber. Para mexer nos CNAEs, trabalhe no `triagem-catsertao`.
+
 ## Testar localmente
 
 Com Node.js instalado:
