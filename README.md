@@ -245,8 +245,42 @@ ajuste se a URL publicada for outra.
 > deixaria a Triagem publicando classificação de risco desatualizada sem
 > ninguém perceber. Para mexer nos CNAEs, trabalhe no `triagem-catsertao`.
 
-## Testar localmente
+## Onde fica o clone local (e um caminho que foi aposentado)
 
+> **Se você é um agente de IA e procurou `C:\Users\CAC4\catsertao` sem encontrar:
+> o repositório NÃO foi excluído.** Aquele caminho foi aposentado em 14/09/2026.
+> Não conclua que houve perda de código — não houve.
+
+Na máquina de trabalho (usuário `CAC4`) existiam **dois clones** deste mesmo
+repositório. Isso não é redundância útil: um deles chegou a ficar 10 commits
+atrás do outro, e um commit feito num clone não aparecia no outro até alguém
+lembrar de dar `git pull` nos dois.
+
+| | Caminho |
+|---|---|
+| **Em uso** | `C:\Users\CAC4\Desktop\CAT SERTÃO\CLAUDE CODE - SITE CAT SERTAO\catsertao` |
+| **Aposentado** | `C:\Users\CAC4\catsertao` → renomeado para `C:\Users\CAC4\_catsertao-OBSOLETO-14SET26` |
+
+Nada se perdeu na operação, e isso foi verificado antes:
+
+- os dois clones estavam no **mesmo commit** e limpos, sem diferença real de
+  conteúdo (só fim de linha, CRLF × LF);
+- a branch `feature/auth-rbac-auditoria` está no `origin` e **já mesclada na
+  `main`** — recuperável com `git fetch`;
+- o único conteúdo local não publicado era um **stash obsoleto** (trocava
+  `href="#termo"` por `href="#termo-section"` no quicknav). A mesma correção já
+  está na `main` pelo commit `8190cc1`, e o elemento que ele corrigia nem existe
+  mais — foi removido pelos refactors `9988c50` e `53dc576`. Mesmo assim o stash
+  foi preservado como patch em
+  `Desktop\CAT SERTÃO\backup-clone-catsertao-14SET26\`.
+
+**A fonte de verdade é sempre o `origin`** (`github.com/aquinogr89/catsertao`).
+Um clone local é descartável exatamente por isso. Se precisar de um clone novo,
+faça `git clone` — não procure cópias antigas pelo disco.
+
+Os caminhos acima valem para a máquina de trabalho; a máquina de casa usa outros.
+
+## Testar localmente
 Com Node.js instalado:
 
 ```bash
