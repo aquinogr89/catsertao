@@ -336,7 +336,7 @@ var CatAuth = (function () {
     { tipo: 'ancora', key: 'termo', id: 'nav-termo', label: 'Termo de Compromisso', anchor: 'termo-section', hiddenByDefault: true },
     { tipo: 'ancora', key: 'satecs', label: 'SATECs', anchor: 'satecs' },
     { grupo: 'Ferramentas' },
-    { tipo: 'externo', key: 'rti', id: 'nav-rti', label: 'Mapa de OCI', href: '#' },
+    { tipo: 'externo', key: 'rti', id: 'nav-rti', label: 'MOCI', href: '#' },
     { tipo: 'externo', key: 'triagem', id: 'nav-triagem', label: 'Triagem de Riscos', href: '#' },
     { tipo: 'pagina', key: 'sistemas', label: 'Sistemas Preventivos', href: 'sistemas-preventivos.html' },
     { tipo: 'pagina', key: 'save', label: 'Triagem SAVE (VE)', href: 'save.html' },
